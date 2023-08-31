@@ -1,0 +1,22 @@
+{
+    "FOM_typ": "square",
+    "FWHM": 6e-08,
+    "N": 10,
+    "NH": 2,
+    "NL": 2,
+    "SOURCE_typ": "gaussian_released",
+    "alpha": 0.0,
+    "lambda_0": 1.326e-06,
+    "maxiter": 90,
+    "penalty": [
+        [
+            0.03,
+            1e-08
+        ],
+        [
+            0.03,
+            1e-07
+        ]
+    ],
+    "uuid": "4cb4"
+}
