@@ -1,0 +1,11 @@
+**
+!.gitignore
+!*.py
+!subw_fiber_template.fsp
+!subw_gaussian_released_template.fsp
+!subw_gaussian_packaged_template.fsp
+!/4cb4
+!/4cb4/*.txt
+!/4cb4/*.png
+!/4cb4/*.json
+!/4cb4/*.log
