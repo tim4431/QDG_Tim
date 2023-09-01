@@ -60,12 +60,16 @@ def rect_tether(
     input_length: float = 10,
     patch_length: float = 5,
 ):
+    c = gf.Component()
+    #
     SHRINK_WIDTH = 0.1
     DEG2RAD = np.pi / 180
     rect_width = 2 * (start_radius * np.sin(grating_angle * DEG2RAD) - SHRINK_WIDTH)
     L = grating[-1] - patch_length
     rect_length = L + start_radius + input_length
-    return gf.components.rectangle(size=(rect_length, rect_width), layer="WG")
+    rect_ref = c << gf.components.rectangle(size=(rect_length, rect_width), layer="WG")
+    #
+    return c
 
 
 @gf.cell
