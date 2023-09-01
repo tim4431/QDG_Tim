@@ -5,14 +5,4 @@
 !subw_gaussian_released_template.fsp
 !subw_gaussian_packaged_template.fsp
 !/4cb4
-!/4cb4/*.txt
-!/4cb4/*.png
-!/4cb4/*.json
-!/4cb4/*.log
 !/28b1
-!/28b1/*.txt
-!/28b1/*.png
-!/28b1/*.json
-!/28b1/*.log
-!/28b1/*.gds
-/28b1/*_p0.log

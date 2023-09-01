@@ -284,6 +284,8 @@ def setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension="2D"):
     if SOURCE_typ in ["gaussian_released", "gaussian_packaged"]:
         fdtd.setnamed("source", "center wavelength", lambda_0)
         fdtd.setnamed("source", "wavelength span", max(400e-9, FWHM * 3))
+        fdtd.setnamed("output_TE", "wavelength center", lambda_0)
+        fdtd.setnamed("output_TE", "wavelength span", max(400e-9, FWHM * 3))
     elif SOURCE_typ == "fiber":
         fdtd.setglobalsource("center wavelength", lambda_0)
         fdtd.setglobalsource("wavelength span", max(400e-9, FWHM * 3))
