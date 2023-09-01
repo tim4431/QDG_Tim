@@ -150,9 +150,14 @@ def set_params(fdtd, paras, **kwargs):
     N = kwargs.get("N", DEFAULT_PARA["N"])
     NL = kwargs.get("NL", DEFAULT_PARA["NL"])
     NH = kwargs.get("NH", DEFAULT_PARA["NH"])
+    start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
+    taper_angle = kwargs.get("taper_angle", DEFAULT_PARA["taper_angle"])
+    #
     fdtd.setnamed("gratings", "N", N)
     fdtd.setnamed("gratings", "NL", NL)
     fdtd.setnamed("gratings", "NH", NH)
+    fdtd.setnamed("gratings", "start_radius", start_radius)
+    fdtd.setnamed("gratings", "taper_angle", taper_angle)
 
 
 def calc_min_feature(paras, NL, NH) -> float:

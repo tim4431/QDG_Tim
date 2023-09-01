@@ -12,4 +12,6 @@ DEFAULT_PARA = {
     "paras_init": None,
     "maxiter": 90,
     "logger": None,
+    "start_radius": 10e-6,
+    "taper_angle": 24,
 }
