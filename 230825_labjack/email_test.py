@@ -8,10 +8,10 @@ from typing import List
 EMAIL_SELF = "quantumdevicesgroup@outlook.com"
 EMAIL_SLACK = "qdglab-monitor-aaaakuknki5idmca7uehje3bpq@quantumdevicesgroup.slack.com"
 EMAIL_GROUP = " quantumdevices@lists.berkeley.edu"
-# emergency_email_list = [EMAIL_SELF, EMAIL_SLACK, EMAIL_GROUP]
-# notice_email_list = [EMAIL_SELF, EMAIL_SLACK]
-emergency_email_list = [EMAIL_SELF]
-notice_email_list = [EMAIL_SELF]
+emergency_email_list = [EMAIL_SELF, EMAIL_SLACK, EMAIL_GROUP]
+notice_email_list = [EMAIL_SELF, EMAIL_SLACK]
+# emergency_email_list = [EMAIL_SELF]
+# notice_email_list = [EMAIL_SELF]
 
 
 def temp_warning(temperature: float, img_fileName=None):
