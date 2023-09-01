@@ -1,10 +1,11 @@
 from time_util import *
 
 
-def email_warning(temperature: float):
+def email_warning(temperature: float, img_fileName=None):
     import smtplib
     from email.mime.multipart import MIMEMultipart
     from email.mime.text import MIMEText
+    from email.mime.image import MIMEImage
 
     # Email configuration
     sender_email = "quantumdevicesgroup@outlook.com"
@@ -33,6 +34,11 @@ def email_warning(temperature: float):
         msg["To"] = receiver_email
         msg["Subject"] = subject
         msg.attach(MIMEText(message, "plain"))
+        # add picture as attachment
+        if img_fileName is not None:
+            with open(img_fileName, "rb") as fp:
+                img = MIMEImage(fp.read())
+            msg.attach(img)
 
         try:
             server = smtplib.SMTP(smtp_server, smtp_port)

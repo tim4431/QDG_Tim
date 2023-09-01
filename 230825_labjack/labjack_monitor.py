@@ -6,52 +6,6 @@ from email_test import email_warning
 import threading
 
 
-def setup_logging(log_fileName):
-    logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s [%(levelname)s] - %(message)s"
-    )
-    cwd = os.getcwd()
-    file_handler = logging.FileHandler(os.path.join(cwd, log_fileName + ".log"))
-    file_handler.setLevel(logging.INFO)
-    file_formatter = logging.Formatter("%(asctime)s [%(levelname)s] - %(message)s")
-    file_handler.setFormatter(file_formatter)
-    #
-    logger = logging.getLogger()
-    # Remove existing file handlers
-    for handler in logger.handlers[:]:
-        if isinstance(handler, logging.FileHandler):
-            logger.removeHandler(handler)
-    # Add the file handler to the root logger
-    logger.addHandler(file_handler)
-
-
-def setup_csv(fileDateStr):
-    # if the file exists, do nothing
-    if os.path.exists(fileDateStr + ".csv"):
-        return
-    write_csv(fileDateStr, "Timestamp, Temperature (K), Temperature (C)\n")
-
-
-def write_csv(fileDateStr, writeline):
-    f = open_csv(fileDateStr)
-    f.write(writeline)
-    f.close()
-
-
-def open_csv(fileDateStr):
-    # Get the current working directory
-    cwd = os.getcwd()
-
-    # Build a file-name and the file path.
-    fileName = "%s.csv" % (fileDateStr)
-    filePath = os.path.join(cwd, fileName)
-
-    # Open the file and write a header line
-    f = open(filePath, "a")
-
-    return f
-
-
 # >>> paramters <<<
 pinName = "AIN0"
 record_interval = 10000  # in ms
