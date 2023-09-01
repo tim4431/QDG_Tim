@@ -131,7 +131,12 @@ def generate_gds_fileName(uuid, tether_typ: str = "empty"):
 
 
 def create_gds(uuid, tether_typ: str = "empty"):
-    from lib.grating.grating_tether import grating_tether, rect_tether, section_tether
+    from lib.grating.grating_tether import (
+        grating_tether,
+        rect_mask,
+        section_mask,
+        recipes,
+    )
 
     kwargs = load_json(uuid)
     paras = load_paras(uuid)
@@ -145,30 +150,21 @@ def create_gds(uuid, tether_typ: str = "empty"):
     ffH = paras[2]
     ff = paras[3]
     #
-    rect_para = (rect_tether, 40)
-    section_para = (section_tether, 24)
-    empty_para = (None, 24)
-    #
-    if tether_typ == "rect":
-        para = rect_para
-    elif tether_typ == "section":
-        para = section_para
-    elif tether_typ == "empty":
-        para = empty_para
-    else:
-        raise Exception("Unknown tether type")
+    para = recipes(tether_typ)
     c = grating_tether(
         N,
-        Lambda * 1e6,
+        Lambda,
         ff,
         ffL,
         ffH,
         NL,
         NH,
-        tether_func=para[0],
-        grating_angle=para[1],
+        mask_func=para[0],
+        tether_func=para[1],
+        grating_angle=para[2],
         start_radius=10,
         input_length=10,
+        suspend=False,
     )
     gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
     c.write_gds(gds_fileName)
@@ -178,35 +174,37 @@ def create_gds(uuid, tether_typ: str = "empty"):
 
 
 if __name__ == "__main__":
-    gds_fileName = create_gds("5e56", tether_typ="empty")
+    uuid = "5e56"
+    #
+    gds_fileName = create_gds(uuid, tether_typ="empty")
     print(gds_fileName)
     reload_work(
-        "5e56",
+        uuid,
         dimension="3D",
         tether_typ="empty",
         pause=False,
     )
     # #
-    # gds_fileName = create_gds("4cb4", tether_typ="rect")
+    # gds_fileName = create_gds(uuid, tether_typ="rect")
     # print(gds_fileName)
     # reload_work(
-    #     "4cb4",
+    #     uuid,
     #     dimension="3D",
     #     tether_typ="rect",
     #     pause=False,
     # )
     # #
-    # gds_fileName = create_gds("4cb4", tether_typ="section")
+    # gds_fileName = create_gds(uuid, tether_typ="section")
     # print(gds_fileName)
     # reload_work(
-    #     "4cb4",
+    #     uuid,
     #     dimension="3D",
     #     tether_typ="section",
     #     pause=False,
     # )
     # #
     # reload_work(
-    #     "4cb4",
+    #     uuid,
     #     dimension="2D",
     #     tether_typ=None,
     #     pause=False,
