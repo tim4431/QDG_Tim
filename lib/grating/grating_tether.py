@@ -2,9 +2,9 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-sys.path.append("..")
-from grating.subwavelength import subw_grating
-from grating.grating_concentric import (
+# sys.path.append("..")
+from .subwavelength import subw_grating
+from .grating_concentric import (
     grating_concentric_arc,
     grating_concentric_ellipse,
 )

@@ -133,8 +133,6 @@ def generate_gds_fileName(uuid, tether_typ: str = "empty"):
 def create_gds(uuid, tether_typ: str = "empty"):
     from lib.grating.grating_tether import (
         grating_tether,
-        rect_mask,
-        section_mask,
         recipes,
     )
 
