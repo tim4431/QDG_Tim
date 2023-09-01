@@ -178,14 +178,14 @@ def create_gds(uuid, tether_typ: str = "empty"):
 
 
 if __name__ == "__main__":
-    # gds_fileName = create_gds("4cb4", tether_typ="empty")
-    # print(gds_fileName)
-    # reload_work(
-    #     "4cb4",
-    #     dimension="3D",
-    #     tether_typ="empty",
-    #     pause=False,
-    # )
+    gds_fileName = create_gds("5e56", tether_typ="empty")
+    print(gds_fileName)
+    reload_work(
+        "5e56",
+        dimension="3D",
+        tether_typ="empty",
+        pause=False,
+    )
     # #
     # gds_fileName = create_gds("4cb4", tether_typ="rect")
     # print(gds_fileName)
@@ -205,9 +205,9 @@ if __name__ == "__main__":
     #     pause=False,
     # )
     # #
-    reload_work(
-        "4cb4",
-        dimension="2D",
-        tether_typ=None,
-        pause=False,
-    )
+    # reload_work(
+    #     "4cb4",
+    #     dimension="2D",
+    #     tether_typ=None,
+    #     pause=False,
+    # )
