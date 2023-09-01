@@ -7,8 +7,8 @@ def email_warning(temperature: float):
     from email.mime.text import MIMEText
 
     # Email configuration
-    sender_email = "quantumdevicesgroup@gmail.com"
-    receiver_email = "zsa2056197@hotmail.com"
+    sender_email = "quantumdevicesgroup@outlook.com"
+    receiver_email = "quantumdevicesgroup@outlook.com"
     subject = "QDG-Lab Temperature Warning: {:.1f} C".format(temperature)
     _, curTimeStr, _ = get_time_date()
     message = "{:s} - Temperature Warning: {:.1f} C".format(curTimeStr, temperature)
@@ -21,10 +21,9 @@ def email_warning(temperature: float):
     msg.attach(MIMEText(message, "plain"))
 
     # Connect to the SMTP server
-    smtp_server = "smtp-relay.gmail.com"  # Change this to your SMTP server
-    # smtp_server = "smtp.gmail.com"  # Change this to your SMTP server
+    smtp_server = "smtp.office365.com"  # Change this to your SMTP server
     smtp_port = 587  # Change this to the appropriate port
-    smtp_username = "quantumdevicesgroup@gmail.com"
+    smtp_username = "quantumdevicesgroup@outlook.com"
     smtp_password = "qdg373!!"
 
     try:
