@@ -61,7 +61,12 @@ def send_email(receiver_list: List, subject: str, msgstr: str, img_fileName=None
         if img_fileName is not None:
             with open(img_fileName, "rb") as fp:
                 img = MIMEImage(fp.read())
-            msg.attach(img)
+                # set attachment mime and file name, the image type is png
+                img["Content-Type"] = "application/octet-stream"
+                img["Content-Disposition"] = (
+                    "attachment; filename=" + img_fileName.split("/")[-1]
+                )
+                msg.attach(img)
 
         try:
             server = smtplib.SMTP(smtp_server, smtp_port)
