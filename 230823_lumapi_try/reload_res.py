@@ -59,7 +59,7 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False):
     ) as fdtd:
         try:
             setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension=dimension)
-            setup_monitor(fdtd, monitor=False)
+            setup_monitor(fdtd, monitor=True)
             #
             if tether_typ is not None:
                 gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
