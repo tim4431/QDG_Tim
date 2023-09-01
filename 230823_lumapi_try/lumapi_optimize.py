@@ -239,7 +239,7 @@ def optimize_wrapper(fdtd, paras, **kwargs):
         logger.info("lambda_maxT = {:.1f}".format(lambda_maxT * 1e9))
         logger.info("FWHM_fit = {:.1f}".format(FWHM_fit * 1e9))
         logger.info("FOM = {:.5f}".format(FOM))
-        logger.info("feature_size = {:.1f}".format(feature_size))
+        logger.info("feature_size = {:.1f}".format(feature_size * 1e9))
     #
     transmissionHist.append((l, T))
     parasHist.append(paras)
@@ -257,7 +257,9 @@ def optimize_wrapper(fdtd, paras, **kwargs):
         axs[0, 1].relim()
         axs[0, 1].autoscale_view()
         # twin axis to plot feature size
-        fig_feature_his.set_data(np.arange(len(featureHist)), featureHist)
+        fig_feature_his.set_data(
+            np.arange(len(featureHist)), np.asarray(featureHist) * 1e9
+        )
         axs[0, 2].relim()
         axs[0, 2].autoscale_view()
         #
@@ -468,7 +470,9 @@ def plot_result(transmission, FOMHist, featureHist, lambda0Hist, FWHMHist, dataN
     ax1.legend(loc="upper right")
     # add double y axis to record feature size
     ax1_2 = ax1.twinx()
-    ax1_2.plot(np.asarray(featureHist), color="orange", alpha=0.5, label="feature size")
+    ax1_2.plot(
+        np.asarray(featureHist) * 1e9, color="orange", alpha=0.5, label="feature size"
+    )
     ax1_2.set_ylabel("Feature size(nm)")
     ax1_2.legend(loc="lower right")
     #
