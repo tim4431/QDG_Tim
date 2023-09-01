@@ -307,6 +307,20 @@ def setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension="2D"):
         # because the definition of 2D source is different from 3D ver.
 
 
+def setup_monitor(fdtd, monitor=False, movie=False):
+    if monitor:
+        fdtd.setnamed("index_monitor", "enabled", 1)
+        fdtd.setnamed("field_monitor", "enabled", 1)
+    else:
+        fdtd.setnamed("index_monitor", "enabled", 0)
+        fdtd.setnamed("field_monitor", "enabled", 0)
+    #
+    if movie:
+        fdtd.setnamed("movie_monitor", "enabled", 1)
+    else:
+        fdtd.setnamed("movie_monitor", "enabled", 0)
+
+
 def load_template(dataName, SOURCE_typ, purpose=""):
     import lumapi  # type: ignore
 
@@ -387,6 +401,7 @@ def run_optimize(dataName, **kwagrs):
         }
 
         setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension="2D")
+        setup_monitor(fdtd, monitor=False, movie=False)
         paras = opt.minimize(
             lambda para: optimize_wrapper(fdtd, para, **kwargs1),
             paras,

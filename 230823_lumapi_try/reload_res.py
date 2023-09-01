@@ -1,9 +1,9 @@
 from lumapi_optimize import (
     getdataName,
     setup_source,
+    setup_monitor,
     fdtd_iter,
     load_template,
-    optimize_wrapper,
 )
 import numpy as np
 from json_uuid import load_json, save_json, uuid_to_logname, uuid_to_wd
@@ -18,20 +18,6 @@ sys.path.append("..")
 def load_paras(uuid):
     dataName = getdataName(uuid)
     return np.loadtxt(dataName + "_paras.txt")
-
-
-def setup_monitor(fdtd, monitor=False, movie=False):
-    if monitor:
-        fdtd.setnamed("index_monitor", "enabled", 1)
-        fdtd.setnamed("field_monitor", "enabled", 1)
-    else:
-        fdtd.setnamed("index_monitor", "enabled", 0)
-        fdtd.setnamed("field_monitor", "enabled", 0)
-    #
-    if movie:
-        fdtd.setnamed("movie_monitor", "enabled", 1)
-    else:
-        fdtd.setnamed("movie_monitor", "enabled", 0)
 
 
 def reload_work(uuid, dimension="2D", tether_typ=None, pause=False):
