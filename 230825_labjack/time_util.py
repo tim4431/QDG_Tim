@@ -1,7 +1,7 @@
 import datetime
 
 
-TIME_STAMP_FORMAT = "%Y-%m-%d %I:%M:%S"  # year-month-day hour:minute:second.microsecond
+TIME_STAMP_FORMAT = "%Y-%m-%d %H:%M:%S"  # year-month-day hour:minute:second.microsecond
 DATE_FORMAT = "%Y-%m-%d"
 
 
