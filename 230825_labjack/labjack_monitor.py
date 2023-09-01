@@ -2,13 +2,12 @@ from labjack import ljm
 import logging
 import os
 from time_util import *
-from email_test import email_warning
+from email_test import temp_warning, schedule_report
 import threading
-
+from load_data import plot_data
 
 # >>> paramters <<<
 pinName = "AIN0"
-record_interval = 10000  # in ms
 
 #
 _, fileTimeStr, fileDateStr = get_time_date()
@@ -40,6 +39,13 @@ while 1:
     # Get and format a timestamp
     curtime, curTimeStr, curDateStr = get_time_date()
     if curDateStr != fileDateStr:
+        # report yesterday's data
+        img_fileName = plot_data(fileDateStr, span="1D")
+        # create another thread to send email
+        threading.Thread(
+            target=schedule_report, args=(fileDateStr, img_fileName)
+        ).start()
+        #
         fileDateStr = curDateStr
         setup_logging(fileDateStr)
         setup_csv(fileDateStr)
@@ -52,13 +58,19 @@ while 1:
     tempertureK = 100.0 * result
     tempertureC = tempertureK - 273.15
 
-    if tempertureC > 29:
+    if tempertureC > TEMPERATURE_THRESHOLD:
         # if last warning is more than 5 minutes ago
-        if lastWarning is None or (curtime - lastWarning).total_seconds() > 60:
+        if (
+            lastWarning is None
+            or (curtime - lastWarning).total_seconds() > ALERT_INTERVAL_S
+        ):
             logging.info("Temperature Warning: %0.1f C" % (tempertureC))
             lastWarning = curtime
+            img_fileName = plot_data(fileDateStr, span="1H")
             # create another thread to send email
-            threading.Thread(target=email_warning, args=(tempertureC,)).start()
+            threading.Thread(
+                target=temp_warning, args=(tempertureC, img_fileName)
+            ).start()
 
     # Write the results to file
     write_csv(

@@ -32,6 +32,14 @@ def plot_data(fileDateStr, span: str = "1D"):
         color="b",
         label="Temperature (°C)",
     )
+    # add a horizontal line at 26 C
+    plt.axhline(
+        y=TEMPERATURE_THRESHOLD,
+        color="r",
+        linestyle="--",
+        label="Threshold ({:d} °C)".format(TEMPERATURE_THRESHOLD),
+    )
+    #
     plt.xlabel("Timestamp")
     plt.ylabel("Temperature (°C)")
     plt.title("Temperature vs. Time")
