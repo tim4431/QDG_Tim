@@ -58,6 +58,12 @@ while 1:
     tempertureK = 100.0 * result
     tempertureC = tempertureK - 273.15
 
+    # Write the results to file
+    write_csv(
+        fileDateStr, "%s, %0.1f, %0.1f\n" % (curTimeStr, tempertureK, tempertureC)
+    )
+    logging.info("Temperature: %0.1f C" % (tempertureC))
+
     if tempertureC > TEMPERATURE_THRESHOLD:
         # if last warning is more than 5 minutes ago
         if (
@@ -71,12 +77,6 @@ while 1:
             threading.Thread(
                 target=temp_warning, args=(tempertureC, img_fileName)
             ).start()
-
-    # Write the results to file
-    write_csv(
-        fileDateStr, "%s, %0.1f, %0.1f\n" % (curTimeStr, tempertureK, tempertureC)
-    )
-    logging.info("Temperature: %0.1f C" % (tempertureC))
 
 
 _, endTimeStr, _ = get_time_date()
