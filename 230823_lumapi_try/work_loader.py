@@ -179,7 +179,7 @@ if __name__ == "__main__":
         "N": 10,
         "NL": 2,
         "NH": 2,
-        "maxiter": 90,
+        "maxiter": 120,
         "MIN_FEATURE_SIZE": 40.0,
         "FOM_typ": "square",
         "SOURCE_typ": "gaussian_released",
