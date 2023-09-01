@@ -4,7 +4,7 @@ import os
 
 TIME_STAMP_FORMAT = "%Y-%m-%d %H:%M:%S"  # year-month-day hour:minute:second.microsecond
 DATE_FORMAT = "%Y-%m-%d"
-RECORD_INTERVAL_S = 30  # in s
+RECORD_INTERVAL_S = 10  # in s
 ALERT_INTERVAL_S = 60 * 5  # in s
 TEMPERATURE_THRESHOLD = 26  # in C
 record_interval = RECORD_INTERVAL_S * 1000  # in ms

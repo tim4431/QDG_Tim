@@ -17,7 +17,8 @@ def load_data(fileDateStr, span: str = "1D"):
     if span == "1D":
         return timedata, tempdata
     elif span == "1H":
-        return timedata.tail(6 * 60), tempdata.tail(6 * 60)
+        length = int(3600 / RECORD_INTERVAL_S)
+        return timedata.tail(length), tempdata.tail(length)
 
 
 def plot_data(fileDateStr, span: str = "1D"):
