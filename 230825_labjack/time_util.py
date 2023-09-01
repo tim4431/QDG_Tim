@@ -36,7 +36,9 @@ def setup_csv(fileDateStr):
     # if the file exists, do nothing
     if os.path.exists(fileDateStr + ".csv"):
         return
-    write_csv(fileDateStr, "Timestamp, Temperature (K), Temperature (C)\n")
+    write_csv(
+        fileDateStr, "Timestamp,Temperature (K),Temperature (C)\n"
+    )  # no trailing white space
 
 
 def write_csv(fileDateStr, writeline):
