@@ -17,12 +17,12 @@ notice_email_list = [EMAIL_SELF, EMAIL_SLACK]
 def temp_warning(temperature: float, img_fileName=None):
     # Email configuration
     _, curTimeStr, _ = get_time_date()
-    subject = "[TEST] QDG-Lab temperature Warning: {:.1f} C".format(temperature)
+    subject = "[Warning] QDG-Lab temperature: {:.1f} C".format(temperature)
     message = (
         "{:s} - Cooling water temperature Warning: {:.1f} C\n".format(
             curTimeStr, temperature
         )
-        + "This is an email for testing"
+        # + "This is an email for testing"
     )
     send_email(
         emergency_email_list, subject=subject, msgstr=message, img_fileName=img_fileName
@@ -30,10 +30,10 @@ def temp_warning(temperature: float, img_fileName=None):
 
 
 def schedule_report(dateStr: str, img_fileName=None):
-    subject = "[TEST] QDG-Lab temperature schedule report: {:s}".format(dateStr)
+    subject = "[Schedule] QDG-Lab temperature: {:s}".format(dateStr)
     message = (
         "{:s} - Cooling water temperature schedule report:\n".format(dateStr)
-        + "This is an email for testing"
+        # + "This is an email for testing"
     )
     send_email(
         notice_email_list, subject=subject, msgstr=message, img_fileName=img_fileName
@@ -75,10 +75,14 @@ def send_email(receiver_list: List, subject: str, msgstr: str, img_fileName=None
 
             # Send the email
             server.sendmail(sender_email, receiver_email, msg.as_string())
-            print("Email sent successfully!")
+            logging.info("To {:s}, Email sent successfully!".format(receiver_email))
 
         except Exception as e:
-            print(f"An error occurred: {str(e)}")
+            logging.error(
+                "To {:s}, Email failed to send! Error {:s}".format(
+                    receiver_email, str(e)
+                )
+            )
 
         finally:
             server.quit()  # type: ignore
