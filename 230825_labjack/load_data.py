@@ -1,5 +1,8 @@
 from time_util import *
 import csv
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime
 
 
 def load_data(fileDateStr):
@@ -7,23 +10,36 @@ def load_data(fileDateStr):
     # before curtime, up to 1 hour
     # return a list of data
 
-    csv_file = open_csv(fileDateStr)
-    csv_reader = csv.DictReader(csv_file)
-    #
-    # time at col 1
-    # temperature at col 3
-    timedata = []
-    tempdata = []
-    for row in csv_reader:
-        timedata.append(row["Timestamp"])
-        tempdata.append(row["Temperature (C)"])
-    csv_file.close()
-    #
-    return timedata, tempdata
+    data = pd.read_csv(fileDateStr + ".csv", parse_dates=["Timestamp"])
+    # Convert Temperature (C) to Fahrenheit for plotting (optional)
+    # data["Temperature (F)"] = (data["Temperature (C)"] * 9 / 5) + 32
+    return data["Timestamp"], data["Temperature (C)"]
+
+
+def plot_data(fileDateStr):
+    timedata, tempdata = load_data(fileDateStr)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(
+        timedata,
+        tempdata,
+        marker="o",
+        linestyle="-",
+        color="b",
+        label="Temperature (°C)",
+    )
+    plt.xlabel("Timestamp")
+    plt.ylabel("Temperature (°C)")
+    plt.title("Temperature vs. Time")
+    plt.legend()
+    plt.grid(True)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    # Show the plot
+    plt.show()
 
 
 if __name__ == "__main__":
     _, _, fileDateStr = get_time_date()
-    timedata, tempdata = load_data(fileDateStr)
-    print(timedata)
-    print(tempdata)
+    plot_data(fileDateStr)
