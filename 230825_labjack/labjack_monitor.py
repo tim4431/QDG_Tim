@@ -3,6 +3,7 @@ import logging
 import os
 from time_util import *
 from email_test import email_warning
+import threading
 
 
 def setup_logging(log_fileName):
@@ -99,10 +100,11 @@ while 1:
 
     if tempertureC > 29:
         # if last warning is more than 5 minutes ago
-        if lastWarning is None or (curtime - lastWarning).total_seconds() > 300:
+        if lastWarning is None or (curtime - lastWarning).total_seconds() > 60:
             logging.info("Temperature Warning: %0.1f C" % (tempertureC))
-            email_warning(tempertureC)
             lastWarning = curtime
+            # create another thread to send email
+            threading.Thread(target=email_warning, args=(tempertureC,)).start()
 
     # Write the results to file
     write_csv(
