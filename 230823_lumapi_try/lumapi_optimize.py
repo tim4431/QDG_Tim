@@ -208,7 +208,7 @@ def optimize_wrapper(fdtd, paras, **kwargs):
     # Feature size penalty
     NL = kwargs.get("NL", DEFAULT_PARA["NL"])
     NH = kwargs.get("NH", DEFAULT_PARA["NH"])
-    feature_size = calc_min_feature(paras, NL, NH) * 1e9
+    feature_size = calc_min_feature(paras, NL, NH)
     MIN_FEATURE_SIZE = kwargs.get("MIN_FEATURE_SIZE", DEFAULT_PARA["MIN_FEATURE_SIZE"])
     feature_size_penalty = (
         0.3
@@ -326,8 +326,8 @@ def run_optimize(dataName, **kwagrs):
         paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6])
         paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6])
     elif SOURCE_typ == "gaussian_released":
-        paras_min = np.array([1.0e-6, 0.02, 0.5, 0.3, 11e-6])
-        paras_max = np.array([1.4e-6, 0.40, 0.98, 0.7, 19e-6])
+        paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 11e-6])
+        paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 19e-6])
     elif SOURCE_typ == "fiber":
         paras_min = np.array([0.7e-6, 0.1, 0.3, 0.3, 12e-6])
         paras_max = np.array([1.0e-6, 0.4, 0.8, 0.6, 18e-6])
