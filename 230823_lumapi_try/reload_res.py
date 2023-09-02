@@ -162,31 +162,21 @@ if __name__ == "__main__":
     uuid = "866f"
 
     #
-    gds_fileName = create_gds(uuid, tether_typ="section")
-    print(gds_fileName)
-    # reload_work(
-    #     uuid,
-    #     dimension="3D",
-    #     tether_typ="section_rect",
-    #     pause=False,
-    # )
-    #    #
     # gds_fileName = create_gds(uuid, tether_typ="empty")
     # print(gds_fileName)
-    # reload_work(
-    #     uuid,
-    #     dimension="3D",
-    #     tether_typ="empty",
-    #     pause=False,
-    # )
-    # gds_fileName = create_gds(uuid, tether_typ="section")
-    # print(gds_fileName)
-    # reload_work(
-    #     uuid,
-    #     dimension="3D",
-    #     tether_typ="section",
-    #     pause=False,
-    # )
+    reload_work(
+        uuid,
+        dimension="3D",
+        tether_typ="section_rect",
+        pause=False,
+    )
+    #
+    reload_work(
+        uuid,
+        dimension="3D",
+        tether_typ="empty",
+        pause=False,
+    )
     # #
     # reload_work(
     #     uuid,
