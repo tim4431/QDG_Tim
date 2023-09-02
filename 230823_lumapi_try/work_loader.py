@@ -213,6 +213,35 @@ if __name__ == "__main__":
         "SOURCE_typ": "gaussian_released",
         "start_radius": 12e-6,
     }
+    work11_linear = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 9,
+        "NL": 2,
+        "NH": 2,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "linear",
+        "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
+    }
+    work11_sq_linear = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.01, 100e-9]],
+        "N": 9,
+        "NL": 2,
+        "NH": 2,
+        "maxiter": 100,
+        "paras_init": "4e25",
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "linear",
+        "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
+    }
     work11_5 = {
         "lambda_0": 1.326e-6,
         "FWHM": 80e-9,
@@ -307,7 +336,7 @@ if __name__ == "__main__":
 if __name__ == "__main__":
     works_test = [work0]
     # works = [work1, work2, work3]
-    works = [work9, work10, work11, work11_5, work12, work13, work14, work15, work16]
-    # works = [work15]
-    work_loader(works, prefix="start_radius_12_para_sweep")
+    # works = [work9, work10, work11, work11_5, work12, work13, work14, work15, work16]
+    works = [work11_linear, work11_sq_linear]
+    work_loader(works, prefix="sq_linear")
     # work_loader(works_test)

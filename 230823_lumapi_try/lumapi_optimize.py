@@ -43,6 +43,11 @@ def process_data(fdtd, SOURCE_typ):
     return l, T
 
 
+def load_paras(uuid):
+    dataName = getdataName(uuid)
+    return np.loadtxt(dataName + "_paras.txt")
+
+
 def analysis_FOM(l, T, **kwargs):
     # >>> useful functions <<< #
     def _find(l, val):
@@ -116,7 +121,7 @@ def analysis_FOM(l, T, **kwargs):
         # T_c1 = _data_crop(l, T, lambda_0, FWHM)
         # mean_CE = _mean_CE(T_c1)
         # print(mean_CE)
-        FOM = float(norm_T * (FWHM_fit / FWHM))
+        FOM = float(norm_T * (FWHM / FWHM_fit))
         # FWHM_range = 30e-9
         # FOM = float(maxT * FWHM_range / (FWHM_range + np.abs(FWHM_fit - FWHM)))
         # FOM = float(((T_div + alpha) ** 0.2) * norm_cross_correlation)
@@ -359,7 +364,10 @@ def run_optimize(dataName, **kwagrs):
     # initialize the paras
     paras_init = kwagrs.get("paras_init", DEFAULT_PARA["paras_init"])
     if paras_init is not None:
-        paras = paras_init
+        if isinstance(paras_init, str):  # uuid
+            paras = load_paras(paras_init)
+        else:  # np.ndarray
+            paras = np.asarray(paras_init)
     else:
         # paras = np.random.uniform(paras_min, paras_max)
         paras = (paras_min + paras_max) / 2

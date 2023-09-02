@@ -4,6 +4,7 @@ from lumapi_optimize import (
     setup_monitor,
     fdtd_iter,
     load_template,
+    load_paras,
 )
 import numpy as np
 from json_uuid import load_json, save_json, uuid_to_logname, uuid_to_wd
@@ -13,11 +14,6 @@ import os
 import matplotlib.pyplot as plt
 
 sys.path.append("..")
-
-
-def load_paras(uuid):
-    dataName = getdataName(uuid)
-    return np.loadtxt(dataName + "_paras.txt")
 
 
 def reload_work(uuid, dimension="2D", tether_typ=None, pause=False):
