@@ -155,28 +155,28 @@ def create_gds(uuid, tether_typ: str = "empty"):
 
 
 if __name__ == "__main__":
-    uuid = "866f"
+    uuid = "2ed3"
 
     #
     # gds_fileName = create_gds(uuid, tether_typ="empty")
     # print(gds_fileName)
-    reload_work(
-        uuid,
-        dimension="3D",
-        tether_typ="section_rect",
-        pause=False,
-    )
+    # reload_work(
+    #     uuid,
+    #     dimension="3D",
+    #     tether_typ="section_rect",
+    #     pause=False,
+    # )
+    #
+    # reload_work(
+    #     uuid,
+    #     dimension="3D",
+    #     tether_typ="empty",
+    #     pause=False,
+    # )
     #
     reload_work(
         uuid,
-        dimension="3D",
-        tether_typ="empty",
-        pause=False,
+        dimension="2D",
+        tether_typ=None,
+        pause=True,
     )
-    # #
-    # reload_work(
-    #     uuid,
-    #     dimension="2D",
-    #     tether_typ=None,
-    #     pause=False,
-    # )
