@@ -147,7 +147,7 @@ def create_gds(uuid, tether_typ: str = "empty"):
         mask_func=para[0],
         tether_func=para[1],
         grating_angle=para[2],
-        start_radius=start_radius,
+        start_radius=start_radius * 1e6,
         input_length=10,
         suspend=False,
     )
