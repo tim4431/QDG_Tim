@@ -176,45 +176,18 @@ if __name__ == "__main__":
         "FWHM": 20e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
-        "N": 10,
+        "N": 9,
         "NL": 2,
         "NH": 2,
         "maxiter": 100,
         "MIN_FEATURE_SIZE": 40e-9,
         "FOM_typ": "square",
         "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
     }
     work10 = {
         "lambda_0": 1.326e-6,
-        "FWHM": 40e-9,
-        "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
-        "N": 10,
-        "NL": 2,
-        "NH": 2,
-        "maxiter": 100,
-        "MIN_FEATURE_SIZE": 40e-9,
-        "FOM_typ": "square",
-        "SOURCE_typ": "gaussian_released",
-    }
-    work11 = {
-        "lambda_0": 1.326e-6,
-        "FWHM": 60e-9,
-        "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
-        "N": 10,
-        "NL": 2,
-        "NH": 2,
-        "maxiter": 100,
-        "MIN_FEATURE_SIZE": 40e-9,
-        "FOM_typ": "square",
-        "SOURCE_typ": "gaussian_released",
-    }
-
-    # >>> square, sweep N
-    work12 = {
-        "lambda_0": 1.326e-6,
-        "FWHM": 60e-9,
+        "FWHM": 30e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
         "N": 9,
@@ -224,39 +197,25 @@ if __name__ == "__main__":
         "MIN_FEATURE_SIZE": 40e-9,
         "FOM_typ": "square",
         "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
     }
-    work13 = {
+    work11 = {
         "lambda_0": 1.326e-6,
-        "FWHM": 60e-9,
+        "FWHM": 40e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
-        "N": 8,
+        "N": 9,
         "NL": 2,
         "NH": 2,
         "maxiter": 100,
         "MIN_FEATURE_SIZE": 40e-9,
         "FOM_typ": "square",
         "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
     }
-
-    # >>> square, sweep NL, NH
-    work14 = {
+    work11_5 = {
         "lambda_0": 1.326e-6,
-        "FWHM": 60e-9,
-        "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
-        "N": 10,
-        "NL": 1,
-        "NH": 1,
-        "maxiter": 100,
-        "MIN_FEATURE_SIZE": 40e-9,
-        "FOM_typ": "square",
-        "SOURCE_typ": "gaussian_released",
-    }
-    #
-    work15 = {
-        "lambda_0": 1.326e-6,
-        "FWHM": 60e-9,
+        "FWHM": 80e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
         "N": 9,
@@ -269,11 +228,86 @@ if __name__ == "__main__":
         "start_radius": 12e-6,
     }
 
+    # >>> square, sweep N
+    work12 = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 8,
+        "NL": 2,
+        "NH": 2,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
+    }
+    work13 = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 7,
+        "NL": 2,
+        "NH": 2,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
+    }
+
+    # >>> square, sweep NL, NH
+    work14 = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 9,
+        "NL": 1,
+        "NH": 1,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
+    }
+    work15 = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 60e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 8,
+        "NL": 1,
+        "NH": 1,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
+    }
+    work16 = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 80e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 7,
+        "NL": 1,
+        "NH": 1,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
+    }
+    #
+
 
 if __name__ == "__main__":
     works_test = [work0]
     # works = [work1, work2, work3]
-    # works = [work9, work10, work11, work12, work13, work14]
-    works = [work15]
-    work_loader(works, prefix="start_radius_12")
+    works = [work9, work10, work11, work11_5, work12, work13, work14, work15, work16]
+    # works = [work15]
+    work_loader(works, prefix="start_radius_12_para_sweep")
     # work_loader(works_test)
