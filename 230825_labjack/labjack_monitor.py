@@ -58,11 +58,14 @@ while 1:
     tempertureK = 100.0 * result
     tempertureC = tempertureK - 273.15
 
-    # Write the results to file
-    write_csv(
-        fileDateStr, "%s, %0.1f, %0.1f\n" % (curTimeStr, tempertureK, tempertureC)
-    )
     logging.info("Temperature: %0.1f C" % (tempertureC))
+    if tempertureC < 0 or tempertureC > 50:
+        logging.warning("Temperature out of range: %0.1f C" % (tempertureC))
+    else:
+        # Write the results to file
+        write_csv(
+            fileDateStr, "%s, %0.1f, %0.1f\n" % (curTimeStr, tempertureK, tempertureC)
+        )
 
     if tempertureC > TEMPERATURE_THRESHOLD:
         # if last warning is more than 5 minutes ago
