@@ -128,6 +128,7 @@ def create_gds(uuid, tether_typ: str = "empty"):
     N = kwargs.get("N", DEFAULT_PARA["N"])
     NL = kwargs.get("NL", DEFAULT_PARA["NL"])
     NH = kwargs.get("NH", DEFAULT_PARA["NH"])
+    start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
     #
     Lambda = paras[0]
     ffL = paras[1]
@@ -146,7 +147,7 @@ def create_gds(uuid, tether_typ: str = "empty"):
         mask_func=para[0],
         tether_func=para[1],
         grating_angle=para[2],
-        start_radius=10,
+        start_radius=start_radius,
         input_length=10,
         suspend=False,
     )
