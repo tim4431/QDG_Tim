@@ -345,7 +345,7 @@ def recipes(tether_typ: str) -> tuple:
         return (section_mask, None, 24)
     elif tether_typ == "empty":
         return (None, None, 24)
-    elif tether_typ == "section_rect":
+    elif tether_typ == "section_tether":
         return (section_mask, section_tether, 24)
     else:
         return (None, None, None)
@@ -361,7 +361,7 @@ if __name__ == "__main__":
     NH = 2
     N = 10
     #
-    para = recipes("section_rect")
+    para = recipes("section_tether")
     c = grating_tether(
         N,
         Lambda,

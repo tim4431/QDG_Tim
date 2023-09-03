@@ -163,7 +163,7 @@ if __name__ == "__main__":
     # reload_work(
     #     uuid,
     #     dimension="3D",
-    #     tether_typ="section_rect",
+    #     tether_typ="section_tether",
     #     pause=False,
     # )
     #
@@ -174,10 +174,4 @@ if __name__ == "__main__":
     #     pause=False,
     # )
     #
-    reload_work(
-        uuid,
-        dimension="2D",
-        tether_typ=None,
-        pause=True,
-        monitor=False
-    )
+    reload_work(uuid, dimension="2D", tether_typ=None, pause=True, monitor=False)
