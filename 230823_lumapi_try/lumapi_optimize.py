@@ -7,7 +7,7 @@ from matplotlib.gridspec import GridSpec
 
 sys.path.append("..")
 from lib.gaussian.gaussian_fit_1d import arb_fit_1d
-from json_uuid import load_json, uuid_to_wd
+from json_uuid import load_json, uuid_to_wd, load_paras, getdataName
 
 # add lumerical api path
 pathList = [
@@ -41,11 +41,6 @@ def process_data(fdtd, SOURCE_typ):
     T = T[idx]
     #
     return l, T
-
-
-def load_paras(uuid):
-    dataName = getdataName(uuid)
-    return np.loadtxt(dataName + "_paras.txt")
 
 
 def analysis_FOM(l, T, **kwargs):
@@ -351,21 +346,21 @@ def run_optimize(dataName, **kwagrs):
     maxiter = kwagrs.get("maxiter", DEFAULT_PARA["maxiter"])
     #
     if SOURCE_typ == "gaussian_packaged":
-        paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6])
-        paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6])
+        paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
+        paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6], dtype=np.float_)
     elif SOURCE_typ == "gaussian_released":
         NL = kwagrs.get("NL", DEFAULT_PARA["NL"])
         NH = kwagrs.get("NH", DEFAULT_PARA["NH"])
         if NL == 2 and NH == 2:
-            paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6])
-            paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6])
+            paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6], dtype=np.float_)
+            paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6], dtype=np.float_)
         else:
-            paras_min = np.array([0.6e-6, 0.00, 0.3, 0.2, 10e-6])
-            paras_max = np.array([1.5e-6, 0.5, 0.95, 0.8, 22e-6])
+            paras_min = np.array([0.6e-6, 0.00, 0.3, 0.2, 10e-6], dtype=np.float_)
+            paras_max = np.array([1.5e-6, 0.5, 0.95, 0.8, 22e-6], dtype=np.float_)
 
     elif SOURCE_typ == "fiber":
-        paras_min = np.array([0.7e-6, 0.1, 0.3, 0.3, 12e-6])
-        paras_max = np.array([1.0e-6, 0.4, 0.8, 0.6, 18e-6])
+        paras_min = np.array([0.7e-6, 0.1, 0.3, 0.3, 12e-6], dtype=np.float_)
+        paras_max = np.array([1.0e-6, 0.4, 0.8, 0.6, 18e-6], dtype=np.float_)
     else:
         raise ValueError("Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
     # initialize the paras
@@ -530,19 +525,6 @@ def plot_result(transmission, FOMHist, featureHist, lambda0Hist, FWHMHist, dataN
 #         print(e)
 #         return dataName
 #     #
-
-
-def getdataName(uuid):
-    data = load_json(uuid)
-    lambda_0 = data.get("lambda_0", None)
-    FWHM = data.get("FWHM", None)
-    assert (lambda_0 is not None) and (
-        FWHM is not None
-    ), "lambda_0 and FWHM must be specified"
-    #
-    dataName = "{:s}_{:.1f}_bw={:.1f}".format(uuid, lambda_0 * 1e9, FWHM * 1e9)
-    wd = uuid_to_wd(uuid)
-    return os.path.join(wd, dataName)
 
 
 def load_work(uuid, logger):
