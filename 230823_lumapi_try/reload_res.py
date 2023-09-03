@@ -82,7 +82,7 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
                         dataName, str(tether_typ), dimension
                     ),
                     bbox_inches="tight",
-                    dpi=300,
+                    dpi=100,
                 )
                 plt.close()
             except Exception as e:

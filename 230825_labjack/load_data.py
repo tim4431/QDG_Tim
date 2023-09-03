@@ -54,7 +54,7 @@ def plot_data(fileDateStr, span: str = "1D"):
         plt.savefig(
             img_fileName,
             bbox_inches="tight",
-            dpi=300,
+            dpi=100,
         )
         logging.info("Image saved")
     except Exception as e:

@@ -496,7 +496,7 @@ def plot_result(transmission, FOMHist, featureHist, lambda0Hist, FWHMHist, dataN
     ax2_2.set_ylabel("FWHM(nm)")
     ax2_2.legend(loc="lower right")
     #
-    plt.savefig("{:s}_result.png".format(dataName), dpi=300, bbox_inches="tight")
+    plt.savefig("{:s}_result.png".format(dataName), dpi=200, bbox_inches="tight")
     #
 
 
