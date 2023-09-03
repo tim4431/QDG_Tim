@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 sys.path.append("..")
 
 
-def reload_work(uuid, dimension="2D", tether_typ=None, pause=False):
+def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True):
     dataName = getdataName(uuid)
     kwargs = load_json(uuid)
     kwargs["plot"] = False
@@ -41,7 +41,7 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False):
     ) as fdtd:
         try:
             setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension=dimension)
-            setup_monitor(fdtd, monitor=True)
+            setup_monitor(fdtd, monitor=monitor, movie=False)
             #
             if tether_typ is not None:
                 gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
@@ -155,28 +155,28 @@ def create_gds(uuid, tether_typ: str = "empty"):
 
 
 if __name__ == "__main__":
-    uuid = "866f"
+    uuid = "2ed3"
 
     #
     # gds_fileName = create_gds(uuid, tether_typ="empty")
     # print(gds_fileName)
-    reload_work(
-        uuid,
-        dimension="3D",
-        tether_typ="section_rect",
-        pause=False,
-    )
+    # reload_work(
+    #     uuid,
+    #     dimension="3D",
+    #     tether_typ="section_rect",
+    #     pause=False,
+    # )
+    #
+    # reload_work(
+    #     uuid,
+    #     dimension="3D",
+    #     tether_typ="empty",
+    #     pause=False,
+    # )
     #
     reload_work(
         uuid,
-        dimension="3D",
-        tether_typ="empty",
-        pause=False,
+        dimension="2D",
+        tether_typ=None,
+        pause=True,
     )
-    # #
-    # reload_work(
-    #     uuid,
-    #     dimension="2D",
-    #     tether_typ=None,
-    #     pause=False,
-    # )
