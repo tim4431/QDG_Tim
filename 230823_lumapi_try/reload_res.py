@@ -99,23 +99,26 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
 
 
 if __name__ == "__main__":
-    uuid = "2ed3"
+    uuid = "4e25"
 
     #
-    # gds_fileName = create_gds(uuid, tether_typ="empty")
-    # print(gds_fileName)
-    # reload_work(
-    #     uuid,
-    #     dimension="3D",
-    #     tether_typ="section_tether",
-    #     pause=False,
-    # )
+    reload_work(
+        uuid,
+        dimension="3D",
+        tether_typ="empty",
+        pause=False,
+    )
     #
-    # reload_work(
-    #     uuid,
-    #     dimension="3D",
-    #     tether_typ="empty",
-    #     pause=False,
-    # )
+    reload_work(
+        uuid,
+        dimension="3D",
+        tether_typ="section_tether",
+        pause=False,
+    )
     #
-    reload_work(uuid, dimension="2D", tether_typ=None, pause=True, monitor=False)
+    reload_work(
+        uuid,
+        dimension="3D",
+        tether_typ="section_rect_tether",
+        pause=False,
+    )
