@@ -56,7 +56,7 @@ def work_loader(workList, prefix):
                 try:
                     os.rmdir(uuid_to_wd(uuid))
                 except Exception as e:
-                    loader_logger.error("Error in deleting uuid: " + str(uuid) + e)
+                    loader_logger.error("Error in deleting uuid: " + str(uuid) + str(e))
 
     # >>> end <<<
     loader_logger.info("Work loader end")
@@ -256,8 +256,8 @@ if __name__ == "__main__":
         "start_radius": 12e-6,
     }
 
-if __name__ == "__main__":
-    works_test = [work0]
+if __name__ == "__main__":  # type: ignore
+    works_test = [work0]  # type: ignore
     # works = [work1, work2, work3]
     # works = [work9, work10, work11, work11_5, work12, work13, work14, work15, work16]
     works = [work9,work10,work11,work12,work13,work14]

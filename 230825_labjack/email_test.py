@@ -10,7 +10,8 @@ EMAIL_SLACK_MONITOR = (
     "qdglab-monitor-aaaakuknki5idmca7uehje3bpq@quantumdevicesgroup.slack.com"
 )
 EMAIL_SLACK_GENERAL = "general-aaaadgmklzajn2v73ykaooqrci@quantumdevicesgroup.slack.com"
-EMAIL_GROUP = " quantumdevices@lists.berkeley.edu"
+EMAIL_GROUP = "quantumdevices@lists.berkeley.edu"
+#
 emergency_email_list = [
     EMAIL_SELF,
     EMAIL_SLACK_MONITOR,

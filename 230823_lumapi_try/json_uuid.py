@@ -4,6 +4,7 @@ import uuid
 from copy import deepcopy
 import os
 from const_var import DEFAULT_PARA
+import numpy as np
 
 
 def _generate_uuid(data):
@@ -59,6 +60,24 @@ def load_json(uuid):
                 raise ValueError("uuid is not correct, file is modified")
             data.pop("uuid")
         return data
+
+
+def getdataName(uuid):
+    data = load_json(uuid)
+    lambda_0 = data.get("lambda_0", None)
+    FWHM = data.get("FWHM", None)
+    assert (lambda_0 is not None) and (
+        FWHM is not None
+    ), "lambda_0 and FWHM must be specified"
+    #
+    dataName = "{:s}_{:.1f}_bw={:.1f}".format(uuid, lambda_0 * 1e9, FWHM * 1e9)
+    wd = uuid_to_wd(uuid)
+    return os.path.join(wd, dataName)
+
+
+def load_paras(uuid):
+    dataName = getdataName(uuid)
+    return np.loadtxt(dataName + "_paras.txt")
 
 
 if __name__ == "__main__":

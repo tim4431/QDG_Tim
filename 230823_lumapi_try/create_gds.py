@@ -1,8 +1,7 @@
-from json_uuid import load_json, save_json, uuid_to_logname, uuid_to_wd
+from json_uuid import load_json, uuid_to_wd, load_paras
 from const_var import DEFAULT_PARA
 import sys
 import os
-from lumapi_optimize import load_paras
 
 
 def generate_gds_fileName(uuid, tether_typ: str = "empty"):

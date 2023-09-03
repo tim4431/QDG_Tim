@@ -4,10 +4,9 @@ from lumapi_optimize import (
     setup_monitor,
     fdtd_iter,
     load_template,
-    load_paras,
 )
 import numpy as np
-from json_uuid import load_json, save_json, uuid_to_logname, uuid_to_wd
+from json_uuid import load_json, load_paras
 from const_var import DEFAULT_PARA
 import sys
 import os
