@@ -3,6 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # sys.path.append("..")
+# from grating.subwavelength import subw_grating
+# from grating.grating_concentric import (
+#     grating_concentric_arc,
+#     grating_concentric_ellipse,
+# )
+
 from .subwavelength import subw_grating
 from .grating_concentric import (
     grating_concentric_arc,
@@ -111,6 +117,7 @@ def section_mask(
     start_radius: float = 10,
     input_length: float = 10,
     patch_length: float = 5,
+    width_factor: float = 1,
 ):
     c = gf.Component()
     # construct
@@ -121,10 +128,10 @@ def section_mask(
     grating_length = section_length * np.cos(grating_angle * DEG2RAD)
     pts = [
         (0, 0),
-        (grating_length, -grating_width / 2),
-        (section_length, -grating_width / 2),
-        (section_length, grating_width / 2),
-        (grating_length, grating_width / 2),
+        (grating_length * width_factor, -grating_width * width_factor / 2),
+        (section_length, -grating_width * width_factor / 2),
+        (section_length, grating_width * width_factor / 2),
+        (grating_length * width_factor, grating_width * width_factor / 2),
         (0, 0),
     ]
     poly_ref = c.add_polygon(pts, layer="WG")
@@ -142,6 +149,9 @@ def section_mask(
     rect_ref.y = 0
     #
     return c
+
+
+section_rect_mask = gf.partial(section_mask, width_factor=0.8)
 
 
 @gf.cell
@@ -347,6 +357,8 @@ def recipes(tether_typ: str) -> tuple:
         return (None, None, 24)
     elif tether_typ == "section_tether":
         return (section_mask, section_tether, 24)
+    elif tether_typ == "section_rect_tether":
+        return (section_rect_mask, section_tether, 24)
     else:
         return (None, None, None)
 
@@ -361,7 +373,7 @@ if __name__ == "__main__":
     NH = 2
     N = 10
     #
-    para = recipes("section_tether")
+    para = recipes("section_rect_tether")
     c = grating_tether(
         N,
         Lambda,
