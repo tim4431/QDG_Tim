@@ -173,9 +173,9 @@ if __name__ == "__main__":
     # >>> square, sweep FWHM
     work9 = {
         "lambda_0": 1.326e-6,
-        "FWHM": 40e-9,
+        "FWHM": 100e-9,
         "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
         "N": 9,
         "NL": 2,
         "NH": 1,
@@ -187,9 +187,9 @@ if __name__ == "__main__":
     }
     work10 = {
         "lambda_0": 1.326e-6,
-        "FWHM": 40e-9,
+        "FWHM": 200e-9,
         "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
         "N": 9,
         "NL": 2,
         "NH": 1,
@@ -201,9 +201,9 @@ if __name__ == "__main__":
     }
     work11 = {
         "lambda_0": 1.326e-6,
-        "FWHM": 40e-9,
+        "FWHM": 100e-9,
         "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
         "N": 9,
         "NL": 1,
         "NH": 1,
@@ -215,9 +215,9 @@ if __name__ == "__main__":
     }
     work12 = {
         "lambda_0": 1.326e-6,
-        "FWHM": 60e-9,
+        "FWHM": 200e-9,
         "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
         "N": 9,
         "NL": 1,
         "NH": 1,
@@ -229,9 +229,9 @@ if __name__ == "__main__":
     }
     work13 = {
         "lambda_0": 1.326e-6,
-        "FWHM": 40e-9,
+        "FWHM": 150e-9,
         "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+       "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
         "N": 12,
         "NL": 1,
         "NH": 1,
@@ -243,9 +243,9 @@ if __name__ == "__main__":
     }
     work14 = {
         "lambda_0": 1.326e-6,
-        "FWHM": 40e-9,
+        "FWHM": 150e-9,
         "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
         "N": 15,
         "NL": 1,
         "NH": 1,
@@ -261,5 +261,5 @@ if __name__ == "__main__":
     # works = [work1, work2, work3]
     # works = [work9, work10, work11, work11_5, work12, work13, work14, work15, work16]
     works = [work9,work10,work11,work12,work13,work14]
-    work_loader(works, prefix="NL_NH_sweep")
+    work_loader(works, prefix="NL_NH_sweep_broad")
     # work_loader(works_test)
