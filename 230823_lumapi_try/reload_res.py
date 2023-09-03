@@ -179,4 +179,5 @@ if __name__ == "__main__":
         dimension="2D",
         tether_typ=None,
         pause=True,
+        monitor=False
     )
