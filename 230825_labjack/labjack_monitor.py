@@ -1,4 +1,4 @@
-from labjack import ljm
+from labjack import ljm  # type: ignore
 import logging
 import os
 from time_util import *
@@ -6,8 +6,6 @@ from email_test import temp_warning, schedule_report
 import threading
 from load_data import plot_data
 
-# >>> paramters <<<
-pinName = "AIN0"
 
 #
 _, fileTimeStr, fileDateStr = get_time_date()
