@@ -27,7 +27,7 @@ def setup_grating_structuregroup(fdtd, grating_typ):
 
 
 with lumapi.FDTD() as fdtd:
-    setup_grating_structuregroup(fdtd, "subw_grating")
+    # setup_grating_structuregroup(fdtd, "subw_grating")
     setup_grating_structuregroup(fdtd, "inverse_grating")
     while 1:
         pass
