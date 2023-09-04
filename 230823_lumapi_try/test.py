@@ -14,13 +14,32 @@ def load_script(script_name):
 
 
 def setup_grating_structuregroup(fdtd, grating_typ):
+    # adduserprop("property name", type, value);
+    # type 0 - number, type 2 - Length, type 6 - matrix
+    fdtd.adduserprop("wg_h", 2, 220e-9)
+    fdtd.adduserprop("start_radius", 2, 10e-6)
+    fdtd.adduserprop("taper_angle", 0, 24)
     if grating_typ == "subw_grating":
         fdtd.addstructuregroup(name="subw_grating")
+        #
+        fdtd.adduserprop("Lambda", 2, 1.326e-6)
+        fdtd.adduserprop("ff", 0, 0.5)
+        fdtd.adduserprop("ffL", 0, 0.2)
+        fdtd.adduserprop("ffH", 0, 0.8)
+        fdtd.adduserprop("NL", 0, 2)
+        fdtd.adduserprop("NH", 0, 3)
+        fdtd.adduserprop("N", 0, 14)
+        #
         fdtd.setnamed(
             "subw_grating", "script", load_script("subw_grating_concentric.lsf")
         )
     elif grating_typ == "inverse_grating":
         fdtd.addstructuregroup(name="inverse_grating")
+        #
+        fdtd.adduserprop("N", 0, 6)
+        fdtd.adduserprop("pitch_list", 6, [0.5e-6] * 6)
+        fdtd.adduserprop("ff_list", 6, [0.2] * 6)
+        #
         fdtd.setnamed(
             "inverse_grating", "script", load_script("inverse_grating_concentric.lsf")
         )
