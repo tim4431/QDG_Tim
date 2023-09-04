@@ -138,6 +138,7 @@ def set_params(fdtd, paras, **kwargs):
     grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
+    N_unit = kwargs.get("N_unit", N)
     #
     if grating_typ == "subw_grating":
         #
@@ -152,9 +153,9 @@ def set_params(fdtd, paras, **kwargs):
         fiberx = paras[4]
     elif grating_typ == "inverse_grating":
         fiberx = paras[0]
-        pitch_list = paras[1 : 1 + N]
+        pitch_list = paras[1 : 1 + N_unit]
         fdtd.setnamed(grating_typ, "pitch_list", pitch_list)
-        ff_list = paras[1 + N : 1 + 2 * N]
+        ff_list = paras[1 + N_unit : 1 + 2 * N_unit]
         fdtd.setnamed(grating_typ, "ff_list", ff_list)
     #
 
@@ -164,19 +165,30 @@ def set_params(fdtd, paras, **kwargs):
         fdtd.setnamed("fiber", "x", fiberx)  # type: ignore
 
 
-def calc_min_feature(paras, NL, NH) -> float:
-    Lambda = paras[0]
-    ffL = paras[1]
-    ffH = paras[2]
-    ff = paras[3]
-    #
-    l_H = Lambda * ff
-    l_L = Lambda * (1 - ff)
-    #
-    min_L = (l_L / NL) * (ffL)
-    min_H = (l_H / NH) * (1 - ffH)
-    #
-    return min(min_L, min_H)
+def calc_min_feature(paras, grating_typ, N_unit=10, NL=2, NH=3) -> float:
+    if grating_typ == "subw_grating":
+        Lambda = paras[0]
+        ffL = paras[1]
+        ffH = paras[2]
+        ff = paras[3]
+        #
+        l_H = Lambda * ff
+        l_L = Lambda * (1 - ff)
+        #
+        min_L = (l_L / NL) * (ffL)
+        min_H = (l_H / NH) * (1 - ffH)
+        #
+        return float(min(min_L, min_H))  # type: ignore
+    elif grating_typ == "inverse_grating":
+        pitch_list = paras[1 : 1 + N_unit]
+        ff_list = paras[1 + N_unit : 1 + 2 * N_unit]
+        _min_feature = 1
+        for i in range(1, N_unit):  # the first unit does not count
+            feature_i = pitch_list[i] * min((1 - ff_list[i]), ff_list[i])
+            _min_feature = min(_min_feature, feature_i)
+        return float(_min_feature)
+    else:
+        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
 
 
 def fdtd_iter(fdtd, paras, **kwargs):
@@ -215,9 +227,12 @@ def optimize_wrapper(fdtd, paras, **kwargs):
     #
     # >>> Figure of merit <<< #
     # Feature size penalty
+    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
+    N = kwargs.get("N", DEFAULT_PARA["N"])
     NL = kwargs.get("NL", DEFAULT_PARA["NL"])
     NH = kwargs.get("NH", DEFAULT_PARA["NH"])
-    feature_size = calc_min_feature(paras, NL, NH)
+    N_unit = kwargs.get("N_unit", N)
+    feature_size = calc_min_feature(paras, grating_typ, N_unit=N_unit, NL=NL, NH=NH)
     MIN_FEATURE_SIZE = kwargs.get("MIN_FEATURE_SIZE", DEFAULT_PARA["MIN_FEATURE_SIZE"])
     feature_size_penalty = (
         0.3
@@ -343,6 +358,7 @@ def setup_grating_structuregroup(fdtd, **kwargs):
     N = kwargs.get("N", DEFAULT_PARA["N"])
     NL = kwargs.get("NL", DEFAULT_PARA["NL"])
     NH = kwargs.get("NH", DEFAULT_PARA["NH"])
+    N_unit = kwargs.get("N_unit", N)
     #
     fdtd.addstructuregroup(name=grating_typ)
     fdtd.adduserprop("start_radius", 2, start_radius)
@@ -357,16 +373,16 @@ def setup_grating_structuregroup(fdtd, **kwargs):
         fdtd.adduserprop("ffH", 0, 0.8)
         fdtd.adduserprop("NL", 0, NL)
         fdtd.adduserprop("NH", 0, NH)
-        fdtd.adduserprop("N", 0, N)
+        fdtd.adduserprop("N", 0, N_unit)
         #
         fdtd.setnamed(
             "subw_grating", "script", load_script("subw_grating_concentric.lsf")
         )
     elif grating_typ == "inverse_grating":
         #
-        fdtd.adduserprop("N", 0, N * (NL + NH))
-        fdtd.adduserprop("pitch_list", 6, np.array([0.5e-6] * N))
-        fdtd.adduserprop("ff_list", 6, np.array([0.2] * 6))
+        fdtd.adduserprop("N", 0, N_unit)
+        fdtd.adduserprop("pitch_list", 6, np.array([0.5e-6] * N_unit))
+        fdtd.adduserprop("ff_list", 6, np.array([0.2] * N_unit))
         #
         fdtd.setnamed(
             "inverse_grating", "script", load_script("inverse_grating_concentric.lsf")
@@ -398,6 +414,13 @@ def run_optimize(dataName, **kwargs):
     N = kwargs.get("N", DEFAULT_PARA["N"])
     NL = kwargs.get("NL", DEFAULT_PARA["NL"])
     NH = kwargs.get("NH", DEFAULT_PARA["NH"])
+    if grating_typ == "inverse_grating":
+        N_unit = N * (NL + NH)
+    elif grating_typ == "subw_grating":
+        N_unit = N
+    else:
+        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+    kwargs["N_unit"] = N_unit
     # >>> parameter bounds <<< #
     if grating_typ == "subw_grating":
         if SOURCE_typ == "gaussian_packaged":
@@ -416,7 +439,6 @@ def run_optimize(dataName, **kwargs):
         else:
             raise ValueError("Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
     elif grating_typ == "inverse_grating":
-        N_unit = N * (NL + NH)
         paras_min = np.array(
             [10e-6] + [100e-9] * N_unit + [0.05] * N_unit, dtype=np.float_
         )
