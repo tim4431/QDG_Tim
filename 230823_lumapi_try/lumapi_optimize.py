@@ -334,9 +334,10 @@ def load_script(script_name):
         return script
 
 
-def setup_grating_structuregroup(fdtd, grating_typ, **kwargs):
+def setup_grating_structuregroup(fdtd, **kwargs):
     # adduserprop("property name", type, value);
     # type 0 - number, type 2 - Length, type 6 - matrix
+    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
     start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
     taper_angle = kwargs.get("taper_angle", DEFAULT_PARA["taper_angle"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
@@ -363,7 +364,7 @@ def setup_grating_structuregroup(fdtd, grating_typ, **kwargs):
         )
     elif grating_typ == "inverse_grating":
         #
-        fdtd.adduserprop("N", 0, N*(NL+NH))
+        fdtd.adduserprop("N", 0, N * (NL + NH))
         fdtd.adduserprop("pitch_list", 6, np.array([0.5e-6] * N))
         fdtd.adduserprop("ff_list", 6, np.array([0.2] * 6))
         #
@@ -381,7 +382,7 @@ def load_template(dataName, SOURCE_typ, purpose=""):
     return lumapi.FDTD(dest_fileName)
 
 
-def run_optimize(dataName, **kwagrs):
+def run_optimize(dataName, **kwargs):
     transmissionHist = []
     parasHist = []
     FOMHist = []
@@ -389,14 +390,14 @@ def run_optimize(dataName, **kwagrs):
     lambda0Hist = []
     FWHMHist = []
     #
-    SOURCE_typ = kwagrs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
-    lambda_0 = kwagrs.get("lambda_0", DEFAULT_PARA["lambda_0"])
-    FWHM = kwagrs.get("FWHM", DEFAULT_PARA["FWHM"])
-    maxiter = kwagrs.get("maxiter", DEFAULT_PARA["maxiter"])
-    grating_typ = kwagrs.get("grating_typ", DEFAULT_PARA["grating_typ"])
-    N = kwagrs.get("N", DEFAULT_PARA["N"])
-    NL = kwagrs.get("NL", DEFAULT_PARA["NL"])
-    NH = kwagrs.get("NH", DEFAULT_PARA["NH"])
+    SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
+    lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
+    FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
+    maxiter = kwargs.get("maxiter", DEFAULT_PARA["maxiter"])
+    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
+    N = kwargs.get("N", DEFAULT_PARA["N"])
+    NL = kwargs.get("NL", DEFAULT_PARA["NL"])
+    NH = kwargs.get("NH", DEFAULT_PARA["NH"])
     # >>> parameter bounds <<< #
     if grating_typ == "subw_grating":
         if SOURCE_typ == "gaussian_packaged":
@@ -425,7 +426,7 @@ def run_optimize(dataName, **kwagrs):
     else:
         raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
     # >>> paras_init <<< #
-    paras_init = kwagrs.get("paras_init", DEFAULT_PARA["paras_init"])
+    paras_init = kwargs.get("paras_init", DEFAULT_PARA["paras_init"])
     if paras_init is not None:
         if isinstance(paras_init, str):  # uuid
             if grating_typ == "subw_grating":
@@ -488,13 +489,13 @@ def run_optimize(dataName, **kwagrs):
             "fig_lambda0_his": fig_lambda0_his,
             "fig_FWHM_his": fig_FWHM_his,
             #
-            **kwagrs,
+            **kwargs,
         }
         # >>> setting up simulation <<< #
-        grating_typ = kwagrs.get("grating_typ", DEFAULT_PARA["grating_typ"])
+        grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
         setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension="2D")
         setup_monitor(fdtd, monitor=False, movie=False)
-        setup_grating_structuregroup(fdtd, grating_typ,**kwargs1)
+        setup_grating_structuregroup(fdtd, **kwargs)
         #
         paras = opt.minimize(
             lambda para: optimize_wrapper(fdtd, para, **kwargs1),
@@ -505,7 +506,7 @@ def run_optimize(dataName, **kwagrs):
         )
 
     #
-    logger = kwagrs.get("logger", DEFAULT_PARA["logger"])
+    logger = kwargs.get("logger", DEFAULT_PARA["logger"])
     logger.info("Final Parameter: ")
     logger.info(paras.x)
     # savedata
