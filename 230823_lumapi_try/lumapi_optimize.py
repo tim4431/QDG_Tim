@@ -341,12 +341,12 @@ def setup_grating_structuregroup(fdtd, grating_typ, **kwargs):
     taper_angle = kwargs.get("taper_angle", DEFAULT_PARA["taper_angle"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
     #
+    fdtd.addstructuregroup(name=grating_typ)
     fdtd.adduserprop("start_radius", 2, start_radius)
     fdtd.adduserprop("taper_angle", 0, taper_angle)
     fdtd.adduserprop("wg_h", 2, 220e-9)
     #
     if grating_typ == "subw_grating":
-        fdtd.addstructuregroup(name="subw_grating")
         #
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
         NH = kwargs.get("NH", DEFAULT_PARA["NH"])
@@ -363,7 +363,6 @@ def setup_grating_structuregroup(fdtd, grating_typ, **kwargs):
             "subw_grating", "script", load_script("subw_grating_concentric.lsf")
         )
     elif grating_typ == "inverse_grating":
-        fdtd.addstructuregroup(name="inverse_grating")
         #
         fdtd.adduserprop("N", 0, N)
         fdtd.adduserprop("pitch_list", 6, np.array([0.5e-6] * N))
