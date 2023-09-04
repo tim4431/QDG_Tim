@@ -468,6 +468,9 @@ def run_optimize(dataName, **kwargs):
                     NH=NH,
                 )
                 pitch_list, ff_list = grating_to_pitch_ff(grating)
+                # add random noise
+                pitch_list = pitch_list * np.random.uniform(0.8, 1.2, N_unit)
+                ff_list = ff_list * np.random.uniform(0.8, 1.2, N_unit)
                 paras = np.hstack((fiberx, pitch_list, ff_list))
                 # print(paras.shape)
         else:  # np.ndarray
