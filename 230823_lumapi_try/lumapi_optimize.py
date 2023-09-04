@@ -102,7 +102,7 @@ def analysis_FOM(l, T, **kwargs):
     FOM_typ = kwargs.get("FOM_typ", DEFAULT_PARA["FOM_typ"])
 
     # >>> analysis <<< #
-    l_c, T_c = _data_crop(l, T, lambda_0, FWHM * 3)
+    l_c, T_c = _data_crop(l, T, lambda_0, FWHM)
     T_des = _gaussian_curve(l_c, lambda_0, FWHM)
     cross_correlation = _cross_correlation(T_c, T_des)
     norm_cross_correlation = _norm_cross_correlation(T_c, T_des)
@@ -469,8 +469,8 @@ def run_optimize(dataName, **kwargs):
                 )
                 pitch_list, ff_list = grating_to_pitch_ff(grating)
                 # add random noise
-                pitch_list = pitch_list * np.random.uniform(0.95, 1.05, N_unit)
-                ff_list = ff_list * np.random.uniform(0.95, 1.05, N_unit)
+                # pitch_list = pitch_list * np.random.uniform(0.95, 1.05, N_unit)
+                # ff_list = ff_list * np.random.uniform(0.95, 1.05, N_unit)
                 paras = np.hstack((fiberx, pitch_list, ff_list))
                 # print(paras.shape)
         else:  # np.ndarray

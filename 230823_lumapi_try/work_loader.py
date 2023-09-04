@@ -258,7 +258,7 @@ if __name__ == "__main__":
     }
     work15_sq_inverse = {
         "lambda_0": 1.326e-6,
-        "FWHM": 70e-9,
+        "FWHM": 100e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.01, 100e-9]],
         "N": 9,
