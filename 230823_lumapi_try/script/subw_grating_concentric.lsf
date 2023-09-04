@@ -1,5 +1,8 @@
 deleteall;
 
+# parameter
+set("Lambda",1.55e-6);
+
 # position
 set("x",0);
 set("y",0);
