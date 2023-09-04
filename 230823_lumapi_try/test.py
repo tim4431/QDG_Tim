@@ -13,8 +13,21 @@ def load_script(script_name):
         return script
 
 
+def setup_grating_structuregroup(fdtd, grating_typ):
+    if grating_typ == "subw_grating":
+        fdtd.addstructuregroup(name="subw_grating")
+        fdtd.setnamed(
+            "subw_grating", "script", load_script("subw_grating_concentric.lsf")
+        )
+    elif grating_typ == "inverse_grating":
+        fdtd.addstructuregroup(name="inverse_grating")
+        fdtd.setnamed(
+            "inverse_grating", "script", load_script("inverse_grating_concentric.lsf")
+        )
+
+
 with lumapi.FDTD() as fdtd:
-    fdtd.addstructuregroup(name="grating")
-    fdtd.setnamed("grating", "script", load_script("subw_grating_concentric.lsf"))
-    while True:
+    setup_grating_structuregroup(fdtd, "subw_grating")
+    setup_grating_structuregroup(fdtd, "inverse_grating")
+    while 1:
         pass

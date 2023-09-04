@@ -1,7 +1,19 @@
 deleteall;
 
 # parameter
-set("Lambda",1.55e-6);
+# adduserprop("property name", type, value);
+# type 0 - number, type 2 - Length
+adduserprop("Lambda", 2, 1.326e-6);
+adduserprop("ff",0,0.5);
+adduserprop("ffL",0,0.2);
+adduserprop("ffH",0,0.8);
+adduserprop("NL", 0, 2);
+adduserprop("NH", 0, 3);
+adduserprop("wg_h", 2, 220e-9);
+adduserprop("start_radius", 2, 10e-6);
+adduserprop("taper_angle", 0, 24);
+adduserprop("N", 0, 14);
+
 
 # position
 set("x",0);
