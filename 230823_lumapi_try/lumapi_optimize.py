@@ -367,7 +367,7 @@ def setup_grating_structuregroup(fdtd, grating_typ, **kwargs):
         #
         fdtd.adduserprop("N", 0, N)
         fdtd.adduserprop("pitch_list", 6, np.array([0.5e-6] * N))
-        fdtd.adduserprop("ff_list", 6, np.array([0.2] * 6)
+        fdtd.adduserprop("ff_list", 6, np.array([0.2] * 6))
         #
         fdtd.setnamed(
             "inverse_grating", "script", load_script("inverse_grating_concentric.lsf")
