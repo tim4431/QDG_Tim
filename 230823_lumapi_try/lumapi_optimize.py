@@ -428,8 +428,7 @@ def run_optimize(dataName, **kwagrs):
             if grating_typ == "subw_grating":
                 paras = load_paras(paras_init)
             else:
-                para = load_json(paras_init)
-                para = np.asarray(paras_init)
+                para = load_paras(paras_init)
                 fiberx = para[4]
                 from lib.grating.subwavelength import subw_grating, grating_to_pitch_ff
 
