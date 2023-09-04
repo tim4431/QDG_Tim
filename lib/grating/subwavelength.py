@@ -42,8 +42,7 @@ def grating_to_pitch_ff(grating):
             ff_list.append(ff_i)
     #
     # return in (pitch, ff) format
-    res = [(pitch_list[i], ff_list[i]) for i in range(len(pitch_list))]
-    return res
+    return np.array(pitch_list), np.array(ff_list)
 
 
 def plot_grating(grating):
@@ -57,9 +56,9 @@ def plot_grating(grating):
     plt.show()
 
 
-def plot_pitch_ff(pitch_ff):
+def plot_pitch_ff(pitch_list, ff_list):
     _x = 0
-    for pitch, ff in pitch_ff:
+    for pitch, ff in zip(pitch_list, ff_list):
         plt.plot([_x, _x + pitch * (1 - ff)], [0, 0], color="black")
         plt.plot([_x + pitch * (1 - ff), _x + pitch * (1 - ff)], [0, 1], color="black")
         plt.plot([_x + pitch * (1 - ff), _x + pitch], [1, 1], color="black")
@@ -77,6 +76,6 @@ if __name__ == "__main__":
     NH = 3
 
     grating = subw_grating(1, Lambda, ff, ffL, ffH, NL, NH)
-    plot_grating(grating)
-    pitch_ff = grating_to_pitch_ff(grating)
-    # plot_pitch_ff(pitch_ff)
+    # plot_grating(grating)
+    pitch_list, ff_list = grating_to_pitch_ff(grating)
+    plot_pitch_ff(pitch_list, ff_list)

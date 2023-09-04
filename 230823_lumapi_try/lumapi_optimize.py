@@ -395,32 +395,58 @@ def run_optimize(dataName, **kwagrs):
     lambda_0 = kwagrs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwagrs.get("FWHM", DEFAULT_PARA["FWHM"])
     maxiter = kwagrs.get("maxiter", DEFAULT_PARA["maxiter"])
-    #
-    if SOURCE_typ == "gaussian_packaged":
-        paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
-        paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6], dtype=np.float_)
-    elif SOURCE_typ == "gaussian_released":
-        NL = kwagrs.get("NL", DEFAULT_PARA["NL"])
-        NH = kwagrs.get("NH", DEFAULT_PARA["NH"])
-        if NL == 2 and NH == 2:
-            paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6], dtype=np.float_)
-            paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6], dtype=np.float_)
+    grating_typ = kwagrs.get("grating_typ", DEFAULT_PARA["grating_typ"])
+    N = kwagrs.get("N", DEFAULT_PARA["N"])
+    NL = kwagrs.get("NL", DEFAULT_PARA["NL"])
+    NH = kwagrs.get("NH", DEFAULT_PARA["NH"])
+    # >>> parameter bounds <<< #
+    if grating_typ == "subw_grating":
+        if SOURCE_typ == "gaussian_packaged":
+            paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
+            paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6], dtype=np.float_)
+        elif SOURCE_typ == "gaussian_released":
+            if NL == 2 and NH == 2:
+                paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6], dtype=np.float_)
+                paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6], dtype=np.float_)
+            else:
+                paras_min = np.array([0.6e-6, 0.00, 0.3, 0.2, 10e-6], dtype=np.float_)
+                paras_max = np.array([1.5e-6, 0.5, 0.95, 0.8, 22e-6], dtype=np.float_)
+        elif SOURCE_typ == "fiber":
+            paras_min = np.array([0.7e-6, 0.1, 0.3, 0.3, 12e-6], dtype=np.float_)
+            paras_max = np.array([1.0e-6, 0.4, 0.8, 0.6, 18e-6], dtype=np.float_)
         else:
-            paras_min = np.array([0.6e-6, 0.00, 0.3, 0.2, 10e-6], dtype=np.float_)
-            paras_max = np.array([1.5e-6, 0.5, 0.95, 0.8, 22e-6], dtype=np.float_)
-
-    elif SOURCE_typ == "fiber":
-        paras_min = np.array([0.7e-6, 0.1, 0.3, 0.3, 12e-6], dtype=np.float_)
-        paras_max = np.array([1.0e-6, 0.4, 0.8, 0.6, 18e-6], dtype=np.float_)
+            raise ValueError("Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
+    elif grating_typ == "inverse_grating":
+        paras_min = np.array([10e-6] + [100e-9] * N + [0.1] * N, dtype=np.float_)
+        paras_max = np.array([20e-6] + [1.5e-6] * N + [0.9] * N, dtype=np.float_)
     else:
-        raise ValueError("Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
-    # initialize the paras
+        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+    # >>> paras_init <<< #
     paras_init = kwagrs.get("paras_init", DEFAULT_PARA["paras_init"])
     if paras_init is not None:
         if isinstance(paras_init, str):  # uuid
-            paras = load_paras(paras_init)
+            if grating_typ == "subw_grating":
+                paras = load_paras(paras_init)
+            else:
+                para = load_json(paras_init)
+                para = np.asarray(paras_init)
+                fiberx = para[4]
+                from lib.grating.subwavelength import subw_grating, grating_to_pitch_ff
+
+                grating = subw_grating(
+                    N=N,
+                    Lambda=para[0],
+                    ff=para[3],
+                    ffL=para[1],
+                    ffH=para[2],
+                    NL=NL,
+                    NH=NH,
+                )
+                pitch_list, ff_list = grating_to_pitch_ff(grating)
+                paras = np.hstack((fiberx, pitch_list, ff_list))
+                print(paras.shape)
         else:  # np.ndarray
-            paras = np.asarray(paras_init)
+            paras = paras_init
     else:
         # paras = np.random.uniform(paras_min, paras_max)
         paras = (paras_min + paras_max) / 2
