@@ -340,6 +340,8 @@ def setup_grating_structuregroup(fdtd, grating_typ, **kwargs):
     start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
     taper_angle = kwargs.get("taper_angle", DEFAULT_PARA["taper_angle"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
+    NL = kwargs.get("NL", DEFAULT_PARA["NL"])
+    NH = kwargs.get("NH", DEFAULT_PARA["NH"])
     #
     fdtd.addstructuregroup(name=grating_typ)
     fdtd.adduserprop("start_radius", 2, start_radius)
@@ -347,9 +349,6 @@ def setup_grating_structuregroup(fdtd, grating_typ, **kwargs):
     fdtd.adduserprop("wg_h", 2, 220e-9)
     #
     if grating_typ == "subw_grating":
-        #
-        NL = kwargs.get("NL", DEFAULT_PARA["NL"])
-        NH = kwargs.get("NH", DEFAULT_PARA["NH"])
         #
         fdtd.adduserprop("Lambda", 2, 1.1e-6)
         fdtd.adduserprop("ff", 0, 0.5)
@@ -364,7 +363,7 @@ def setup_grating_structuregroup(fdtd, grating_typ, **kwargs):
         )
     elif grating_typ == "inverse_grating":
         #
-        fdtd.adduserprop("N", 0, N)
+        fdtd.adduserprop("N", 0, N*(NL+NH))
         fdtd.adduserprop("pitch_list", 6, np.array([0.5e-6] * N))
         fdtd.adduserprop("ff_list", 6, np.array([0.2] * 6))
         #
@@ -416,8 +415,13 @@ def run_optimize(dataName, **kwagrs):
         else:
             raise ValueError("Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
     elif grating_typ == "inverse_grating":
-        paras_min = np.array([10e-6] + [100e-9] * N + [0.1] * N, dtype=np.float_)
-        paras_max = np.array([20e-6] + [1.5e-6] * N + [0.9] * N, dtype=np.float_)
+        N_unit = N * (NL + NH)
+        paras_min = np.array(
+            [10e-6] + [100e-9] * N_unit + [0.1] * N_unit, dtype=np.float_
+        )
+        paras_max = np.array(
+            [20e-6] + [1.5e-6] * N_unit + [0.9] * N_unit, dtype=np.float_
+        )
     else:
         raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
     # >>> paras_init <<< #
@@ -442,7 +446,7 @@ def run_optimize(dataName, **kwagrs):
                 )
                 pitch_list, ff_list = grating_to_pitch_ff(grating)
                 paras = np.hstack((fiberx, pitch_list, ff_list))
-                print(paras.shape)
+                # print(paras.shape)
         else:  # np.ndarray
             paras = paras_init
     else:
@@ -490,7 +494,7 @@ def run_optimize(dataName, **kwagrs):
         grating_typ = kwagrs.get("grating_typ", DEFAULT_PARA["grating_typ"])
         setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension="2D")
         setup_monitor(fdtd, monitor=False, movie=False)
-        setup_grating_structuregroup(fdtd, grating_typ)
+        setup_grating_structuregroup(fdtd, grating_typ,**kwargs1)
         #
         paras = opt.minimize(
             lambda para: optimize_wrapper(fdtd, para, **kwargs1),
