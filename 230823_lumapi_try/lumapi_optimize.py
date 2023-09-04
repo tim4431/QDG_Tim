@@ -418,10 +418,10 @@ def run_optimize(dataName, **kwargs):
     elif grating_typ == "inverse_grating":
         N_unit = N * (NL + NH)
         paras_min = np.array(
-            [10e-6] + [100e-9] * N_unit + [0.1] * N_unit, dtype=np.float_
+            [10e-6] + [100e-9] * N_unit + [0.05] * N_unit, dtype=np.float_
         )
         paras_max = np.array(
-            [20e-6] + [1.5e-6] * N_unit + [0.9] * N_unit, dtype=np.float_
+            [20e-6] + [1.5e-6] * N_unit + [0.95] * N_unit, dtype=np.float_
         )
     else:
         raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
