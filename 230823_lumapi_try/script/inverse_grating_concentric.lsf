@@ -3,10 +3,10 @@ deleteall;
 # parameter
 # adduserprop("property name", type, value);
 # type 0 - number, type 2 - Length, type 6 - Matrix
-adduserprop("N", 0, 14);
+adduserprop("N", 0, 6);
 #
-adduserprop("pitch_list", 6,[]);
-adduserprop("ff_list", 6,[]);
+adduserprop("pitch_list", 6,[0.5e-6,0.5e-6,0.5e-6,0.5e-6,0.5e-6,0.5e-6]);
+adduserprop("ff_list", 6,[0.2,0.2,0.2,0.2,0.2,0.2]);
 
 
 # position
