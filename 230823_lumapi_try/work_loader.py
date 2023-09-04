@@ -278,5 +278,5 @@ if __name__ == "__main__":  # type: ignore
     # works = [work9, work10, work11, work11_5, work12, work13, work14, work15, work16]
     # works = [work9,work10,work11,work12,work13,work14]
     works=[work15]
-    work_loader(works, prefix="NL_NH_sweep_broad")
+    work_loader(works, prefix="subw_inverse")
     # work_loader(works_test)
