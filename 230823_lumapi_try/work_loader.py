@@ -258,13 +258,13 @@ if __name__ == "__main__":
     }
     work15_sq_inverse = {
         "lambda_0": 1.326e-6,
-        "FWHM": 40e-9,
+        "FWHM": 70e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.01, 100e-9]],
         "N": 9,
         "NL": 2,
         "NH": 2,
-        "maxiter": 100,
+        "maxiter": 400,
         "paras_init": "4e25",
         "MIN_FEATURE_SIZE": 40e-9,
         "FOM_typ": "linear",
