@@ -5,7 +5,7 @@ import os
 import logging
 from datetime import datetime
 from setup_logger import create_logger, close_logger
-
+import shutil
 
 def work_loader(workList, prefix):
     cwd = os.getcwd()
@@ -54,7 +54,8 @@ def work_loader(workList, prefix):
                 uuid_file.write(msg + "\n")
                 #
                 try:
-                    os.rmdir(uuid_to_wd(uuid))
+                    # os.rmdir(uuid_to_wd(uuid))
+                    shutil.rmtree(uuid_to_wd(uuid))
                 except Exception as e:
                     loader_logger.error("Error in deleting uuid: " + str(uuid) + str(e))
 
@@ -277,6 +278,6 @@ if __name__ == "__main__":  # type: ignore
     # works = [work1, work2, work3]
     # works = [work9, work10, work11, work11_5, work12, work13, work14, work15, work16]
     # works = [work9,work10,work11,work12,work13,work14]
-    works=[work15]
+    works=[work15_sq_inverse]
     work_loader(works, prefix="subw_inverse")
     # work_loader(works_test)
