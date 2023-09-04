@@ -100,9 +100,16 @@ def analysis_FOM(l, T, **kwargs):
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
     alpha = kwargs.get("alpha", DEFAULT_PARA["alpha"])
     FOM_typ = kwargs.get("FOM_typ", DEFAULT_PARA["FOM_typ"])
+    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
 
     # >>> analysis <<< #
-    l_c, T_c = _data_crop(l, T, lambda_0, FWHM)
+    if grating_typ == "subw_grating":
+        _crop_range = 2 * FWHM
+    elif grating_typ == "inverse_grating":
+        _crop_range = FWHM
+    else:
+        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+    l_c, T_c = _data_crop(l, T, lambda_0, _crop_range)
     T_des = _gaussian_curve(l_c, lambda_0, FWHM)
     cross_correlation = _cross_correlation(T_c, T_des)
     norm_cross_correlation = _norm_cross_correlation(T_c, T_des)
@@ -431,8 +438,8 @@ def run_optimize(dataName, **kwargs):
                 paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6], dtype=np.float_)
                 paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6], dtype=np.float_)
             else:
-                paras_min = np.array([0.6e-6, 0.00, 0.3, 0.2, 10e-6], dtype=np.float_)
-                paras_max = np.array([1.5e-6, 0.5, 0.95, 0.8, 22e-6], dtype=np.float_)
+                paras_min = np.array([0.4e-6, 0.00, 0.3, 0.2, 10e-6], dtype=np.float_)
+                paras_max = np.array([1.3e-6, 0.5, 0.95, 0.8, 22e-6], dtype=np.float_)
         elif SOURCE_typ == "fiber":
             paras_min = np.array([0.7e-6, 0.1, 0.3, 0.3, 12e-6], dtype=np.float_)
             paras_max = np.array([1.0e-6, 0.4, 0.8, 0.6, 18e-6], dtype=np.float_)

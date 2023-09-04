@@ -7,6 +7,7 @@ from datetime import datetime
 from setup_logger import create_logger, close_logger
 import shutil
 
+
 def work_loader(workList, prefix):
     cwd = os.getcwd()
     now = datetime.now()
@@ -172,103 +173,34 @@ if __name__ == "__main__":
         "SOURCE_typ": "gaussian_released",
     }
     # >>> square, sweep FWHM
-    work9 = {
+    work_4e25 = {
         "lambda_0": 1.326e-6,
-        "FWHM": 100e-9,
+        "FWHM": 40e-9,
         "alpha": 0.00,
-        "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
         "N": 9,
         "NL": 2,
-        "NH": 1,
+        "NH": 2,
         "maxiter": 100,
         "MIN_FEATURE_SIZE": 40e-9,
         "FOM_typ": "square",
         "SOURCE_typ": "gaussian_released",
         "start_radius": 12e-6,
     }
-    work10 = {
-        "lambda_0": 1.326e-6,
-        "FWHM": 200e-9,
-        "alpha": 0.00,
-        "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
-        "N": 9,
-        "NL": 2,
-        "NH": 1,
-        "maxiter": 100,
-        "MIN_FEATURE_SIZE": 40e-9,
-        "FOM_typ": "square",
-        "SOURCE_typ": "gaussian_released",
-        "start_radius": 12e-6,
-    }
-    work11 = {
+
+    work_4e25_inverse = {
         "lambda_0": 1.326e-6,
         "FWHM": 100e-9,
         "alpha": 0.00,
-        "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
-        "N": 9,
-        "NL": 1,
-        "NH": 1,
-        "maxiter": 100,
-        "MIN_FEATURE_SIZE": 40e-9,
-        "FOM_typ": "square",
-        "SOURCE_typ": "gaussian_released",
-        "start_radius": 12e-6,
-    }
-    work12 = {
-        "lambda_0": 1.326e-6,
-        "FWHM": 200e-9,
-        "alpha": 0.00,
-        "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
-        "N": 9,
-        "NL": 1,
-        "NH": 1,
-        "maxiter": 100,
-        "MIN_FEATURE_SIZE": 40e-9,
-        "FOM_typ": "square",
-        "SOURCE_typ": "gaussian_released",
-        "start_radius": 12e-6,
-    }
-    work13 = {
-        "lambda_0": 1.326e-6,
-        "FWHM": 150e-9,
-        "alpha": 0.00,
-       "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
-        "N": 12,
-        "NL": 1,
-        "NH": 1,
-        "maxiter": 100,
-        "MIN_FEATURE_SIZE": 40e-9,
-        "FOM_typ": "square",
-        "SOURCE_typ": "gaussian_released",
-        "start_radius": 12e-6,
-    }
-    work14 = {
-        "lambda_0": 1.326e-6,
-        "FWHM": 150e-9,
-        "alpha": 0.00,
-        "penalty": [[0.002, 10e-9], [0.002, 100e-9]],
-        "N": 15,
-        "NL": 1,
-        "NH": 1,
-        "maxiter": 100,
-        "MIN_FEATURE_SIZE": 40e-9,
-        "FOM_typ": "square",
-        "SOURCE_typ": "gaussian_released",
-        "start_radius": 12e-6,
-    }
-    work15_sq_inverse = {
-        "lambda_0": 1.326e-6,
-        "FWHM": 100e-9,
-        "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.01, 100e-9]],
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
         "N": 9,
         "NL": 2,
         "NH": 2,
         "maxiter": 400,
         "paras_init": "4e25",
         "MIN_FEATURE_SIZE": 40e-9,
-        "FOM_typ": "linear",
-        "grating_typ":"inverse_grating",
+        "FOM_typ": "square",
+        "grating_typ": "inverse_grating",
         "SOURCE_typ": "gaussian_released",
         "start_radius": 12e-6,
     }
@@ -278,6 +210,8 @@ if __name__ == "__main__":  # type: ignore
     # works = [work1, work2, work3]
     # works = [work9, work10, work11, work11_5, work12, work13, work14, work15, work16]
     # works = [work9,work10,work11,work12,work13,work14]
-    works=[work15_sq_inverse]
-    work_loader(works, prefix="subw_inverse")
+    works = [work_4e25]
+    works = [work_4e25_inverse]
+    work_loader(works, prefix="4e25_crop_range=2")
+    work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)
