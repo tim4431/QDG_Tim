@@ -9,6 +9,7 @@ sys.path.append("..")
 from lib.gaussian.gaussian_fit_1d import arb_fit_1d
 from json_uuid import load_json, uuid_to_wd, load_paras, getdataName
 
+
 def add_lumerical_path():
     # add lumerical api path
     pathList = [
@@ -21,6 +22,7 @@ def add_lumerical_path():
             sys.path.append(pathName)
             break
     sys.path.append(os.path.dirname(__file__))  # Current directory
+
 
 add_lumerical_path()
 
@@ -133,33 +135,33 @@ def analysis_FOM(l, T, **kwargs):
 
 
 def set_params(fdtd, paras, **kwargs):
-    Lambda = paras[0]
-    fdtd.setnamed("gratings", "Lambda", Lambda)
-    ffL = paras[1]
-    fdtd.setnamed("gratings", "ffL", ffL)
-    ffH = paras[2]
-    fdtd.setnamed("gratings", "ffH", ffH)
-    ff = paras[3]
-    fdtd.setnamed("gratings", "ff", ff)
-    fiberx = paras[4]
+    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
-    if SOURCE_typ in ["gaussian_released", "gaussian_packaged"]:
-        fdtd.setnamed("source", "x", fiberx)
-    elif SOURCE_typ == "fiber":
-        fdtd.setnamed("fiber", "x", fiberx)
-    #
-    # >>> not in paras <<< #
     N = kwargs.get("N", DEFAULT_PARA["N"])
-    NL = kwargs.get("NL", DEFAULT_PARA["NL"])
-    NH = kwargs.get("NH", DEFAULT_PARA["NH"])
-    start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
-    taper_angle = kwargs.get("taper_angle", DEFAULT_PARA["taper_angle"])
     #
-    fdtd.setnamed("gratings", "N", N)
-    fdtd.setnamed("gratings", "NL", NL)
-    fdtd.setnamed("gratings", "NH", NH)
-    fdtd.setnamed("gratings", "start_radius", start_radius)
-    fdtd.setnamed("gratings", "taper_angle", taper_angle)
+    if grating_typ == "subw_grating":
+        #
+        Lambda = paras[0]
+        fdtd.setnamed(grating_typ, "Lambda", Lambda)
+        ffL = paras[1]
+        fdtd.setnamed(grating_typ, "ffL", ffL)
+        ffH = paras[2]
+        fdtd.setnamed(grating_typ, "ffH", ffH)
+        ff = paras[3]
+        fdtd.setnamed(grating_typ, "ff", ff)
+        fiberx = paras[4]
+    elif grating_typ == "inverse_grating":
+        fiberx = paras[0]
+        pitch_list = paras[1 : 1 + N]
+        fdtd.setnamed(grating_typ, "pitch_list", pitch_list)
+        ff_list = paras[1 + N : 1 + 2 * N]
+        fdtd.setnamed(grating_typ, "ff_list", ff_list)
+    #
+
+    if SOURCE_typ in ["gaussian_released", "gaussian_packaged"]:
+        fdtd.setnamed("source", "x", fiberx)  # type: ignore
+    elif SOURCE_typ == "fiber":
+        fdtd.setnamed("fiber", "x", fiberx)  # type: ignore
 
 
 def calc_min_feature(paras, NL, NH) -> float:
@@ -325,6 +327,53 @@ def setup_monitor(fdtd, monitor=False, movie=False):
         fdtd.setnamed("movie_monitor", "enabled", 0)
 
 
+def load_script(script_name):
+    cwd = os.getcwd()
+    with open(os.path.join(cwd, "script", script_name), "r") as f:
+        script = f.read()
+        return script
+
+
+def setup_grating_structuregroup(fdtd, grating_typ, **kwargs):
+    # adduserprop("property name", type, value);
+    # type 0 - number, type 2 - Length, type 6 - matrix
+    start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
+    taper_angle = kwargs.get("taper_angle", DEFAULT_PARA["taper_angle"])
+    N = kwargs.get("N", DEFAULT_PARA["N"])
+    #
+    fdtd.adduserprop("start_radius", 2, start_radius)
+    fdtd.adduserprop("taper_angle", 0, taper_angle)
+    fdtd.adduserprop("wg_h", 2, 220e-9)
+    #
+    if grating_typ == "subw_grating":
+        fdtd.addstructuregroup(name="subw_grating")
+        #
+        NL = kwargs.get("NL", DEFAULT_PARA["NL"])
+        NH = kwargs.get("NH", DEFAULT_PARA["NH"])
+        #
+        fdtd.adduserprop("Lambda", 2, 1.1e-6)
+        fdtd.adduserprop("ff", 0, 0.5)
+        fdtd.adduserprop("ffL", 0, 0.2)
+        fdtd.adduserprop("ffH", 0, 0.8)
+        fdtd.adduserprop("NL", 0, NL)
+        fdtd.adduserprop("NH", 0, NH)
+        fdtd.adduserprop("N", 0, N)
+        #
+        fdtd.setnamed(
+            "subw_grating", "script", load_script("subw_grating_concentric.lsf")
+        )
+    elif grating_typ == "inverse_grating":
+        fdtd.addstructuregroup(name="inverse_grating")
+        #
+        fdtd.adduserprop("N", 0, N)
+        fdtd.adduserprop("pitch_list", 6, np.array([0.5e-6] * N))
+        fdtd.adduserprop("ff_list", 6, np.array([0.2] * 6)
+        #
+        fdtd.setnamed(
+            "inverse_grating", "script", load_script("inverse_grating_concentric.lsf")
+        )
+
+
 def load_template(dataName, SOURCE_typ, purpose=""):
     import lumapi  # type: ignore
 
@@ -413,9 +462,12 @@ def run_optimize(dataName, **kwagrs):
             #
             **kwagrs,
         }
-
+        # >>> setting up simulation <<< #
+        grating_typ = kwagrs.get("grating_typ", DEFAULT_PARA["grating_typ"])
         setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension="2D")
         setup_monitor(fdtd, monitor=False, movie=False)
+        setup_grating_structuregroup(fdtd, grating_typ)
+        #
         paras = opt.minimize(
             lambda para: optimize_wrapper(fdtd, para, **kwargs1),
             paras,

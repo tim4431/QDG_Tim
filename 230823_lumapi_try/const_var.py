@@ -1,4 +1,5 @@
 DEFAULT_PARA = {
+    "plot": False,
     "lambda_0": 1.326e-6,
     "FWHM": 0.0833e-6,
     "alpha": 0.02,
@@ -9,6 +10,7 @@ DEFAULT_PARA = {
     "N": 14,
     "MIN_FEATURE_SIZE": 50.0,
     "FOM_typ": "square",
+    "grating_typ": "subw_grating",
     "paras_init": None,
     "maxiter": 90,
     "logger": None,
