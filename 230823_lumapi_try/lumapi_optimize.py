@@ -9,18 +9,20 @@ sys.path.append("..")
 from lib.gaussian.gaussian_fit_1d import arb_fit_1d
 from json_uuid import load_json, uuid_to_wd, load_paras, getdataName
 
-# add lumerical api path
-pathList = [
-    "C:\\Program Files\\Lumerical\\v221\\api\\python\\",
-    "C:\\Program Files\\Lumerical\\FDTD\\api\\python\\",
-    "D:\\software\\Lumerical\\Lumerical\\v221\\api\\python",
-]
-for pathName in pathList:
-    if os.path.exists(pathName):
-        sys.path.append(pathName)
-        break
-sys.path.append(os.path.dirname(__file__))  # Current directory
+def add_lumerical_path():
+    # add lumerical api path
+    pathList = [
+        "C:\\Program Files\\Lumerical\\v221\\api\\python\\",
+        "C:\\Program Files\\Lumerical\\FDTD\\api\\python\\",
+        "D:\\software\\Lumerical\\Lumerical\\v221\\api\\python",
+    ]
+    for pathName in pathList:
+        if os.path.exists(pathName):
+            sys.path.append(pathName)
+            break
+    sys.path.append(os.path.dirname(__file__))  # Current directory
 
+add_lumerical_path()
 
 from const_var import DEFAULT_PARA
 
