@@ -4,6 +4,8 @@
 !subw_fiber_template.fsp
 !subw_gaussian_released_template.fsp
 !subw_gaussian_packaged_template.fsp
+!/script
+!/script/*
 !/4cb4
 !/4cb4/*
 !/28b1
