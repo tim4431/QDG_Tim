@@ -255,11 +255,28 @@ if __name__ == "__main__":
         "SOURCE_typ": "gaussian_released",
         "start_radius": 12e-6,
     }
+    work15_sq_inverse = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.01, 100e-9]],
+        "N": 9,
+        "NL": 2,
+        "NH": 2,
+        "maxiter": 100,
+        "paras_init": "4e25",
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "linear",
+        "grating_typ":"inverse_grating",
+        "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
+    }
 
 if __name__ == "__main__":  # type: ignore
     works_test = [work0]  # type: ignore
     # works = [work1, work2, work3]
     # works = [work9, work10, work11, work11_5, work12, work13, work14, work15, work16]
-    works = [work9,work10,work11,work12,work13,work14]
+    # works = [work9,work10,work11,work12,work13,work14]
+    works=[work15]
     work_loader(works, prefix="NL_NH_sweep_broad")
     # work_loader(works_test)
