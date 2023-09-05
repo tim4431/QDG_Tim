@@ -34,6 +34,15 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
+    N = kwargs.get("N", DEFAULT_PARA["N"])
+    NL = kwargs.get("NL", DEFAULT_PARA["NL"])
+    NH = kwargs.get("NH", DEFAULT_PARA["NH"])
+    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
+    if grating_typ == "inverse_grating":
+        N_unit = N * (NL + NH)
+    else:
+        N_unit = N
+    kwargs["N_unit"] = N_unit
     #
     with load_template(
         dataName,
@@ -127,6 +136,6 @@ if __name__ == "__main__":
         uuid,
         dimension="2D",
         tether_typ=None,
-        monitor= False,
+        monitor=False,
         pause=True,
     )
