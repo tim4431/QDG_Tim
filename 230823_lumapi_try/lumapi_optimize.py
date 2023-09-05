@@ -413,6 +413,7 @@ def setup_grating_structuregroup(fdtd, **kwargs):
         )
     elif grating_typ == "grating":
         #
+        fdtd.adduserprop("N", 0, N)
         fdtd.adduserprop("Lambda", 2, 1.1e-6)
         fdtd.adduserprop("ff", 0, 0.5)
         #
