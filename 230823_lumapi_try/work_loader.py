@@ -207,7 +207,7 @@ if __name__ == "__main__":
         "FWHM": 20e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.03, 100e-9]],
-        "N": 9,
+        "N": 6,
         "NL": 2,
         "NH": 2,
         "maxiter": 1000,
@@ -222,12 +222,28 @@ if __name__ == "__main__":
         "lambda_0": 1.326e-6,
         "FWHM": 100e-9,
         "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
-        "N": 9,
+        "penalty": [[0.01, 10e-9], [0.03, 100e-9]],
+        "N": 6,
         "NL": 2,
         "NH": 2,
         "maxiter": 1000,
         # "paras_init": "4e25",
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "grating_typ": "inverse_grating",
+        "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
+    }
+    work_inverse_3 = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 100e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.03, 100e-9]],
+        "N": 9,
+        "NL": 2,
+        "NH": 2,
+        "maxiter": 1000,
+        "paras_init": "4e25",
         "MIN_FEATURE_SIZE": 40e-9,
         "FOM_typ": "square",
         "grating_typ": "inverse_grating",
@@ -240,8 +256,8 @@ if __name__ == "__main__":  # type: ignore
     # works = [work1, work2, work3]
     # works = [work9, work10, work11, work11_5, work12, work13, work14, work15, work16]
     # works = [work9,work10,work11,work12,work13,work14]
-    works = [work_4e25_crop_1,work_inverse]
+    works = [work_inverse_1, work_inverse_2, work_inverse_3]
     # works = [work_4e25_inverse]
-    work_loader(works, prefix="4e25_crop_range=3_inverse")
+    work_loader(works, prefix="inverse_try")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)

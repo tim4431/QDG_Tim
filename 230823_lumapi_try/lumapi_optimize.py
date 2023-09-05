@@ -104,9 +104,9 @@ def analysis_FOM(l, T, **kwargs):
 
     # >>> analysis <<< #
     if grating_typ == "subw_grating":
-        _crop_range =  3*FWHM
+        _crop_range = 3 * FWHM
     elif grating_typ == "inverse_grating":
-        _crop_range = 3*FWHM
+        _crop_range = 3 * FWHM
     else:
         raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
     l_c, T_c = _data_crop(l, T, lambda_0, _crop_range)
@@ -447,10 +447,10 @@ def run_optimize(dataName, **kwargs):
             raise ValueError("Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
     elif grating_typ == "inverse_grating":
         paras_min = np.array(
-            [10e-6] + [100e-9] * N_unit + [0.05] * N_unit, dtype=np.float_
+            [10e-6] + [200e-9] * N_unit + [0.05] * N_unit, dtype=np.float_
         )
         paras_max = np.array(
-            [20e-6] + [1.5e-6] * N_unit + [0.95] * N_unit, dtype=np.float_
+            [25e-6] + [1.1e-6] * N_unit + [0.95] * N_unit, dtype=np.float_
         )
     else:
         raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
@@ -475,9 +475,6 @@ def run_optimize(dataName, **kwargs):
                     NH=NH,
                 )
                 pitch_list, ff_list = grating_to_pitch_ff(grating)
-                # add random noise
-                # pitch_list = pitch_list * np.random.uniform(0.95, 1.05, N_unit)
-                # ff_list = ff_list * np.random.uniform(0.95, 1.05, N_unit)
                 paras = np.hstack((fiberx, pitch_list, ff_list))
                 # print(paras.shape)
         else:  # np.ndarray
@@ -485,6 +482,8 @@ def run_optimize(dataName, **kwargs):
     else:
         # paras = np.random.uniform(paras_min, paras_max)
         paras = (paras_min + paras_max) / 2
+        # add random noise
+        paras = paras * np.random.uniform(0.8, 1.2, len(paras))
     #
     paras_bounds = opt.Bounds(paras_min, paras_max)  # type: ignore
     # plot setup
