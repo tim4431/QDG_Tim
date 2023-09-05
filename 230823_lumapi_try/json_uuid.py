@@ -40,7 +40,7 @@ def uuid_to_logname(uuid):
 
 def save_json(data):
     # Generate a uuid
-    uuid = _generate_uuid(data)
+    uuid = _generate_uuid(_default_wrapper(data))
     data["uuid"] = uuid
     # Save the JSON object to a file
     setup_wd(uuid)
@@ -48,6 +48,13 @@ def save_json(data):
     with open(json_filename, "w") as json_file:
         json.dump(data, json_file, indent=4, sort_keys=True)
     return uuid
+
+
+def _default_wrapper(data):
+    for key in DEFAULT_PARA.keys():
+        if key not in data:
+            data[key] = DEFAULT_PARA[key]
+    return data
 
 
 def load_json(uuid):
@@ -59,7 +66,7 @@ def load_json(uuid):
             if uuid != data["uuid"]:
                 raise ValueError("uuid is not correct, file is modified")
             data.pop("uuid")
-        return data
+        return _default_wrapper(data)
 
 
 def getdataName(uuid):

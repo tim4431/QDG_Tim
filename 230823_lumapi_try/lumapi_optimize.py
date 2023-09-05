@@ -159,12 +159,21 @@ def set_params(fdtd, paras, **kwargs):
         fiberx = paras[4]
         #
     elif grating_typ == "inverse_grating":
-        fiberx = paras[0]
         pitch_list = paras[1 : 1 + N]
         fdtd.setnamed(grating_typ, "pitch_list", pitch_list)
         ff_list = paras[1 + N : 1 + 2 * N]
         fdtd.setnamed(grating_typ, "ff_list", ff_list)
-    #
+        fiberx = paras[0]
+        #
+    elif grating_typ == "grating":
+        Lambda = paras[0]
+        fdtd.setnamed(grating_typ, "Lambda", Lambda)
+        ff = paras[1]
+        fdtd.setnamed(grating_typ, "ff", ff)
+        fiberx = paras[2]
+        #
+    else:
+        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
 
     if SOURCE_typ in ["gaussian_released", "gaussian_packaged"]:
         fdtd.setnamed("source", "x", fiberx)  # type: ignore
@@ -200,6 +209,10 @@ def calc_min_feature(paras, **kwargs) -> float:
             feature_i = pitch_list[i] * min((1 - ff_list[i]), ff_list[i])
             _min_feature = min(_min_feature, feature_i)
         return float(_min_feature)
+    elif grating_typ == "grating":
+        Lambda = paras[0]
+        ff = paras[1]
+        return float(min(Lambda * ff, Lambda * (1 - ff)))  # type: ignore
     else:
         raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
 
@@ -394,6 +407,14 @@ def setup_grating_structuregroup(fdtd, **kwargs):
         fdtd.setnamed(
             "inverse_grating", "script", load_script("inverse_grating_concentric.lsf")
         )
+    elif grating_typ == "grating":
+        #
+        fdtd.adduserprop("Lambda", 2, 1.1e-6)
+        fdtd.adduserprop("ff", 0, 0.5)
+        #
+        fdtd.setnamed("grating", "script", load_script("grating_concentric.lsf"))
+    else:
+        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
 
 
 def load_template(dataName, SOURCE_typ, purpose=""):
@@ -438,8 +459,44 @@ def convert_paras_init(para, kwargs, kwargs_init):
             return paras
         elif grating_typ_init == "inverse_grating":
             return para
+    elif grating_typ == "grating":  # can only be converted from grating
+        if grating_typ_init == "grating":
+            return para
+        else:
+            raise ValueError("Invalid grating_typ_init: {:s}".format(grating_typ_init))
     else:
         raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+
+
+def get_paras_bound(**kwargs):
+    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
+    SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
+    N = kwargs.get("N", DEFAULT_PARA["N"])
+    #
+    if grating_typ == "subw_grating":  # [Lambda, ffL, ffH, ff, fiberx]
+        NL = kwargs.get("NL", DEFAULT_PARA["NL"])
+        if SOURCE_typ == "gaussian_packaged":
+            paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
+            paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6], dtype=np.float_)
+        elif SOURCE_typ == "gaussian_released":
+            if NL == 2:
+                paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6], dtype=np.float_)
+                paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6], dtype=np.float_)
+            else:
+                paras_min = np.array([0.4e-6, 0.00, 0.3, 0.2, 10e-6], dtype=np.float_)
+                paras_max = np.array([1.3e-6, 0.5, 0.95, 0.8, 22e-6], dtype=np.float_)
+        else:
+            raise ValueError("Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
+    elif grating_typ == "inverse_grating":  # [fiberx, pitch_list, ff_list]
+        paras_min = np.array([10e-6] + [200e-9] * N + [0.05] * N, dtype=np.float_)
+        paras_max = np.array([25e-6] + [1.1e-6] * N + [0.95] * N, dtype=np.float_)
+    elif grating_typ == "grating":  # [Lambda, ff, fiberx]
+        paras_min = np.array([0.3e-6, 0.1, 12e-6], dtype=np.float_)
+        paras_max = np.array([1.1e-6, 0.9, 20e-6], dtype=np.float_)
+    else:
+        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+    #
+    return paras_min, paras_max
 
 
 def run_optimize(dataName, **kwargs):
@@ -454,32 +511,8 @@ def run_optimize(dataName, **kwargs):
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
     maxiter = kwargs.get("maxiter", DEFAULT_PARA["maxiter"])
-    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
-    N = kwargs.get("N", DEFAULT_PARA["N"])
     # >>> parameter bounds <<< #
-    if grating_typ == "subw_grating":
-        NL = kwargs.get("NL", DEFAULT_PARA["NL"])
-        NH = kwargs.get("NH", DEFAULT_PARA["NH"])
-        if SOURCE_typ == "gaussian_packaged":
-            paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
-            paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6], dtype=np.float_)
-        elif SOURCE_typ == "gaussian_released":
-            if NL == 2:
-                paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6], dtype=np.float_)
-                paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6], dtype=np.float_)
-            else:
-                paras_min = np.array([0.4e-6, 0.00, 0.3, 0.2, 10e-6], dtype=np.float_)
-                paras_max = np.array([1.3e-6, 0.5, 0.95, 0.8, 22e-6], dtype=np.float_)
-        else:
-            raise ValueError("Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
-    elif grating_typ == "inverse_grating":
-        paras_min = np.array([10e-6] + [200e-9] * N + [0.05] * N, dtype=np.float_)
-        paras_max = np.array([25e-6] + [1.1e-6] * N + [0.95] * N, dtype=np.float_)
-    elif grating_typ == "grating":
-        paras_min = np.array([1.1e-6, 0.1, 12e-6], dtype=np.float_)
-        paras_max = np.array([1.7e-6, 0.9, 20e-6], dtype=np.float_)
-    else:
-        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+    paras_min, paras_max = get_paras_bound(**kwargs)
     # >>> paras_init <<< #
     paras_init = kwargs.get("paras_init", DEFAULT_PARA["paras_init"])
     if paras_init is not None:  # initialize the paras
