@@ -107,8 +107,10 @@ def analysis_FOM(l, T, **kwargs):
         _crop_range = 3 * FWHM
     elif grating_typ == "inverse_grating":
         _crop_range = 3 * FWHM
+    elif grating_typ == "grating":
+        _crop_range = 3 * FWHM
     else:
-        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+        raise ValueError("analysis_FOM: Invalid grating_typ: {:s}".format(grating_typ))
     l_c, T_c = _data_crop(l, T, lambda_0, _crop_range)
     T_des = _gaussian_curve(l_c, lambda_0, FWHM)
     cross_correlation = _cross_correlation(T_c, T_des)
@@ -173,7 +175,7 @@ def set_params(fdtd, paras, **kwargs):
         fiberx = paras[2]
         #
     else:
-        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+        raise ValueError("set_params: Invalid grating_typ: {:s}".format(grating_typ))
 
     if SOURCE_typ in ["gaussian_released", "gaussian_packaged"]:
         fdtd.setnamed("source", "x", fiberx)  # type: ignore
@@ -214,7 +216,9 @@ def calc_min_feature(paras, **kwargs) -> float:
         ff = paras[1]
         return float(min(Lambda * ff, Lambda * (1 - ff)))  # type: ignore
     else:
-        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+        raise ValueError(
+            "calc_min_feature: Invalid grating_typ: {:s}".format(grating_typ)
+        )
 
 
 def fdtd_iter(fdtd, paras, **kwargs):
@@ -414,7 +418,11 @@ def setup_grating_structuregroup(fdtd, **kwargs):
         #
         fdtd.setnamed("grating", "script", load_script("grating_concentric.lsf"))
     else:
-        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+        raise ValueError(
+            "setup_grating_structuregroup: Invalid grating_typ: {:s}".format(
+                grating_typ
+            )
+        )
 
 
 def load_template(dataName, SOURCE_typ, purpose=""):
@@ -436,7 +444,11 @@ def convert_paras_init(para, kwargs, kwargs_init):
         if grating_typ_init == "subw_grating":
             return para
         else:
-            raise ValueError("Invalid grating_typ_init: {:s}".format(grating_typ_init))
+            raise ValueError(
+                "convert_paras_init: Invalid grating_typ_init: {:s}".format(
+                    grating_typ_init
+                )
+            )
     elif (
         grating_typ == "inverse_grating"
     ):  # can be converted from subw_grating or inverse_grating
@@ -463,9 +475,15 @@ def convert_paras_init(para, kwargs, kwargs_init):
         if grating_typ_init == "grating":
             return para
         else:
-            raise ValueError("Invalid grating_typ_init: {:s}".format(grating_typ_init))
+            raise ValueError(
+                "convert_paras_init: Invalid grating_typ_init: {:s}".format(
+                    grating_typ_init
+                )
+            )
     else:
-        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+        raise ValueError(
+            "convert_paras_init: Invalid grating_typ: {:s}".format(grating_typ)
+        )
 
 
 def get_paras_bound(**kwargs):
@@ -486,7 +504,9 @@ def get_paras_bound(**kwargs):
                 paras_min = np.array([0.4e-6, 0.00, 0.3, 0.2, 10e-6], dtype=np.float_)
                 paras_max = np.array([1.3e-6, 0.5, 0.95, 0.8, 22e-6], dtype=np.float_)
         else:
-            raise ValueError("Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
+            raise ValueError(
+                "get_paras_bound: Invalid SOURCE_typ: {:s}".format(SOURCE_typ)
+            )
     elif grating_typ == "inverse_grating":  # [fiberx, pitch_list, ff_list]
         paras_min = np.array([10e-6] + [200e-9] * N + [0.05] * N, dtype=np.float_)
         paras_max = np.array([25e-6] + [1.1e-6] * N + [0.95] * N, dtype=np.float_)
@@ -494,7 +514,9 @@ def get_paras_bound(**kwargs):
         paras_min = np.array([0.3e-6, 0.1, 12e-6], dtype=np.float_)
         paras_max = np.array([1.1e-6, 0.9, 20e-6], dtype=np.float_)
     else:
-        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
+        raise ValueError(
+            "get_paras_bound: Invalid grating_typ: {:s}".format(grating_typ)
+        )
     #
     return paras_min, paras_max
 
@@ -523,7 +545,9 @@ def run_optimize(dataName, **kwargs):
         elif isinstance(paras_init, list) or isinstance(paras_init, np.ndarray):
             paras = np.asarray(paras_init)
         else:
-            raise ValueError("Invalid paras_init: {:s}".format(paras_init))
+            raise ValueError(
+                "run_optimize: Invalid paras_init: {:s}".format(paras_init)
+            )
     else:  # no initialization
         # paras = np.random.uniform(paras_min, paras_max)
         paras = (paras_min + paras_max) / 2
