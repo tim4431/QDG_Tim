@@ -104,9 +104,9 @@ def analysis_FOM(l, T, **kwargs):
 
     # >>> analysis <<< #
     if grating_typ == "subw_grating":
-        _crop_range = 2 * FWHM
+        _crop_range =  3*FWHM
     elif grating_typ == "inverse_grating":
-        _crop_range = FWHM
+        _crop_range = 3*FWHM
     else:
         raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
     l_c, T_c = _data_crop(l, T, lambda_0, _crop_range)

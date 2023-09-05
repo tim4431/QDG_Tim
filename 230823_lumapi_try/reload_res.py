@@ -2,6 +2,7 @@ from lumapi_optimize import (
     getdataName,
     setup_source,
     setup_monitor,
+    setup_grating_structuregroup,
     fdtd_iter,
     load_template,
 )
@@ -42,6 +43,7 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
         try:
             setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension=dimension)
             setup_monitor(fdtd, monitor=monitor, movie=False)
+            setup_grating_structuregroup(fdtd, **kwargs)
             #
             if tether_typ is not None:
                 gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
@@ -98,26 +100,33 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
 
 
 if __name__ == "__main__":
-    uuid = "4e25"
+    uuid = "284b"
 
-    #
+    # #
+    # reload_work(
+    #     uuid,
+    #     dimension="3D",
+    #     tether_typ="empty",
+    #     pause=False,
+    # )
+    # #
+    # reload_work(
+    #     uuid,
+    #     dimension="3D",
+    #     tether_typ="section_tether",
+    #     pause=False,
+    # )
+    # #
+    # reload_work(
+    #     uuid,
+    #     dimension="3D",
+    #     tether_typ="section_rect_tether",
+    #     pause=False,
+    # )
     reload_work(
         uuid,
-        dimension="3D",
-        tether_typ="empty",
-        pause=False,
-    )
-    #
-    reload_work(
-        uuid,
-        dimension="3D",
-        tether_typ="section_tether",
-        pause=False,
-    )
-    #
-    reload_work(
-        uuid,
-        dimension="3D",
-        tether_typ="section_rect_tether",
-        pause=False,
+        dimension="2D",
+        tether_typ=None,
+        monitor= False,
+        pause=True,
     )
