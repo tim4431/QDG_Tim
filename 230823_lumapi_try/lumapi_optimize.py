@@ -434,7 +434,7 @@ def run_optimize(dataName, **kwargs):
             paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
             paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6], dtype=np.float_)
         elif SOURCE_typ == "gaussian_released":
-            if NL == 2 and NH == 2:
+            if NL == 2:
                 paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6], dtype=np.float_)
                 paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6], dtype=np.float_)
             else:
@@ -483,7 +483,7 @@ def run_optimize(dataName, **kwargs):
         # paras = np.random.uniform(paras_min, paras_max)
         paras = (paras_min + paras_max) / 2
         # add random noise
-        paras = paras * np.random.uniform(0.8, 1.2, len(paras))
+        # paras = paras * np.random.uniform(0.8, 1.2, len(paras))
     #
     paras_bounds = opt.Bounds(paras_min, paras_max)  # type: ignore
     # plot setup
