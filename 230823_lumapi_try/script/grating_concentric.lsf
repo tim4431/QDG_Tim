@@ -1,0 +1,49 @@
+deleteall;
+
+
+# position
+set("x",0);
+set("y",0);
+set("z",0.11e-6);
+
+
+# rotaion
+set("first axis","x");
+set("rotation 1",90);
+
+# add input waveguide
+addrect;
+set("name","input");
+set("material","Si (Silicon) - Palik");
+set("x min",-10e-6);
+set("x max",1e-6);
+set("y min",-175e-9);
+set("y max",175e-9);
+set("z min",-wg_h/2);
+set("z max",wg_h/2);
+
+# add taper
+addring;
+set("name","taper");
+set("material","Si (Silicon) - Palik");
+set("inner radius",0);
+set("outer radius",start_radius);
+set("z min",-wg_h/2);
+set("z max",wg_h/2);
+set("theta start",-taper_angle);
+set("theta stop",taper_angle);
+
+# add grating
+for(j=1:N){
+    x0=start_radius+Lambda*(j-1);
+
+    addring;
+    set("name","grating_"+num2str(j));
+    set("material","Si (Silicon) - Palik");
+    set("inner radius",x0 + Lambda*(1-ff));
+    set("outer radius",x0 + Lambda);
+    set("z min",-wg_h/2);
+    set("z max",wg_h/2);
+    set("theta start",-taper_angle);
+    set("theta stop",taper_angle);
+}

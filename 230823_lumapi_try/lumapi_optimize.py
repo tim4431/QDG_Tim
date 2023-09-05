@@ -548,6 +548,8 @@ def run_optimize(dataName, **kwargs):
     #
     with load_template(dataName, SOURCE_typ, purpose="scan") as fdtd:
         kwargs1 = {
+            **kwargs,
+            #
             "plot": True,
             #
             "transmissionHist": transmissionHist,
@@ -565,7 +567,6 @@ def run_optimize(dataName, **kwargs):
             "fig_lambda0_his": fig_lambda0_his,
             "fig_FWHM_his": fig_FWHM_his,
             #
-            **kwargs,
         }
         # >>> setting up simulation <<< #
         grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
