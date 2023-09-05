@@ -109,7 +109,7 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
 
 
 if __name__ == "__main__":
-    uuid = "284b"
+    uuid = "4e25"
 
     # #
     # reload_work(
@@ -126,16 +126,16 @@ if __name__ == "__main__":
     #     pause=False,
     # )
     # #
-    # reload_work(
-    #     uuid,
-    #     dimension="3D",
-    #     tether_typ="section_rect_tether",
-    #     pause=False,
-    # )
     reload_work(
         uuid,
-        dimension="2D",
-        tether_typ=None,
-        monitor=False,
-        pause=True,
+        dimension="3D",
+        tether_typ="section_rect_tether",
+        pause=False,
     )
+    # reload_work(
+    #     uuid,
+    #     dimension="2D",
+    #     tether_typ=None,
+    #     monitor=False,
+    #     pause=True,
+    # )

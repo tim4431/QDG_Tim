@@ -340,27 +340,40 @@ def grating_tether(
     # add suspension
     if (mask_func is not None) and suspend:
         suspend_ref = c << gf.components.rectangle(
-            size=(start_radius + (grating[-1] - PATCH_LENGTH), 0.35), layer="WG"
+            size=(2 + (grating[-1] - PATCH_LENGTH), 0.35), layer="WG"
         )
-        suspend_ref.xmin = 2
+        suspend_ref.xmin = start_radius - 2
         suspend_ref.y = 0
     #
     return c
 
 
-def recipes(tether_typ: str) -> tuple:
+def recipes(tether_typ: str) -> dict:
     if tether_typ == "rect":
-        return (rect_mask, None, 40)
+        return {"mask_func": rect_mask, "tether_func": None, "grating_angle": 40}
     elif tether_typ == "section":
-        return (section_mask, None, 24)
+        return {"mask_func": section_mask, "tether_func": None, "grating_angle": 24}
     elif tether_typ == "empty":
-        return (None, None, 24)
+        return {"mask_func": None, "tether_func": None, "grating_angle": 24}
     elif tether_typ == "section_tether":
-        return (section_mask, section_tether, 24)
+        return {
+            "mask_func": section_mask,
+            "tether_func": section_tether,
+            "grating_angle": 24,
+        }
     elif tether_typ == "section_rect_tether":
-        return (section_rect_mask, section_tether, 24)
+        return {
+            "mask_func": section_rect_mask,
+            "tether_func": section_tether,
+            "grating_angle": 24,
+            "suspend": True,
+        }
     else:
-        return (None, None, None)
+        return {
+            "mask_func": None,
+            "tether_func": None,
+            "grating_angle": None,
+        }
 
 
 if __name__ == "__main__":
@@ -375,19 +388,7 @@ if __name__ == "__main__":
     #
     para = recipes("section_rect_tether")
     c = grating_tether(
-        N,
-        Lambda,
-        ff,
-        ffL,
-        ffH,
-        NL,
-        NH,
-        mask_func=para[0],
-        tether_func=para[1],
-        grating_angle=para[2],
-        start_radius=10,
-        input_length=10,
-        suspend=False,
+        N, Lambda, ff, ffL, ffH, NL, NH, start_radius=12, input_length=10, **para
     )
     # c = section_tether(30, 24)
     # d = skeleton(30, 24, 3, 1.5)

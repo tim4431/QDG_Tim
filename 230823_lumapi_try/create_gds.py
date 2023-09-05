@@ -1,7 +1,13 @@
 from json_uuid import load_json, uuid_to_wd, load_paras
 from const_var import DEFAULT_PARA
 import sys
+
+sys.path.append("..")
 import os
+from lib.grating.grating_tether import (
+    grating_tether,
+    recipes,
+)
 
 
 def generate_gds_fileName(uuid, tether_typ: str = "empty"):
@@ -20,11 +26,6 @@ def generate_gds_fileName(uuid, tether_typ: str = "empty"):
 
 
 def create_gds(uuid, tether_typ: str = "empty"):
-    from lib.grating.grating_tether import (
-        grating_tether,
-        recipes,
-    )
-
     kwargs = load_json(uuid)
     paras = load_paras(uuid)
     #
@@ -47,12 +48,9 @@ def create_gds(uuid, tether_typ: str = "empty"):
         ffH,
         NL,
         NH,
-        mask_func=para[0],
-        tether_func=para[1],
-        grating_angle=para[2],
         start_radius=start_radius * 1e6,
         input_length=10,
-        suspend=False,
+        **para
     )
     gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
     c.write_gds(gds_fileName)
@@ -63,7 +61,8 @@ def create_gds(uuid, tether_typ: str = "empty"):
 
 if __name__ == "__main__":
     uuid = "4e25"
-    tether_typ_list = ["empty", "section_tether", "section_rect_tether"]
+    # tether_typ_list = ["empty", "section_tether", "section_rect_tether"]
+    tether_typ_list = ["section_rect_tether"]
     for tether_typ in tether_typ_list:
         gds_fileName = create_gds(uuid, tether_typ=tether_typ)
         print(gds_fileName)
