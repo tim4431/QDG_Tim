@@ -145,7 +145,6 @@ def set_params(fdtd, paras, **kwargs):
     grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
-    N_unit = kwargs.get("N_unit", N)
     #
     if grating_typ == "subw_grating":
         #
@@ -158,11 +157,12 @@ def set_params(fdtd, paras, **kwargs):
         ff = paras[3]
         fdtd.setnamed(grating_typ, "ff", ff)
         fiberx = paras[4]
+        #
     elif grating_typ == "inverse_grating":
         fiberx = paras[0]
-        pitch_list = paras[1 : 1 + N_unit]
+        pitch_list = paras[1 : 1 + N]
         fdtd.setnamed(grating_typ, "pitch_list", pitch_list)
-        ff_list = paras[1 + N_unit : 1 + 2 * N_unit]
+        ff_list = paras[1 + N : 1 + 2 * N]
         fdtd.setnamed(grating_typ, "ff_list", ff_list)
     #
 
@@ -172,8 +172,14 @@ def set_params(fdtd, paras, **kwargs):
         fdtd.setnamed("fiber", "x", fiberx)  # type: ignore
 
 
-def calc_min_feature(paras, grating_typ, N_unit=10, NL=2, NH=3) -> float:
+def calc_min_feature(paras, **kwargs) -> float:
+    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
+    N = kwargs.get("N", DEFAULT_PARA["N"])
+    #
     if grating_typ == "subw_grating":
+        NL = kwargs.get("NL", DEFAULT_PARA["NL"])
+        NH = kwargs.get("NH", DEFAULT_PARA["NH"])
+        #
         Lambda = paras[0]
         ffL = paras[1]
         ffH = paras[2]
@@ -187,10 +193,10 @@ def calc_min_feature(paras, grating_typ, N_unit=10, NL=2, NH=3) -> float:
         #
         return float(min(min_L, min_H))  # type: ignore
     elif grating_typ == "inverse_grating":
-        pitch_list = paras[1 : 1 + N_unit]
-        ff_list = paras[1 + N_unit : 1 + 2 * N_unit]
+        pitch_list = paras[1 : 1 + N]
+        ff_list = paras[1 + N : 1 + 2 * N]
         _min_feature = 1
-        for i in range(1, N_unit):  # the first unit does not count
+        for i in range(1, N):  # the first unit does not count
             feature_i = pitch_list[i] * min((1 - ff_list[i]), ff_list[i])
             _min_feature = min(_min_feature, feature_i)
         return float(_min_feature)
@@ -234,12 +240,7 @@ def optimize_wrapper(fdtd, paras, **kwargs):
     #
     # >>> Figure of merit <<< #
     # Feature size penalty
-    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
-    N = kwargs.get("N", DEFAULT_PARA["N"])
-    NL = kwargs.get("NL", DEFAULT_PARA["NL"])
-    NH = kwargs.get("NH", DEFAULT_PARA["NH"])
-    N_unit = kwargs.get("N_unit", N)
-    feature_size = calc_min_feature(paras, grating_typ, N_unit=N_unit, NL=NL, NH=NH)
+    feature_size = calc_min_feature(paras, **kwargs)
     MIN_FEATURE_SIZE = kwargs.get("MIN_FEATURE_SIZE", DEFAULT_PARA["MIN_FEATURE_SIZE"])
     feature_size_penalty = (
         0.3
@@ -363,9 +364,6 @@ def setup_grating_structuregroup(fdtd, **kwargs):
     start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
     taper_angle = kwargs.get("taper_angle", DEFAULT_PARA["taper_angle"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
-    NL = kwargs.get("NL", DEFAULT_PARA["NL"])
-    NH = kwargs.get("NH", DEFAULT_PARA["NH"])
-    N_unit = kwargs.get("N_unit", N)
     #
     fdtd.addstructuregroup(name=grating_typ)
     fdtd.adduserprop("start_radius", 2, start_radius)
@@ -373,6 +371,8 @@ def setup_grating_structuregroup(fdtd, **kwargs):
     fdtd.adduserprop("wg_h", 2, 220e-9)
     #
     if grating_typ == "subw_grating":
+        NL = kwargs.get("NL", DEFAULT_PARA["NL"])
+        NH = kwargs.get("NH", DEFAULT_PARA["NH"])
         #
         fdtd.adduserprop("Lambda", 2, 1.1e-6)
         fdtd.adduserprop("ff", 0, 0.5)
@@ -380,16 +380,16 @@ def setup_grating_structuregroup(fdtd, **kwargs):
         fdtd.adduserprop("ffH", 0, 0.8)
         fdtd.adduserprop("NL", 0, NL)
         fdtd.adduserprop("NH", 0, NH)
-        fdtd.adduserprop("N", 0, N_unit)
+        fdtd.adduserprop("N", 0, N)
         #
         fdtd.setnamed(
             "subw_grating", "script", load_script("subw_grating_concentric.lsf")
         )
     elif grating_typ == "inverse_grating":
         #
-        fdtd.adduserprop("N", 0, N_unit)
-        fdtd.adduserprop("pitch_list", 6, np.array([0.5e-6] * N_unit))
-        fdtd.adduserprop("ff_list", 6, np.array([0.2] * N_unit))
+        fdtd.adduserprop("N", 0, N)
+        fdtd.adduserprop("pitch_list", 6, np.array([0.5e-6] * N))
+        fdtd.adduserprop("ff_list", 6, np.array([0.2] * N))
         #
         fdtd.setnamed(
             "inverse_grating", "script", load_script("inverse_grating_concentric.lsf")
@@ -403,6 +403,43 @@ def load_template(dataName, SOURCE_typ, purpose=""):
     dest_fileName = "{:s}_{:s}_subw_{:s}.fsp".format(dataName, purpose, SOURCE_typ)
     shutil.copy("./subw_{:s}_template.fsp".format(SOURCE_typ), dest_fileName)
     return lumapi.FDTD(dest_fileName)
+
+
+def convert_paras_init(para, kwargs, kwargs_init):
+    from lib.grating.subwavelength import subw_grating, grating_to_pitch_ff
+
+    #
+    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
+    grating_typ_init = kwargs_init.get("grating_typ", DEFAULT_PARA["grating_typ"])
+    if grating_typ == "subw_grating":  # should only be converted from subw_grating
+        if grating_typ_init == "subw_grating":
+            return para
+        else:
+            raise ValueError("Invalid grating_typ_init: {:s}".format(grating_typ_init))
+    elif (
+        grating_typ == "inverse_grating"
+    ):  # can be converted from subw_grating or inverse_grating
+        if grating_typ_init == "subw_grating":
+            fiberx = para[4]
+            N = kwargs_init.get("N", DEFAULT_PARA["N"])
+            NL = kwargs_init.get("NL", DEFAULT_PARA["NL"])
+            NH = kwargs_init.get("NH", DEFAULT_PARA["NH"])
+            grating = subw_grating(
+                N=N,
+                Lambda=para[0],
+                ff=para[3],
+                ffL=para[1],
+                ffH=para[2],
+                NL=NL,
+                NH=NH,
+            )
+            pitch_list, ff_list = grating_to_pitch_ff(grating)
+            paras = np.hstack((fiberx, pitch_list, ff_list))
+            return paras
+        elif grating_typ_init == "inverse_grating":
+            return para
+    else:
+        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
 
 
 def run_optimize(dataName, **kwargs):
@@ -419,17 +456,10 @@ def run_optimize(dataName, **kwargs):
     maxiter = kwargs.get("maxiter", DEFAULT_PARA["maxiter"])
     grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
-    NL = kwargs.get("NL", DEFAULT_PARA["NL"])
-    NH = kwargs.get("NH", DEFAULT_PARA["NH"])
-    if grating_typ == "inverse_grating":
-        N_unit = N * (NL + NH)
-    elif grating_typ == "subw_grating":
-        N_unit = N
-    else:
-        raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
-    kwargs["N_unit"] = N_unit
     # >>> parameter bounds <<< #
     if grating_typ == "subw_grating":
+        NL = kwargs.get("NL", DEFAULT_PARA["NL"])
+        NH = kwargs.get("NH", DEFAULT_PARA["NH"])
         if SOURCE_typ == "gaussian_packaged":
             paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
             paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6], dtype=np.float_)
@@ -440,46 +470,28 @@ def run_optimize(dataName, **kwargs):
             else:
                 paras_min = np.array([0.4e-6, 0.00, 0.3, 0.2, 10e-6], dtype=np.float_)
                 paras_max = np.array([1.3e-6, 0.5, 0.95, 0.8, 22e-6], dtype=np.float_)
-        elif SOURCE_typ == "fiber":
-            paras_min = np.array([0.7e-6, 0.1, 0.3, 0.3, 12e-6], dtype=np.float_)
-            paras_max = np.array([1.0e-6, 0.4, 0.8, 0.6, 18e-6], dtype=np.float_)
         else:
             raise ValueError("Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
     elif grating_typ == "inverse_grating":
-        paras_min = np.array(
-            [10e-6] + [200e-9] * N_unit + [0.05] * N_unit, dtype=np.float_
-        )
-        paras_max = np.array(
-            [25e-6] + [1.1e-6] * N_unit + [0.95] * N_unit, dtype=np.float_
-        )
+        paras_min = np.array([10e-6] + [200e-9] * N + [0.05] * N, dtype=np.float_)
+        paras_max = np.array([25e-6] + [1.1e-6] * N + [0.95] * N, dtype=np.float_)
+    elif grating_typ == "grating":
+        paras_min = np.array([1.1e-6, 0.1, 12e-6], dtype=np.float_)
+        paras_max = np.array([1.7e-6, 0.9, 20e-6], dtype=np.float_)
     else:
         raise ValueError("Invalid grating_typ: {:s}".format(grating_typ))
     # >>> paras_init <<< #
     paras_init = kwargs.get("paras_init", DEFAULT_PARA["paras_init"])
-    if paras_init is not None:
+    if paras_init is not None:  # initialize the paras
         if isinstance(paras_init, str):  # uuid
-            if grating_typ == "subw_grating":
-                paras = load_paras(paras_init)
-            else:
-                para = load_paras(paras_init)
-                fiberx = para[4]
-                from lib.grating.subwavelength import subw_grating, grating_to_pitch_ff
-
-                grating = subw_grating(
-                    N=N,
-                    Lambda=para[0],
-                    ff=para[3],
-                    ffL=para[1],
-                    ffH=para[2],
-                    NL=NL,
-                    NH=NH,
-                )
-                pitch_list, ff_list = grating_to_pitch_ff(grating)
-                paras = np.hstack((fiberx, pitch_list, ff_list))
-                # print(paras.shape)
-        else:  # np.ndarray
-            paras = paras_init
-    else:
+            para = load_paras(paras_init)
+            kwargs_init = load_json(paras_init)
+            paras = convert_paras_init(para, kwargs, kwargs_init)
+        elif isinstance(paras_init, list) or isinstance(paras_init, np.ndarray):
+            paras = np.asarray(paras_init)
+        else:
+            raise ValueError("Invalid paras_init: {:s}".format(paras_init))
+    else:  # no initialization
         # paras = np.random.uniform(paras_min, paras_max)
         paras = (paras_min + paras_max) / 2
         # add random noise
