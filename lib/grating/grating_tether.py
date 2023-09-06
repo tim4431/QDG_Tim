@@ -36,6 +36,16 @@ def grating_mask_tether(grating, grating_mask, tether=None, input_length: float 
     grating_masked = gf.geometry.boolean(
         mask_ref, grating_ref, operation="and", layer="WG"
     )
+    hole = gf.components.rectangle(size=(0.35, 0.35), layer="WG")
+    grating_masked_ref = grating_masked.ref()
+    grating_masked_ref.xmin = -input_length
+    grating_masked_ref.y = 0
+    hole_ref = hole.ref()
+    hole_ref.xmin = 9
+    hole_ref.y = 0
+    grating_masked = gf.geometry.boolean(
+        grating_masked_ref, hole_ref, operation="not", layer="WG"
+    )
     grating_masked_ref = c << grating_masked
 
     # outer rectangle is inner rectangle + 3um margin
@@ -361,7 +371,9 @@ def recipes(tether_typ: str) -> dict:
             "tether_func": section_tether,
             "grating_angle": 24,
         }
-    elif tether_typ == "section_rect_tether":
+    elif (
+        tether_typ == "section_rect_tether" or tether_typ == "section_rect_tether_hole"
+    ):
         return {
             "mask_func": section_rect_mask,
             "tether_func": section_tether,
@@ -386,7 +398,7 @@ if __name__ == "__main__":
     NH = 2
     N = 10
     #
-    para = recipes("section_rect_tether")
+    para = recipes("section_rect_tether_hole")
     c = grating_tether(
         N, Lambda, ff, ffL, ffH, NL, NH, start_radius=12, input_length=10, **para
     )
