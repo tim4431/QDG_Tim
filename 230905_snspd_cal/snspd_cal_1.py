@@ -11,11 +11,11 @@ def load_data(fileName):
     return dataI[I_mask], dataC[I_mask]
 
 
-I1l, C1l = load_data("./snspd1_lum.csv")
-I1d, C1d = load_data("./snspd1_dark.csv")
+I1l, C1l = load_data("./data1/snspd1_lum.csv")
+I1d, C1d = load_data("./data1/snspd1_dark.csv")
 C1l = C1l - C1d
-I2l, C2l = load_data("./snspd2_lum.csv")
-I2d, C2d = load_data("./snspd2_dark.csv")
+I2l, C2l = load_data("./data1/snspd2_lum.csv")
+I2d, C2d = load_data("./data1/snspd2_dark.csv")
 C2l = C2l - C2d
 
 THEO_cps = 41.96 * 1e3
@@ -83,5 +83,5 @@ plt.grid(True)
 ax1.legend(lines1 + lines2, labels1 + labels2, loc="upper left")
 
 plt.tight_layout()
-plt.savefig("snspd_cal.png", bbox_inches="tight")
+plt.savefig("snspd_cal_1.png", bbox_inches="tight")
 plt.show()
