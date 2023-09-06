@@ -378,7 +378,7 @@ def recipes(tether_typ: str) -> dict:
             "mask_func": section_rect_mask,
             "tether_func": section_tether,
             "grating_angle": 24,
-            "suspend": True,
+            "suspend": False,
         }
     else:
         return {
