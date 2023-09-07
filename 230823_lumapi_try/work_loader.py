@@ -292,17 +292,46 @@ if __name__ == "__main__":
         "SOURCE_typ": "gaussian_released",
         "start_radius": 12e-6,
     }
+    #
     work_grating_1 = {
         "lambda_0": 1.326e-6,
-        "FWHM": 40e-9,
+        "FWHM": 20e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
-        "N": 16,
+        "N": 14,
         "maxiter": 100,
         "MIN_FEATURE_SIZE": 40e-9,
         "FOM_typ": "square",
         "SOURCE_typ": "gaussian_released",
         "grating_typ": "grating",
+        "start_radius": 12e-6,
+    }
+    work_grating_2 = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 12,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "grating_typ": "grating",
+        "start_radius": 12e-6,
+    }
+    #
+    work_4e25_maxT = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 9,
+        "NL": 2,
+        "NH": 2,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "single",
+        "SOURCE_typ": "gaussian_released",
         "start_radius": 12e-6,
     }
 
@@ -312,7 +341,7 @@ if __name__ == "__main__":  # type: ignore
     # works = [work9, work10, work11, work11_5, work12, work13, work14, work15, work16]
     # works = [work9,work10,work11,work12,work13,work14]
     # works = [work_inverse_1, work_inverse_2, work_inverse_3]
-    works = [work_grating_1]
+    works = [work_grating_1, work_grating_2, work_4e25_maxT]
     # works = [work_4e25_inverse]
     work_loader(works, prefix="grating_test")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
