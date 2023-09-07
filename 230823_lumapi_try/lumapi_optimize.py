@@ -30,7 +30,7 @@ from const_var import DEFAULT_PARA
 
 
 def process_data(fdtd, SOURCE_typ):
-    if SOURCE_typ in ["gaussian_released", "gaussian_packaged"]:
+    if "gaussian" in SOURCE_typ:
         res = fdtd.getresult("output", "T")
         mod_overlap = fdtd.getresult("output_TE", "expansion for output_TE")
     elif SOURCE_typ == "fiber":
@@ -177,7 +177,7 @@ def set_params(fdtd, paras, **kwargs):
     else:
         raise ValueError("set_params: Invalid grating_typ: {:s}".format(grating_typ))
 
-    if SOURCE_typ in ["gaussian_released", "gaussian_packaged"]:
+    if "gaussian" in SOURCE_typ:
         fdtd.setnamed("source", "x", fiberx)  # type: ignore
     elif SOURCE_typ == "fiber":
         fdtd.setnamed("fiber", "x", fiberx)  # type: ignore
@@ -330,7 +330,7 @@ def optimize_wrapper(fdtd, paras, **kwargs):
 
 def setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension="2D"):
     # set source
-    if SOURCE_typ in ["gaussian_released", "gaussian_packaged"]:
+    if "gaussian" in SOURCE_typ:
         fdtd.setnamed("source", "center wavelength", lambda_0)
         fdtd.setnamed("source", "wavelength span", max(400e-9, FWHM * 3))
         fdtd.setnamed("output_TE", "wavelength center", lambda_0)
@@ -390,7 +390,7 @@ def setup_grating_structuregroup(fdtd, **kwargs):
     fdtd.adduserprop("taper_angle", 0, taper_angle)
     fdtd.adduserprop("wg_h", 2, 220e-9)
     #
-    if grating_typ == "subw_grating":
+    if grating_typ in ["subw_grating", "subw_grating_notaper"]:
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
         NH = kwargs.get("NH", DEFAULT_PARA["NH"])
         #
@@ -403,7 +403,9 @@ def setup_grating_structuregroup(fdtd, **kwargs):
         fdtd.adduserprop("N", 0, N)
         #
         fdtd.setnamed(
-            "subw_grating", "script", load_script("subw_grating_concentric.lsf")
+            "subw_grating",
+            "script",
+            load_script("{:s}_concentric.lsf".format(grating_typ)),
         )
     elif grating_typ == "inverse_grating":
         #
@@ -497,10 +499,10 @@ def get_paras_bound(**kwargs):
     #
     if grating_typ == "subw_grating":  # [Lambda, ffL, ffH, ff, fiberx]
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
-        if SOURCE_typ == "gaussian_packaged":
+        if SOURCE_typ in ["gaussian_packaged", "gaussian_airclad"]:
             paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
             paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6], dtype=np.float_)
-        elif SOURCE_typ == "gaussian_released":
+        elif SOURCE_typ in ["gaussian_released", "gaussian_released_notaper"]:
             if NL == 2:
                 paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6], dtype=np.float_)
                 paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6], dtype=np.float_)
@@ -749,12 +751,3 @@ def load_work(uuid, logger):
     )
     #
     logger.info("Work done: {:s}".format(dataName))
-
-
-if __name__ == "__main__":
-    lambda_0 = 1.326e-6
-    FWHM = 0.3e-6
-    alpha = 0.02
-    penalty = (0.03, 40e-9)
-    SOURCE_typ = "gaussian_released"
-    #
