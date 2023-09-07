@@ -68,7 +68,9 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
                 fdtd.setnamed("GDS_LAYER_1:0", "first axis", "x")
                 fdtd.setnamed("GDS_LAYER_1:0", "rotation 1", 90)
             #
-            l, T, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(fdtd, paras, **kwargs)
+            l, T, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(
+                fdtd, paras, reload=True, **kwargs
+            )
             # print(l)
             # print(T)
             try:
@@ -136,6 +138,12 @@ if __name__ == "__main__":
         uuid,
         dimension="3D",
         tether_typ="section_rect_tether_hole",
+        pause=False,
+    )
+    reload_work(
+        uuid,
+        dimension="3D",
+        tether_typ="section_rect_tether_hole_suspend",
         pause=False,
     )
     # reload_work(

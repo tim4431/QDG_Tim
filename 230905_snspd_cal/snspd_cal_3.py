@@ -8,55 +8,31 @@ import numpy as np
 # sns.set_theme(style="darkgrid")
 
 
-def load_process_cnt_data(fileName, Imax=None, key1="I", key2="c"):
-    data = pd.read_csv(fileName)
-    dataI = data[key1].to_numpy()
-    dataC = data[key2].to_numpy()
-    if Imax is not None:
-        I_sel = dataI < Imax
-        dataI = dataI[I_sel]
-        dataC = dataC[I_sel]
-    #
-    I_list = sorted(list(set(dataI)))
-    mean_c_list = []
-    std_c_list = []
-    for Is in I_list:
-        # print(Is)
-        # for I=Is, cal mean and std of c
-        I_mask = dataI == Is
-        mean_c = np.mean(dataC[I_mask])
-        std_c = np.std(dataC[I_mask])
-        mean_c_list.append(mean_c)
-        std_c_list.append(std_c)
-
-    return np.array(I_list), np.array(mean_c_list), np.array(std_c_list)
+from snspd_cal_2 import load_process_cnt_data
 
 
 if __name__ == "__main__":
     I1l, C1l, stdC1l = load_process_cnt_data(
-        "./data2/snspd1_lum_combine.csv", Imax=14.4
+        "./data3/snspd1_lum_combine.csv", Imax=14.6
     )
     I1d, C1d, stdC1d = load_process_cnt_data(
-        "./data2/snspd1_dark_combine.csv", Imax=14.4
+        "./data2/snspd1_dark_combine.csv", Imax=14.6
     )
     C1l = C1l - C1d  # type: ignore
     stdC1l = np.sqrt(stdC1l**2 + stdC1d**2)  # type: ignore
     #
-    I2l, C2l, stdC2l = load_process_cnt_data(
-        "./data2/snspd2_lum_combine.csv", Imax=15.8
-    )
-    I2d, C2d, stdC2d = load_process_cnt_data(
-        "./data2/snspd2_dark_combine.csv", Imax=15.8
-    )
+    I2l, C2l, stdC2l = load_process_cnt_data("./data3/snspd2_lum_combine.csv", Imax=16)
+    I2d, C2d, stdC2d = load_process_cnt_data("./data2/snspd2_dark_combine.csv", Imax=16)
     C2l = C2l - C2d  # type: ignore
     stdC2l = np.sqrt(stdC2l**2 + stdC2d**2)  # type: ignore
-    THEO_cps = 20.56 * 1e3
+    THEO_cps = 277.3 * 1e3
     # Create a figure and axis for the primary plot
     fig, ax1 = plt.subplots(figsize=(9, 6))
     ax1.plot(
         I1l,
         C1l / THEO_cps,
         linestyle="-",
+        marker=".",
         color="b",
         label="snspd1,lum",
     )
@@ -73,6 +49,7 @@ if __name__ == "__main__":
         I2l,
         C2l / THEO_cps,
         linestyle="-",
+        marker=".",
         color="orange",
         label="snspd2,lum",
     )
@@ -126,7 +103,8 @@ if __name__ == "__main__":
     ax1.scatter(
         I1l[idx_1],
         C1l[idx_1] / THEO_cps,
-        marker="o",
+        marker="^",
+        s=80,
         color="b",
         label="{:.2f} uA,dark count={:.1f}, efficiency={:.2f}".format(
             I1l[idx_1], C1d[idx_1], C1l[idx_1] / THEO_cps
@@ -136,7 +114,8 @@ if __name__ == "__main__":
     ax1.scatter(
         I2l[idx_2],
         C2l[idx_2] / THEO_cps,
-        marker="o",
+        marker="^",
+        s=80,
         color="orange",
         label="{:.2f} uA,dark count={:.1f}, efficiency={:.2f}".format(
             I2l[idx_2], C2d[idx_2], C2l[idx_2] / THEO_cps
@@ -154,5 +133,5 @@ if __name__ == "__main__":
     # set grid to be gray, and partially transparent
     ax1.grid(color="gray", alpha=0.2)
 
-    plt.savefig("snspd_cal_2.png", dpi=300, bbox_inches="tight")
+    plt.savefig("snspd_cal_3.png", dpi=300, bbox_inches="tight")
     plt.show()

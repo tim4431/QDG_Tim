@@ -221,13 +221,14 @@ def calc_min_feature(paras, **kwargs) -> float:
         )
 
 
-def fdtd_iter(fdtd, paras, **kwargs):
+def fdtd_iter(fdtd, paras, reload=False, **kwargs):
     """l, T, maxT, FOM=fdtd_iter(fdtd, paras, **kwargs)"""
     #
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     #
     fdtd.switchtolayout()
-    set_params(fdtd, paras, **kwargs)
+    if not reload:
+        set_params(fdtd, paras, **kwargs)
     fdtd.run()
     l, T = process_data(fdtd, SOURCE_typ)
     #
@@ -253,7 +254,9 @@ def optimize_wrapper(fdtd, paras, **kwargs):
     lambda0Hist = kwargs.get("lambda0Hist", [])
     FWHMHist = kwargs.get("FWHMHist", [])
     # >>> Analyse <<< #
-    l, T, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(fdtd, paras, **kwargs)
+    l, T, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(
+        fdtd, paras, reload=False, **kwargs
+    )
     #
     # >>> Figure of merit <<< #
     # Feature size penalty
