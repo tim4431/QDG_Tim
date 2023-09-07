@@ -52,7 +52,7 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
         try:
             setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension=dimension)
             setup_monitor(fdtd, monitor=monitor, movie=False)
-            setup_grating_structuregroup(fdtd, **kwargs)
+            # setup_grating_structuregroup(fdtd, **kwargs)
             #
             if tether_typ is not None:
                 gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
