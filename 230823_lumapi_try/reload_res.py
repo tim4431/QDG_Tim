@@ -132,6 +132,12 @@ if __name__ == "__main__":
         tether_typ="section_rect_tether",
         pause=False,
     )
+    reload_work(
+        uuid,
+        dimension="3D",
+        tether_typ="section_rect_tether_hole",
+        pause=False,
+    )
     # reload_work(
     #     uuid,
     #     dimension="2D",
