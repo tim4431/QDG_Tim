@@ -19,7 +19,9 @@ from typing import List, Callable, Union
 
 
 @gf.cell
-def grating_mask_tether(grating, grating_mask, tether=None, input_length: float = 10):
+def grating_mask_tether(
+    grating, grating_mask, tether=None, hole=False, input_length: float = 10
+):
     # construct
     c = gf.Component()
 
@@ -36,16 +38,17 @@ def grating_mask_tether(grating, grating_mask, tether=None, input_length: float 
     grating_masked = gf.geometry.boolean(
         mask_ref, grating_ref, operation="and", layer="WG"
     )
-    hole = gf.components.rectangle(size=(0.35, 0.35), layer="WG")
-    grating_masked_ref = grating_masked.ref()
-    grating_masked_ref.xmin = -input_length
-    grating_masked_ref.y = 0
-    hole_ref = hole.ref()
-    hole_ref.xmin = 9
-    hole_ref.y = 0
-    grating_masked = gf.geometry.boolean(
-        grating_masked_ref, hole_ref, operation="not", layer="WG"
-    )
+    if hole:  # add vhf hole
+        vhf_hole = gf.components.rectangle(size=(0.35, 0.35), layer="WG")
+        grating_masked_ref = grating_masked.ref()
+        grating_masked_ref.xmin = -input_length
+        grating_masked_ref.y = 0
+        hole_ref = vhf_hole.ref()
+        hole_ref.xmin = 9
+        hole_ref.y = 0
+        grating_masked = gf.geometry.boolean(
+            grating_masked_ref, hole_ref, operation="not", layer="WG"
+        )
     grating_masked_ref = c << grating_masked
 
     # outer rectangle is inner rectangle + 3um margin
@@ -302,6 +305,7 @@ def grating_tether(
     tether_func: Union[Callable, None],
     grating_angle: float,
     start_radius: float = 10,
+    hole: bool = False,
     suspend: bool = False,
     input_length: float = 10,
 ) -> gf.Component:
@@ -342,7 +346,9 @@ def grating_tether(
             start_radius=start_radius,
             patch_length=PATCH_LENGTH,
         )
-        gt = grating_mask_tether(g, mask, tether=tether, input_length=input_length)
+        gt = grating_mask_tether(
+            g, mask, tether=tether, hole=hole, input_length=input_length
+        )
         gt_ref = c << gt
     else:
         g_rec = c << g
@@ -371,14 +377,28 @@ def recipes(tether_typ: str) -> dict:
             "tether_func": section_tether,
             "grating_angle": 24,
         }
-    elif (
-        tether_typ == "section_rect_tether" or tether_typ == "section_rect_tether_hole"
-    ):
+    elif tether_typ == "section_rect_tether":
         return {
             "mask_func": section_rect_mask,
             "tether_func": section_tether,
             "grating_angle": 24,
             "suspend": False,
+        }
+    elif tether_typ == "section_rect_tether_hole":
+        return {
+            "mask_func": section_rect_mask,
+            "tether_func": section_tether,
+            "grating_angle": 24,
+            "suspend": False,
+            "hole": True,
+        }
+    elif tether_typ == "section_rect_tether_hole_suspend":
+        return {
+            "mask_func": section_rect_mask,
+            "tether_func": section_tether,
+            "grating_angle": 24,
+            "suspend": True,
+            "hole": True,
         }
     else:
         return {
