@@ -7,21 +7,8 @@ from matplotlib.gridspec import GridSpec
 
 sys.path.append("..")
 from lib.gaussian.gaussian_fit_1d import arb_fit_1d
+from lib.lumerical.util import add_lumerical_path
 from json_uuid import load_json, uuid_to_wd, load_paras, getdataName
-
-
-def add_lumerical_path():
-    # add lumerical api path
-    pathList = [
-        "C:\\Program Files\\Lumerical\\v221\\api\\python\\",
-        "C:\\Program Files\\Lumerical\\FDTD\\api\\python\\",
-        "D:\\software\\Lumerical\\Lumerical\\v221\\api\\python",
-    ]
-    for pathName in pathList:
-        if os.path.exists(pathName):
-            sys.path.append(pathName)
-            break
-    sys.path.append(os.path.dirname(__file__))  # Current directory
 
 
 add_lumerical_path()
@@ -690,31 +677,6 @@ def plot_result(transmission, FOMHist, featureHist, lambda0Hist, FWHMHist, dataN
     #
     plt.savefig("{:s}_result.png".format(dataName), dpi=200, bbox_inches="tight")
     #
-
-
-# def getdataName_DEPRECATED(uid, lambda_0, FWHM, alpha, penalty, SOURCE_typ, setup=True):
-#     #
-#     dataName = "{:03d}_{:.1f}_bw={:.1f}_alpha={:.3f}_penalty=({:.3f},{:d})_{:s}".format(
-#         uid,
-#         lambda_0 * 1e9,
-#         FWHM * 1e9,
-#         alpha,
-#         penalty[0],
-#         round(penalty[1] * 1e9),
-#         SOURCE_typ,
-#     )
-#     # make dir named uid at current cwd
-#     try:
-#         cwd = os.getcwd()
-#         if (not os.path.exists(os.path.join(cwd, "{:03d}".format(uid)))) and setup:
-#             os.mkdir(os.path.join(cwd, "{:03d}".format(uid)))
-#         print("Current working directory: {:s}".format(cwd))
-#         path_dataName = os.path.join(cwd, "{:03d}".format(uid), dataName)
-#         return path_dataName
-#     except Exception as e:
-#         print(e)
-#         return dataName
-#     #
 
 
 def load_work(uuid, logger):

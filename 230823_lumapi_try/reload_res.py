@@ -17,7 +17,9 @@ from create_gds import generate_gds_fileName
 sys.path.append("..")
 
 
-def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True):
+def reload_work(
+    uuid: str, dimension: str = "2D", tether_typ=None, pause=False, monitor=True
+):
     dataName = getdataName(uuid)
     kwargs = load_json(uuid)
     kwargs["plot"] = False
@@ -31,19 +33,11 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
     paras = load_paras(uuid)
     # paras[0] = paras[0] * 1.05
     print("Loaded paras: ", paras)
+    # >>> load kwargs <<< #
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
-    N = kwargs.get("N", DEFAULT_PARA["N"])
-    NL = kwargs.get("NL", DEFAULT_PARA["NL"])
-    NH = kwargs.get("NH", DEFAULT_PARA["NH"])
-    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
-    if grating_typ == "inverse_grating":
-        N_unit = N * (NL + NH)
-    else:
-        N_unit = N
-    kwargs["N_unit"] = N_unit
-    #
+    # >>> begin simulation <<< #
     with load_template(
         dataName,
         SOURCE_typ,
@@ -52,9 +46,8 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
         try:
             setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension=dimension)
             setup_monitor(fdtd, monitor=monitor, movie=False)
-            # setup_grating_structuregroup(fdtd, **kwargs)
             #
-            if tether_typ is not None:
+            if tether_typ is not None:  # import gds
                 gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
                 fdtd.gdsimport(
                     gds_fileName,
@@ -67,12 +60,14 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
                 fdtd.setnamed("gratings", "enabled", 0)
                 fdtd.setnamed("GDS_LAYER_1:0", "first axis", "x")
                 fdtd.setnamed("GDS_LAYER_1:0", "rotation 1", 90)
+            else:  # setup by script
+                setup_grating_structuregroup(fdtd, **kwargs)
+
             #
             l, T, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(
                 fdtd, paras, reload=True, **kwargs
             )
-            # print(l)
-            # print(T)
+            # >>> save data <<< #
             try:
                 a = np.transpose(np.vstack((l * 1e6, T)))  # wavelength in um
                 np.savetxt(
@@ -82,8 +77,8 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
                     a,
                 )
             except Exception as e:
-                print("Error: ", str(e))
-            #
+                print("reload_res: save data Error: ", str(e))
+            # >>> plot <<< #
             try:
                 plt.figure(figsize=(9, 6))
                 plt.plot(l * 1e9, T)
@@ -99,12 +94,12 @@ def reload_work(uuid, dimension="2D", tether_typ=None, pause=False, monitor=True
                 )
                 plt.close()
             except Exception as e:
-                print("Error: ", str(e))
+                print("reload_res: save figure Error: ", str(e))
             #
             print(maxT, lambda_maxT, FWHM_fit, FOM)
         except Exception as e:
-            print("Error: ", e)
-        # whatever happens, keeps the lumerical window open
+            print("reload_res: Error: ", e)
+        # >>> if pause, keeps the lumerical window open <<< #
         if pause:
             while 1:
                 pass

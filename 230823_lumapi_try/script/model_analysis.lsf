@@ -1,0 +1,46 @@
+## Normalized power through port 2 at the target frequency.
+## This result is needed  to optimize the coupling efficiency.
+## need parameter: lambda_0, FWMH, alpha
+
+T_data = getresult("::model::output_TE","expansion for output_TE");
+T = (-1)*(T_data.T_net);
+res = getresult("::model::output","T");
+lambda = res.lambda;
+
+index_center = find(lambda,lambda_0);
+T_0 = T(index_center);
+sigma=FWMH/1.6651092223153954;
+
+#
+cross_correlation=0;
+T_square_sum=0;
+ratio_square_sum=0;
+index_leftmost=find(lambda,lambda_0+2*sigma);
+index_rightmost=find(lambda,lambda_0-2*sigma);
+for(i=index_leftmost:index_rightmost){
+    T_lambda = T(i);
+    lambda_i = lambda(i);
+    T_0 =exp(-(lambda_i-lambda_0)^2/(sigma^2));
+    cross_correlation = cross_correlation + T_lambda*T_0;
+    T_square_sum = T_square_sum + T_lambda^2;
+    ratio_square_sum = ratio_square_sum + T_0^2;
+}
+len=index_rightmost-index_leftmost+1;
+
+norm_T = sqrt(T_square_sum);
+norm_ratio = sqrt(ratio_square_sum);
+norm_cross_correlation = cross_correlation/(norm_T*norm_ratio);
+norm_T_div=norm_T/sqrt(len); # in order to make alpha independent of the data num
+
+maxT=max(T);
+idx=find(T,maxT);
+lambda_maxT=lambda(idx);
+lambda_range=10e-9;
+penalty=0.2*lambda_range/(lambda_range+abs(lambda_0-lambda_maxT));
+
+#
+FOM= (norm_T_div+alpha)*norm_cross_correlation+penalty;
+
+?T_0;
+?maxT;
+?FOM;
