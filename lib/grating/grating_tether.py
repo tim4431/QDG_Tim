@@ -384,6 +384,13 @@ def recipes(tether_typ: str) -> dict:
             "grating_angle": 24,
             "suspend": False,
         }
+    elif tether_typ == "section_rect_tether_suspend":
+        return {
+            "mask_func": section_rect_mask,
+            "tether_func": section_tether,
+            "grating_angle": 24,
+            "suspend": True,
+        }
     elif tether_typ == "section_rect_tether_hole":
         return {
             "mask_func": section_rect_mask,
