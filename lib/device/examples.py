@@ -1,7 +1,19 @@
-from data_recorder import data_recorder
+from data_recorder import *
+
+
+def _init_laser():
+    laser = RemoteDevice("SantecTSL570")
+    laser.write_laser_status("On")
+    laser.write_wavelength(1326.0)
+    return laser
+
+
+def _init_picoharp():
+    return RemoteDevice("PicoHarp300")
 
 
 def santec_power_sweep():
+    laser = _init_laser()
     dataName = "./santec_power_sweep.csv"
     xname = "power"
     x_list = np.arange(-14, -6, 0.5)
@@ -11,6 +23,8 @@ def santec_power_sweep():
 
 
 def snspd_cal():
+    picoharp = _init_picoharp()
+
     current_list_1 = np.array(
         [
             7.97,
@@ -73,18 +87,21 @@ def snspd_cal():
     dataName = "./snspd1_lum_comnbine.csv"
     xname = "current"
     x_list = current_list_1
-    x_func = _nop
+    x_func = lambda: None
     y_func = lambda: picoharp.aver_count1(5)
     data_recorder(dataName, xname, x_list, x_func, y_func, wait=0, measure_num=5)
     #
     xname = "current"
     x_list = current_fine_list_1
-    x_func = _nop
+    x_func = lambda: None
     y_func = lambda: picoharp.aver_count1(5)
     data_recorder(dataName, xname, x_list, x_func, y_func, wait=0, measure_num=5)
 
 
 def photodiode_power_sweep():
+    laser = _init_laser()
+    picoharp = _init_picoharp()
+    #
     dataName = "./photodiode_power_sweep.csv"
     xname = "power"
     x_list = np.arange(-14, -6, 0.5)
