@@ -417,19 +417,13 @@ def create_objective(
     # obj = sum(objectives)
     #
     # Tim
-    objectives = np.array(objectives)
     l, T = wlens, objectives
     lambda_0 = 1326
     FWHM = 20
     T_des = analysis.gaussian_curve(l, lambda_0, FWHM)
-    norm_cross_correlation = analysis.norm_cross_correlation(T, T_des)
-    norm_T = analysis.mean_alpha(T, 2)
-    FOM = float(norm_T * norm_cross_correlation)
-    T_max, lambda_maxT = analysis.T_max(l, T)
-    penalty = [(0.1, 100)]
-    cw_penalty = analysis.cw_penalty(penalty, lambda_0, lambda_maxT)
-    obj = FOM + cw_penalty
-
+    # norm_T_des = analysis.mean_alpha(T_des, alpha=2)
+    FOM = sum([float(T_d) * T for T_d, T in zip(T_des, T)])
+    obj = FOM
     return obj, monitor_list
 
 
