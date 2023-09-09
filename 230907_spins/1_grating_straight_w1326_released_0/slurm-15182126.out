@@ -1,5 +1,8 @@
+hello world
 [2023-09-08 14:04:34,913][INFO][solver][run_plan] Setting up workspace.
 [2023-09-08 14:04:34,914][INFO][solver][run_plan] Running transformation opt_cont.
+/global/home/users/xinwei/.local/lib/python3.9/site-packages/scipy/sparse/_data.py:72: ComplexWarning: Casting complex values to real discards the imaginary part
+  self.data.astype(dtype, casting=casting, copy=True),
 [2023-09-08 14:05:03,176][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'state': 'start'} [1].
 [2023-09-08 14:05:43,543][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 1, 'state': 'optimizing'} [2].
 [2023-09-08 14:06:10,527][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 2, 'state': 'optimizing'} [3].
@@ -314,3 +317,6 @@
 [2023-09-08 17:25:34,886][INFO][workspace][write] Saving monitors for transformation opt_disc with event info {'state': 'end'} [306].
 [2023-09-08 17:25:35,166][INFO][workspace][write_checkpoint] Saving checkpoint file: opt_disc.chkpt.pkl
 [2023-09-08 17:25:35,264][INFO][solver][run_plan] Spins finished.
+/global/home/users/xinwei/Tim/spins-b/spins/invdes/problem_graph/log_tools/plotter.py:296: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+end of job

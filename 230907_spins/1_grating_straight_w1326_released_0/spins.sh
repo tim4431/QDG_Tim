@@ -2,10 +2,10 @@
 #SBATCH --job-name=spins
 #SBATCH --account=fc_qudev
 #SBATCH --partition=savio3
-#SBATCH --time=20:00:00
+#SBATCH --time=30:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=20
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=xinwei@berkeley.edu
 #
