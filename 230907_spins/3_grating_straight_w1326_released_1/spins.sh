@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=spins
+#SBATCH --job-name=spins_3
 #SBATCH --account=fc_qudev
 #SBATCH --partition=savio3
 #SBATCH --time=30:00:00
@@ -10,7 +10,6 @@
 #SBATCH --mail-user=xinwei@berkeley.edu
 #
 ## Command(s) to run:
-echo "hello world"
 module load python
 # cd ~/Tim/spins-b
 # make install
