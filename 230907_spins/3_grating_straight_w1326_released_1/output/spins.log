@@ -1,0 +1,114 @@
+[2023-09-09 00:38:17,060][INFO][solver][run_plan] Setting up workspace.
+[2023-09-09 00:38:17,060][INFO][solver][run_plan] Running transformation opt_cont.
+[2023-09-09 00:41:37,226][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'state': 'start'} [1].
+[2023-09-09 00:46:44,542][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 1, 'state': 'optimizing'} [2].
+[2023-09-09 00:53:42,622][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 2, 'state': 'optimizing'} [3].
+[2023-09-09 00:57:14,987][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 3, 'state': 'optimizing'} [4].
+[2023-09-09 01:00:46,645][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 4, 'state': 'optimizing'} [5].
+[2023-09-09 01:07:49,841][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 5, 'state': 'optimizing'} [6].
+[2023-09-09 01:11:21,789][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 6, 'state': 'optimizing'} [7].
+[2023-09-09 01:18:22,444][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 7, 'state': 'optimizing'} [8].
+[2023-09-09 01:21:54,697][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 8, 'state': 'optimizing'} [9].
+[2023-09-09 01:25:22,580][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 9, 'state': 'optimizing'} [10].
+[2023-09-09 01:32:37,250][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 10, 'state': 'optimizing'} [11].
+[2023-09-09 01:36:23,979][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 11, 'state': 'optimizing'} [12].
+[2023-09-09 01:40:08,913][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 12, 'state': 'optimizing'} [13].
+[2023-09-09 01:43:56,446][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 13, 'state': 'optimizing'} [14].
+[2023-09-09 01:51:39,808][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 14, 'state': 'optimizing'} [15].
+[2023-09-09 01:59:39,117][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 15, 'state': 'optimizing'} [16].
+[2023-09-09 02:03:02,165][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 16, 'state': 'optimizing'} [17].
+[2023-09-09 02:06:35,900][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 17, 'state': 'optimizing'} [18].
+[2023-09-09 02:10:47,790][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 18, 'state': 'optimizing'} [19].
+[2023-09-09 02:14:57,293][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 19, 'state': 'optimizing'} [20].
+[2023-09-09 02:18:56,636][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 20, 'state': 'optimizing'} [21].
+[2023-09-09 02:23:04,925][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 21, 'state': 'optimizing'} [22].
+[2023-09-09 02:26:31,246][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 22, 'state': 'optimizing'} [23].
+[2023-09-09 02:30:22,266][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 23, 'state': 'optimizing'} [24].
+[2023-09-09 02:33:47,218][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 24, 'state': 'optimizing'} [25].
+[2023-09-09 02:37:10,199][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 25, 'state': 'optimizing'} [26].
+[2023-09-09 02:40:33,970][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 26, 'state': 'optimizing'} [27].
+[2023-09-09 02:43:55,179][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 27, 'state': 'optimizing'} [28].
+[2023-09-09 02:47:15,136][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 28, 'state': 'optimizing'} [29].
+[2023-09-09 02:50:35,065][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 29, 'state': 'optimizing'} [30].
+[2023-09-09 02:53:53,771][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 30, 'state': 'optimizing'} [31].
+[2023-09-09 02:57:22,366][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 31, 'state': 'optimizing'} [32].
+[2023-09-09 03:00:45,122][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 32, 'state': 'optimizing'} [33].
+[2023-09-09 03:07:35,777][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 33, 'state': 'optimizing'} [34].
+[2023-09-09 03:14:22,445][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 34, 'state': 'optimizing'} [35].
+[2023-09-09 03:21:05,024][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 35, 'state': 'optimizing'} [36].
+[2023-09-09 03:24:26,763][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 36, 'state': 'optimizing'} [37].
+[2023-09-09 03:27:49,224][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 37, 'state': 'optimizing'} [38].
+[2023-09-09 03:31:10,387][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 38, 'state': 'optimizing'} [39].
+[2023-09-09 03:34:34,949][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 39, 'state': 'optimizing'} [40].
+[2023-09-09 03:37:54,091][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 40, 'state': 'optimizing'} [41].
+[2023-09-09 03:41:14,266][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 41, 'state': 'optimizing'} [42].
+[2023-09-09 03:44:34,951][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 42, 'state': 'optimizing'} [43].
+[2023-09-09 03:48:00,256][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 43, 'state': 'optimizing'} [44].
+[2023-09-09 03:51:23,020][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 44, 'state': 'optimizing'} [45].
+[2023-09-09 03:54:42,487][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 45, 'state': 'optimizing'} [46].
+[2023-09-09 03:58:02,477][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 46, 'state': 'optimizing'} [47].
+[2023-09-09 04:04:42,048][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 47, 'state': 'optimizing'} [48].
+[2023-09-09 04:08:04,947][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 48, 'state': 'optimizing'} [49].
+[2023-09-09 04:11:24,835][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 49, 'state': 'optimizing'} [50].
+[2023-09-09 04:14:47,026][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'iteration': 50, 'state': 'optimizing'} [51].
+[2023-09-09 04:14:48,315][INFO][workspace][write] Saving monitors for transformation opt_cont with event info {'state': 'end'} [52].
+[2023-09-09 04:14:49,425][INFO][workspace][write_checkpoint] Saving checkpoint file: opt_cont.chkpt.pkl
+[2023-09-09 04:14:49,544][INFO][solver][run_plan] Running transformation opt_cont_disc.
+[2023-09-09 04:14:49,702][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'state': 'start'} [53].
+[2023-09-09 04:24:48,106][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 1, 'state': 'optimizing'} [54].
+[2023-09-09 04:28:08,761][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 2, 'state': 'optimizing'} [55].
+[2023-09-09 04:31:27,556][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 3, 'state': 'optimizing'} [56].
+[2023-09-09 04:34:45,195][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 4, 'state': 'optimizing'} [57].
+[2023-09-09 04:38:06,606][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 5, 'state': 'optimizing'} [58].
+[2023-09-09 04:41:29,524][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 6, 'state': 'optimizing'} [59].
+[2023-09-09 04:44:48,331][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 7, 'state': 'optimizing'} [60].
+[2023-09-09 04:48:08,649][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 8, 'state': 'optimizing'} [61].
+[2023-09-09 04:51:30,509][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 9, 'state': 'optimizing'} [62].
+[2023-09-09 04:54:51,849][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 10, 'state': 'optimizing'} [63].
+[2023-09-09 04:58:12,635][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 11, 'state': 'optimizing'} [64].
+[2023-09-09 05:01:36,229][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 12, 'state': 'optimizing'} [65].
+[2023-09-09 05:05:02,850][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 13, 'state': 'optimizing'} [66].
+[2023-09-09 05:08:25,202][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 14, 'state': 'optimizing'} [67].
+[2023-09-09 05:11:46,754][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 15, 'state': 'optimizing'} [68].
+[2023-09-09 05:15:10,110][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 16, 'state': 'optimizing'} [69].
+[2023-09-09 05:18:30,156][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 17, 'state': 'optimizing'} [70].
+[2023-09-09 05:21:50,034][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 18, 'state': 'optimizing'} [71].
+[2023-09-09 05:25:10,257][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 19, 'state': 'optimizing'} [72].
+[2023-09-09 05:28:28,204][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 20, 'state': 'optimizing'} [73].
+[2023-09-09 05:31:49,599][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 21, 'state': 'optimizing'} [74].
+[2023-09-09 05:35:13,197][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 22, 'state': 'optimizing'} [75].
+[2023-09-09 05:38:31,440][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 23, 'state': 'optimizing'} [76].
+[2023-09-09 05:41:55,651][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 24, 'state': 'optimizing'} [77].
+[2023-09-09 05:48:36,891][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 25, 'state': 'optimizing'} [78].
+[2023-09-09 05:51:57,495][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 26, 'state': 'optimizing'} [79].
+[2023-09-09 05:55:19,343][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 27, 'state': 'optimizing'} [80].
+[2023-09-09 05:58:42,198][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 28, 'state': 'optimizing'} [81].
+[2023-09-09 06:02:03,523][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 29, 'state': 'optimizing'} [82].
+[2023-09-09 06:05:25,521][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 30, 'state': 'optimizing'} [83].
+[2023-09-09 06:12:04,344][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 31, 'state': 'optimizing'} [84].
+[2023-09-09 06:21:58,158][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 32, 'state': 'optimizing'} [85].
+[2023-09-09 06:31:53,270][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 33, 'state': 'optimizing'} [86].
+[2023-09-09 06:41:51,484][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 34, 'state': 'optimizing'} [87].
+[2023-09-09 06:48:31,706][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 35, 'state': 'optimizing'} [88].
+[2023-09-09 06:51:55,197][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 36, 'state': 'optimizing'} [89].
+[2023-09-09 07:01:53,014][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 37, 'state': 'optimizing'} [90].
+[2023-09-09 07:08:32,429][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 38, 'state': 'optimizing'} [91].
+[2023-09-09 07:15:08,870][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 39, 'state': 'optimizing'} [92].
+[2023-09-09 07:21:48,510][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 40, 'state': 'optimizing'} [93].
+[2023-09-09 07:31:44,966][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 41, 'state': 'optimizing'} [94].
+[2023-09-09 07:38:19,946][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 42, 'state': 'optimizing'} [95].
+[2023-09-09 07:48:24,625][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 43, 'state': 'optimizing'} [96].
+[2023-09-09 07:58:26,008][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 44, 'state': 'optimizing'} [97].
+[2023-09-09 08:05:03,030][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 45, 'state': 'optimizing'} [98].
+[2023-09-09 08:18:16,173][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 46, 'state': 'optimizing'} [99].
+[2023-09-09 08:31:35,331][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'iteration': 47, 'state': 'optimizing'} [100].
+[2023-09-09 08:31:36,303][INFO][workspace][write] Saving monitors for transformation opt_cont_disc with event info {'state': 'end'} [101].
+[2023-09-09 08:31:37,290][INFO][workspace][write_checkpoint] Saving checkpoint file: opt_cont_disc.chkpt.pkl
+[2023-09-09 08:31:37,444][INFO][solver][run_plan] Running transformation cont_to_disc.
+[2023-09-09 08:31:42,095][INFO][workspace][write_checkpoint] Saving checkpoint file: cont_to_disc.chkpt.pkl
+[2023-09-09 08:31:42,206][INFO][solver][run_plan] Running transformation opt_disc.
+[2023-09-09 08:33:21,759][INFO][workspace][write] Saving monitors for transformation opt_disc with event info {'state': 'start'} [102].
+[2023-09-09 08:35:03,847][INFO][workspace][write] Saving monitors for transformation opt_disc with event info {'iteration': 1, 'state': 'optimizing'} [103].
+[2023-09-09 08:35:04,792][INFO][workspace][write] Saving monitors for transformation opt_disc with event info {'state': 'end'} [104].
+[2023-09-09 08:35:05,529][INFO][workspace][write_checkpoint] Saving checkpoint file: opt_disc.chkpt.pkl
+[2023-09-09 08:35:05,573][INFO][solver][run_plan] Spins finished.
