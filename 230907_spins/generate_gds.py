@@ -14,9 +14,9 @@ def generate_gds(dataDirname):
         taper_angle=24, grating_angle=24, start_radius=12.0, grating=grating
     )
     c.show()
-    c.write_gds(os.path.join(".", dataDirname, "output", "_arc.gds"))
+    c.write_gds(os.path.join(".", dataDirname, dataDirname + "_arc.gds"))
 
 
 if __name__ == "__main__":
-    dataDirname = "0_grating_straight_w1326_0"
+    dataDirname = "1_grating_straight_w1326_released_0"
     generate_gds(dataDirname)
