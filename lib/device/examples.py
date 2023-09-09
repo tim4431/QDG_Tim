@@ -1,4 +1,5 @@
-from data_recorder import *
+from .data_recorder import *
+from labjack import ljm  # type: ignore
 
 
 def _init_laser():
@@ -12,14 +13,20 @@ def _init_picoharp():
     return RemoteDevice("PicoHarp300")
 
 
-def santec_power_sweep():
+def _init_labjack():
+    handle = ljm.openS("T7", "ETHERNET", "192.168.0.125")
+    info = ljm.getHandleInfo(handle)
+    print(info)
+    return handle
+
+
+def santec_power_sweep(dataName):
     laser = _init_laser()
-    dataName = "./santec_power_sweep.csv"
     xname = "power"
-    x_list = np.arange(-14, -6, 0.5)
+    x_list = np.arange(0, 10, 0.5)
     x_func = laser.write_power
     y_func = input
-    data_recorder(dataName, xname, x_list, x_func, y_func, wait=2, measure_num=1)
+    data_recorder(dataName, xname, x_list, x_func, y_func, wait=1, measure_num=1)
 
 
 def snspd_cal():
@@ -98,13 +105,12 @@ def snspd_cal():
     data_recorder(dataName, xname, x_list, x_func, y_func, wait=0, measure_num=5)
 
 
-def photodiode_power_sweep():
+def photodiode_power_sweep(dataName):
     laser = _init_laser()
-    picoharp = _init_picoharp()
+    handle = _init_labjack()
     #
-    dataName = "./photodiode_power_sweep.csv"
     xname = "power"
-    x_list = np.arange(-14, -6, 0.5)
+    x_list = np.arange(-15, 9.5, 0.5)
     x_func = laser.write_power
-    y_func = lambda: picoharp.aver_count1(5)
-    data_recorder(dataName, xname, x_list, x_func, y_func, wait=2, measure_num=1)
+    y_func = lambda: ljm.eReadName(handle, "AIN2")
+    data_recorder(dataName, xname, x_list, x_func, y_func, wait=1.5, measure_num=6)

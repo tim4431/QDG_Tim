@@ -9,7 +9,7 @@ from typing import Callable
 
 def appenddata(dataName, x, y):
     with open(dataName, "a") as f:
-        f.write("{:.2f},{:.2f}\n".format(x, y))
+        f.write("{:.2f},{:.5f}\n".format(float(x), float(y)))
 
 
 def nop(x):
@@ -23,7 +23,7 @@ def data_recorder(
     x_func: Callable,
     y_func: Callable,
     idx_start: int = 0,
-    wait=2,
+    wait: float = 2.0,
     measure_num=1,
 ):
     for x in x_list[idx_start:]:
@@ -37,7 +37,8 @@ def data_recorder(
         #
         print("begin")
         for j in range(measure_num):
-            y = y_func()
+            y = float(y_func())
             print(y)
             appenddata(dataName, x, y)
+            time.sleep(0.2)
         print("finished")

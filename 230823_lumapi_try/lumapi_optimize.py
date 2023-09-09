@@ -8,7 +8,10 @@ from matplotlib.gridspec import GridSpec
 sys.path.append("..")
 from lib.gaussian.gaussian_fit_1d import arb_fit_1d
 from lib.lumerical.util import add_lumerical_path
+from lib.gaussian.FOM_analysis import FOM_analysis
 from json_uuid import load_json, uuid_to_wd, load_paras, getdataName
+
+analysis = FOM_analysis()
 
 
 add_lumerical_path()
@@ -34,54 +37,7 @@ def process_data(fdtd, SOURCE_typ):
     return l, T
 
 
-def analysis_FOM(l, T, **kwargs):
-    # >>> useful functions <<< #
-    def _find(l, val):
-        # return the index of most close value in l
-        # uni-directional, l must be sorted
-        idx = np.abs(np.asarray(l) - val).argmin()
-        return idx
-
-    def _gaussian_curve(l, lambda_0, FWHM):
-        sigma = FWHM / 1.6651092223153954
-        return np.exp(-((l - lambda_0) ** 2) / (sigma**2))
-
-    def _T_0(l, lambda_0, T):
-        index_center = _find(l, lambda_0)
-        T_0 = T[index_center]
-        return T_0
-
-    def _T_max(l, T):
-        return np.max(T), l[np.argmax(T)]
-
-    def _data_crop(l, T, lambda_0, width):
-        """get data from lambda_0-width/2 to lambda_0+width/2"""
-        assert width > 0, "width must be positive"
-        index_leftmost = _find(l, lambda_0 - width / 2)
-        index_rightmost = _find(l, lambda_0 + width / 2)
-        l_crop = l[index_leftmost : index_rightmost + 1]
-        T_crop = T[index_leftmost : index_rightmost + 1]
-        return l_crop, T_crop
-
-    def _cross_correlation(f, g):
-        assert len(f) == len(g), "f and g must have the same length"
-        return np.sum(np.asarray(f) * np.asarray(g))
-
-    def _sum_alpha(f, alpha=1):
-        return np.sum(np.power(f, alpha))
-
-    def _mean_alpha(f, alpha=1):
-        return np.power(np.mean(np.power(f, alpha)), 1 / alpha)
-
-    def _norm_cross_correlation(f, g):
-        cc = _cross_correlation(f, g)
-        norm_f = np.sqrt(_sum_alpha(f, 2))
-        norm_g = np.sqrt(_sum_alpha(g, 2))
-        return cc / (norm_f * norm_g)
-
-    def _mean_CE(f):
-        return np.mean(10 * np.log10(np.asarray(f)))
-
+def calculate_FOM(l, T, **kwargs):
     # >>> load paras <<< #
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
@@ -97,14 +53,14 @@ def analysis_FOM(l, T, **kwargs):
     elif grating_typ == "grating":
         _crop_range = 3 * FWHM
     else:
-        raise ValueError("analysis_FOM: Invalid grating_typ: {:s}".format(grating_typ))
-    l_c, T_c = _data_crop(l, T, lambda_0, _crop_range)
-    T_des = _gaussian_curve(l_c, lambda_0, FWHM)
-    cross_correlation = _cross_correlation(T_c, T_des)
-    norm_cross_correlation = _norm_cross_correlation(T_c, T_des)
+        raise ValueError("calculate_FOM: Invalid grating_typ: {:s}".format(grating_typ))
+    l_c, T_c = analysis.data_crop(l, T, lambda_0, _crop_range)
+    T_des = analysis.gaussian_curve(l_c, lambda_0, FWHM)
+    cross_correlation = analysis.cross_correlation(T_c, T_des)
+    norm_cross_correlation = analysis.norm_cross_correlation(T_c, T_des)
     # maxT, lambda_maxT = _T_max(l, T)
     maxT, lambda_maxT, FWHM_fit, CE = arb_fit_1d(False, l, T, "")  # type: ignore
-    norm_T = _mean_alpha(T_c, 2)
+    norm_T = analysis.mean_alpha(T_c, 2)
 
     # >>> FOM <<< #
     if FOM_typ == "square":
@@ -122,7 +78,7 @@ def analysis_FOM(l, T, **kwargs):
         # FOM = float(((T_div + alpha) ** 0.2) * norm_cross_correlation)
     elif FOM_typ == "single":
         # print("single")
-        T_0 = _T_0(l, lambda_0, T)
+        T_0 = analysis.T_0(l, lambda_0, T)
         FOM = T_0
     else:
         raise ValueError("Invalid FOM_typ: {:s}".format(FOM_typ))
@@ -219,7 +175,7 @@ def fdtd_iter(fdtd, paras, reload=False, **kwargs):
     fdtd.run()
     l, T = process_data(fdtd, SOURCE_typ)
     #
-    maxT, lambda_maxT, FWHM_fit, FOM = analysis_FOM(l, T, **kwargs)
+    maxT, lambda_maxT, FWHM_fit, FOM = calculate_FOM(l, T, **kwargs)
     #
     return l, T, maxT, lambda_maxT, FWHM_fit, FOM
 
@@ -258,11 +214,7 @@ def optimize_wrapper(fdtd, paras, **kwargs):
     # Center wavelength penalty
     penalty = kwargs.get("penalty", DEFAULT_PARA["penalty"])
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
-    cw_penalty = 0
-    for p_coeff, lambda_range in penalty:
-        cw_penalty += (
-            p_coeff * lambda_range / (lambda_range + np.abs(lambda_0 - lambda_maxT))
-        )
+    cw_penalty = analysis.cw_penalty(penalty, lambda_0, lambda_maxT)
     print("penalty: ", cw_penalty)
     #
     logger = kwargs.get("logger", DEFAULT_PARA["logger"])
