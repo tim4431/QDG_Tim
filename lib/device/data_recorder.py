@@ -1,9 +1,6 @@
-import sys
 import numpy as np
 import time
 
-sys.path.append(r"\\QDG-LABBEAR\\Users\\QDG-LABBEAR-SERVER\\Desktop\\LANAS\\DataBear")
-from RemoteDevice import RemoteDevice  # type: ignore
 from typing import Callable
 
 

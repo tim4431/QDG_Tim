@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append("..")
-from lib.device.load_csv_data import load_csv_data
+from lib.process_data.load_csv_data import load_csv_data
 import matplotlib.pyplot as plt
 import numpy as np
 
