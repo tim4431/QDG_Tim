@@ -3,6 +3,7 @@ import sys
 
 sys.path.append(r"\\QDG-LABBEAR\\Users\\QDG-LABBEAR-SERVER\\Desktop\\LANAS\\DataBear")
 from RemoteDevice import RemoteDevice  # type: ignore
+from typing import List, Tuple, Union, Any
 
 
 def init_laser():
@@ -23,11 +24,20 @@ def init_labjack():
     return handle
 
 
-def ljm_conf_range_resolution(handle, numAIN, rangeAIN, resolutionAIN):
+def ljm_conf_range_resolution(
+    handle: Any, numAIN: int, rangeAIN: float, resolutionAIN: int
+):
     numFrames = 2
     aNames = ["AIN{:d}_RANGE".format(numAIN), "AIN{:d}_RESOLUTION_INDEX".format(numAIN)]
     aValues = [rangeAIN, resolutionAIN]
     ljm.eWriteNames(handle, numFrames, aNames, aValues)
+
+
+def ljm_read_range_resolution(handle: Any, numAIN: int):
+    numFrames = 2
+    aNames = ["AIN{:d}_RANGE".format(numAIN), "AIN{:d}_RESOLUTION_INDEX".format(numAIN)]
+    aValues = ljm.eReadNames(handle, numFrames, aNames)
+    return aValues
 
 
 def ljm_auto_range_resolution(handle, numAIN, estimated_v):
