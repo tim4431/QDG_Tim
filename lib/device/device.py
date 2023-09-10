@@ -10,6 +10,7 @@ def init_laser():
     laser = RemoteDevice("SantecTSL570")
     laser.write_laser_status("On")
     laser.write_wavelength(1326.0)
+    laser.write_coherence_control("Off")
     return laser
 
 
@@ -41,9 +42,7 @@ def ljm_read_range_resolution(handle: Any, numAIN: int):
 
 
 def ljm_auto_range_resolution(handle, numAIN, estimated_v):
-    if estimated_v < 0.5:
-        ljm_conf_range_resolution(handle, numAIN, 1.00, 4)
-    elif estimated_v < 3:
-        ljm_conf_range_resolution(handle, numAIN, 10.00, 7)
+    if estimated_v < 0.8:
+        ljm_conf_range_resolution(handle, numAIN, 1.00, 8)
     elif estimated_v < 20:
-        ljm_conf_range_resolution(handle, numAIN, 10.00, 4)
+        ljm_conf_range_resolution(handle, numAIN, 10.00, 8)

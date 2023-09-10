@@ -6,7 +6,7 @@ from typing import Callable
 
 def appenddata(dataName, x, y):
     with open(dataName, "a") as f:
-        f.write("{:.2f},{:.5f}\n".format(float(x), float(y)))
+        f.write("{:.2f},{:.8f}\n".format(float(x), float(y)))
 
 
 def nop(x):
