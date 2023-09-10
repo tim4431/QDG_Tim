@@ -40,8 +40,10 @@ plt.plot(
     c="blue",
     label="fit output(V)={:.4f} * p(uW)".format(popt[0]),
 )
+plt.xscale("log")
+plt.yscale("log")
 
 
 plt.legend()
-plt.savefig("./pd_cal.png", dpi=200, bbox_inches="tight")
+# plt.savefig("./pd_cal.png", dpi=200, bbox_inches="tight")
 plt.show()
