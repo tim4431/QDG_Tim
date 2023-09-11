@@ -41,20 +41,11 @@ def create_gds(uuid, tether_typ: str = "empty"):
     #
     para = recipes(tether_typ)
     c = grating_tether(
-        N,
-        Lambda * 1e6,
-        ff,
-        ffL,
-        ffH,
-        NL,
-        NH,
-        start_radius=start_radius * 1e6,
-        input_length=10,
-        **para
+        N, Lambda * 1e6, ff, ffL, ffH, NL, NH, start_radius=start_radius * 1e6, **para
     )
     gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
     c.write_gds(gds_fileName)
-    # c.show()
+    c.show()
     #
     return gds_fileName
 
@@ -62,7 +53,7 @@ def create_gds(uuid, tether_typ: str = "empty"):
 if __name__ == "__main__":
     uuid = "4e25"
     # tether_typ_list = ["empty", "section_tether", "section_rect_tether"]
-    tether_typ_list = ["section_rect_tether_suspend"]
+    tether_typ_list = ["section_rect_tether_hole_unbox"]
     for tether_typ in tether_typ_list:
         gds_fileName = create_gds(uuid, tether_typ=tether_typ)
         print(gds_fileName)

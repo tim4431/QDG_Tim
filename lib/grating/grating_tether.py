@@ -415,6 +415,24 @@ def recipes(tether_typ: str) -> dict:
             "suspend": True,
             "hole": True,
         }
+    elif tether_typ == "section_rect_tether_hole_unbox":
+        return {
+            "mask_func": None,
+            "tether_func": section_tether,
+            "grating_angle": 24,
+            "suspend": False,
+            "hole": True,
+            "input_length": 0,
+        }
+    elif tether_typ == "section_rect_tether_suspend_unbox":
+        return {
+            "mask_func": None,
+            "tether_func": section_tether,
+            "grating_angle": 24,
+            "suspend": True,
+            "hole": False,
+            "input_length": 0,
+        }
     elif tether_typ == "section_rect_tether_hole_suspend_unbox":
         return {
             "mask_func": None,
