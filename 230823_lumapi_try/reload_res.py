@@ -123,12 +123,12 @@ if __name__ == "__main__":
     #     pause=False,
     # )
     # #
-    reload_work(
-        uuid,
-        dimension="3D",
-        tether_typ="section_rect_tether_suspend",
-        pause=False,
-    )
+    # reload_work(
+    #     uuid,
+    #     dimension="3D",
+    #     tether_typ="section_rect_tether_suspend",
+    #     pause=False,
+    # )
     # reload_work(
     #     uuid,
     #     dimension="3D",
