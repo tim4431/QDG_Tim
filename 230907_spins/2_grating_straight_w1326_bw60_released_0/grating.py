@@ -341,7 +341,7 @@ def create_objective(
                 polarization_angle=0,
                 theta=np.deg2rad(-10),
                 psi=np.pi / 2,
-                center=[0, 0, wg_thickness + 700],
+                center=[0, 0, wg_thickness + 1500],
                 extents=[14000, 14000, 0],
                 normal=[0, 0, -1],
                 power=1,
