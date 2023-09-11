@@ -10,13 +10,15 @@ from lib.gaussian.gaussian_fit_1d import arb_fit_1d
 if __name__ == "__main__":
     dataName = getdataName("4e25")
     fig, ax = plt.subplots(figsize=(10, 6))
-    fileName = "{:s}_None_2D_simulated_transmission.txt".format(dataName)
-    data = np.loadtxt(fileName)
-    arb_fit_1d(ax, data[:, 0] * 1e3, data[:, 1], "2D")
+    # fileName = "{:s}_None_2D_simulated_transmission.txt".format(dataName)
+    # data = np.loadtxt(fileName)
+    # arb_fit_1d(ax, data[:, 0] * 1e3, data[:, 1], "2D")
 
     # tether_typ_list = ["empty", "section_tether", "section_rect_tether"]
     tether_typ_list = [
+        "empty",
         "section_rect_tether",
+        "section_rect_tether_suspend",
         "section_rect_tether_hole",
         "section_rect_tether_hole_suspend",
     ]

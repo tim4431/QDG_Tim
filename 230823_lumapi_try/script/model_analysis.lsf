@@ -20,10 +20,10 @@ index_rightmost=find(lambda,lambda_0-2*sigma);
 for(i=index_leftmost:index_rightmost){
     T_lambda = T(i);
     lambda_i = lambda(i);
-    T_0 =exp(-(lambda_i-lambda_0)^2/(sigma^2));
-    cross_correlation = cross_correlation + T_lambda*T_0;
+    T_theo =exp(-(lambda_i-lambda_0)^2/(sigma^2));
+    cross_correlation = cross_correlation + T_lambda*T_theo;
     T_square_sum = T_square_sum + T_lambda^2;
-    ratio_square_sum = ratio_square_sum + T_0^2;
+    ratio_square_sum = ratio_square_sum + T_theo^2;
 }
 len=index_rightmost-index_leftmost+1;
 
@@ -44,3 +44,4 @@ FOM= (norm_T_div+alpha)*norm_cross_correlation+penalty;
 ?T_0;
 ?maxT;
 ?FOM;
+?lambda_maxT;
