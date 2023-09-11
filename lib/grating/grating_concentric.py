@@ -19,11 +19,6 @@ def grating_concentric_arc(
     c = Component()
     WG_CROSS = gf.cross_section.cross_section(width=0.35, layer="WG")
 
-    # add input wg
-    wg = gf.components.straight(length=input_length, cross_section=WG_CROSS)
-    wg_ref = c << wg
-    wg_ref.xmax = 0
-
     # add input taper
     from gdsfactory.components.grating_coupler_elliptical import grating_taper_points
 
@@ -36,6 +31,15 @@ def grating_concentric_arc(
         wg_width=0.35,
     )
     c.add_polygon(pts, "WG")
+    #
+    # add input wg
+    if not (input_length == 0):
+        wg = gf.components.straight(length=input_length, cross_section=WG_CROSS)
+        wg_ref = c << wg
+        wg_ref.xmax = 0
+        c.add_port("o1", port=wg_ref.ports["o1"])
+    else:
+        c.add_port("o1", center=(0, 0), width=0.35, orientation=180, layer="WG")
 
     # add grating rings
     for i, (r1, r2) in enumerate(gratings):
@@ -94,10 +98,14 @@ def grating_concentric_ellipse(
 if __name__ == "__main__":
     grating = list(np.linspace(0, 10, 20))
     grating = list(np.linspace(0, 10, 20))
-    # c = grating_concentric_arc(
+    c = grating_concentric_arc(
+        taper_angle=24,
+        grating_angle=24,
+        start_radius=10,
+        grating=grating,
+        input_length=0,
+    )
+    # c = grating_concentric_ellipse(
     #     taper_angle=24, grating_angle=24, start_radius=10, grating=grating
     # )
-    c = grating_concentric_ellipse(
-        taper_angle=24, grating_angle=24, start_radius=10, grating=grating
-    )
-    c.show()
+    c.show(show_ports=True)

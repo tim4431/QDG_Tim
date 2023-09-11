@@ -20,85 +20,89 @@ from typing import List, Callable, Union
 
 @gf.cell
 def grating_mask_tether(
-    grating, grating_mask, tether=None, hole=False, input_length: float = 10
+    grating,
+    grating_mask,
+    tether=None,
+    hole=False,
+    suspend=False,
+    input_length: float = 10,
 ):
     # construct
     c = gf.Component()
 
-    #
+    # >>> add grating <<<
     grating_ref = grating.ref()
     grating_ref.xmin = -input_length
     grating_ref.y = 0
-    #
-    mask_ref = grating_mask.ref()
-    mask_ref.xmin = -input_length
-    mask_ref.y = 0
-    #
-    # keep crosssection part of tether_mask and grating
-    grating_masked = gf.geometry.boolean(
-        mask_ref, grating_ref, operation="and", layer="WG"
-    )
-    if hole:  # add vhf hole
+    c.add_ports(grating_ref.ports)
+    # >>> add hole <<<
+    if hole:
         vhf_hole = gf.components.rectangle(size=(0.35, 0.35), layer="WG")
-        grating_masked_ref = grating_masked.ref()
-        grating_masked_ref.xmin = -input_length
-        grating_masked_ref.y = 0
         hole_ref = vhf_hole.ref()
         hole_ref.xmin = 9
         hole_ref.y = 0
-        grating_masked = gf.geometry.boolean(
-            grating_masked_ref, hole_ref, operation="not", layer="WG"
+        grating = gf.geometry.boolean(
+            grating_ref, hole_ref, operation="not", layer="WG"
         )
+    # >>> add suspension <<<
+    SUSPEND_XMIN = 11
+    if suspend:
+        suspend_ref = c << gf.components.rectangle(
+            size=(grating_ref.xmax - SUSPEND_XMIN - 5, 0.35), layer="WG"
+        )
+        suspend_ref.xmin = SUSPEND_XMIN
+        suspend_ref.y = 0
+    # >>> add mask <<<
+    if grating_mask is not None:
+        mask_ref = grating_mask.ref()
+        mask_ref.xmin = -input_length
+        mask_ref.y = 0
+        grating_masked = gf.geometry.boolean(
+            mask_ref, grating.ref(), operation="and", layer="WG"
+        )
+    else:
+        grating_masked = grating
     grating_masked_ref = c << grating_masked
 
-    # outer rectangle is inner rectangle + 3um margin
-    outer_rect_length = mask_ref.xmax - mask_ref.xmin
-    outer_rect_width = mask_ref.ymax - mask_ref.ymin
-    MARGIN_WIDTH = 3
-    outer_rectangle = gf.components.rectangle(
-        size=(outer_rect_length + MARGIN_WIDTH, outer_rect_width + MARGIN_WIDTH * 2),
-        layer="WG",
-    )
-    outer_rectangle_ref = outer_rectangle.ref()
-    outer_rectangle_ref.xmin = -input_length
-    outer_rectangle_ref.y = 0
-
-    # keep difference part of mask_copy and outer_rectangle
-    if tether is None:
-        support = gf.geometry.boolean(
-            outer_rectangle_ref, mask_ref, operation="not", layer="WG"
-        )
-        support_ref = c << support
-    else:
+    # >>> add tether <<<
+    if tether is not None:
         tether_ref = c << tether
         tether_ref.xmin = 0
         tether_ref.y = 0
-        #
-        mask_bounding_box_length = mask_ref.xmax - mask_ref.xmin
-        mask_bounding_box_width = mask_ref.ymax - mask_ref.ymin
-        mask_bounding_box = gf.components.rectangle(
-            size=(mask_bounding_box_length, mask_bounding_box_width), layer="WG"
-        )
-        mask_bounding_box_ref = mask_bounding_box.ref()
-        mask_bounding_box_ref.xmin = -input_length
-        mask_bounding_box_ref.y = 0
-        #
+    # >>> add support <<<
+    # outer rectangle is inner rectangle + margin
+    # if grating_mask == None, then do not need to add outer rectangle
+    if grating_mask is not None:
+        MARGIN_WIDTH = 4
+        mask_bbox_length = mask_ref.xmax - mask_ref.xmin  # type: ignore
+        mask_bbox_width = mask_ref.ymax - mask_ref.ymin  # type: ignore
         outer_rectangle = gf.components.rectangle(
             size=(
-                mask_bounding_box_length + MARGIN_WIDTH,
-                mask_bounding_box_width + MARGIN_WIDTH * 2,
+                mask_bbox_length + MARGIN_WIDTH,
+                mask_bbox_width + MARGIN_WIDTH * 2,
             ),
             layer="WG",
         )
         outer_rectangle_ref = outer_rectangle.ref()
         outer_rectangle_ref.xmin = -input_length
         outer_rectangle_ref.y = 0
+        # if tether==None, support is just the difference between outer rectangle and mask
+        if tether is None:
+            support = gf.geometry.boolean(
+                outer_rectangle_ref, mask_ref, operation="not", layer="WG"  # type: ignore
+            )
+        else:  # support is the difference between outer rectangle and bbox of mask
+            mask_bbox = gf.components.rectangle(
+                size=(mask_bbox_length, mask_bbox_width), layer="WG"
+            )
+            mask_bbox_ref = mask_bbox.ref()
+            mask_bbox_ref.xmin = -input_length
+            mask_bbox_ref.y = 0
+            support = gf.geometry.boolean(
+                outer_rectangle_ref, mask_bbox_ref, operation="not", layer="WG"
+            )
         #
-        support = gf.geometry.boolean(
-            outer_rectangle_ref, mask_bounding_box_ref, operation="not", layer="WG"
-        )
         support_ref = c << support
-
     #
     return c
 
@@ -201,9 +205,9 @@ def _tether(straight_length: float, angle: float = 0):
     # then add length straight, keep 500nm
     c = gf.Component()
     #
-    taper_length = 1.2
+    taper_length = 2.5
     taper_width_1 = 0.2
-    taper_width_2 = 0.5
+    taper_width_2 = 1.5
     cross_section_1 = gf.cross_section.cross_section(width=taper_width_1, layer="WG")
     cross_section_2 = gf.cross_section.cross_section(width=taper_width_2, layer="WG")
     #
@@ -260,9 +264,11 @@ def section_tether(
     #
     # add tether
     cross_section = gf.cross_section.cross_section(width=0.2, layer="WG")
+    # TETHER_ANGLE = grating_angle
+    TETHER_ANGLE = 0
     for i, x in enumerate(np.linspace(4, GL - 3, 4)):
-        L_tether = (GL - x) * np.sin(grating_angle * DEG2RAD) - 1.1
-        tether = _tether(straight_length=L_tether, angle=0)
+        L_tether = (GL - x) * np.sin(grating_angle * DEG2RAD) + 2
+        tether = _tether(straight_length=L_tether, angle=TETHER_ANGLE)
         tether_ref = c << tether
         # create port
         c.add_port(
@@ -276,6 +282,7 @@ def section_tether(
         )
         tether_ref.connect("o1", c.ports["ou{:d}".format(i)])
         #
+        tether = _tether(straight_length=L_tether, angle=-TETHER_ANGLE)
         tether_ref_bottom = c << tether
         # create port
         c.add_port(
@@ -310,13 +317,15 @@ def grating_tether(
     input_length: float = 10,
 ) -> gf.Component:
     # const
-    PATCH_LENGTH = 0 if mask_func is None else 5
+    PATCH_LENGTH = 0 if (mask_func is None and tether_func is None) else 5
     #
     c = gf.Component("grating_gds")  # here we generate gds with designated cell name
     # constructW
     # generate grating
     grating = subw_grating(N, Lambda, ff, ffL, ffH, NL, NH)
+    grating[0] = -1  # Tim: to connect to the taper
     grating_length = grating[-1]
+    #
     if PATCH_LENGTH > 0:
         grating.append(grating_length)
         grating.append(grating_length + PATCH_LENGTH)
@@ -346,20 +355,19 @@ def grating_tether(
             start_radius=start_radius,
             patch_length=PATCH_LENGTH,
         )
-        gt = grating_mask_tether(
-            g, mask, tether=tether, hole=hole, input_length=input_length
-        )
-        gt_ref = c << gt
     else:
-        g_rec = c << g
+        mask = None
     #
-    # add suspension
-    if (mask_func is not None) and suspend:
-        suspend_ref = c << gf.components.rectangle(
-            size=(2 + (grating[-1] - PATCH_LENGTH), 0.35), layer="WG"
-        )
-        suspend_ref.xmin = start_radius - 2
-        suspend_ref.y = 0
+    gt = grating_mask_tether(
+        g,
+        mask,
+        tether=tether,
+        input_length=input_length,
+        hole=hole,
+        suspend=suspend,
+    )
+    gt_ref = c << gt
+    c.add_ports(gt_ref.ports)
     #
     return c
 
@@ -407,6 +415,15 @@ def recipes(tether_typ: str) -> dict:
             "suspend": True,
             "hole": True,
         }
+    elif tether_typ == "section_rect_tether_hole_suspend_unbox":
+        return {
+            "mask_func": None,
+            "tether_func": section_tether,
+            "grating_angle": 24,
+            "suspend": True,
+            "hole": True,
+            "input_length": 0,
+        }
     else:
         return {
             "mask_func": None,
@@ -425,11 +442,18 @@ if __name__ == "__main__":
     NH = 2
     N = 10
     #
-    para = recipes("section_rect_tether_hole")
+    para = recipes("section_rect_tether_hole_suspend_unbox")
     c = grating_tether(
-        N, Lambda, ff, ffL, ffH, NL, NH, start_radius=12, input_length=10, **para
+        N,
+        Lambda,
+        ff,
+        ffL,
+        ffH,
+        NL,
+        NH,
+        start_radius=12,
+        **para,
     )
     # c = section_tether(30, 24)
     # d = skeleton(30, 24, 3, 1.5)
-    # d.show()
-    c.show()
+    c.show(show_ports=True)
