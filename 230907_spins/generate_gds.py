@@ -8,7 +8,7 @@ from lib.grating.grating_concentric import grating_concentric_arc
 
 def generate_gds(dataDirname):
     grating = load_grating_data(
-        os.path.join(".", dataDirname, "output"), grating_len=12000
+        os.path.join(".", dataDirname, "output"), grating_len=10000
     )
     c = grating_concentric_arc(
         taper_angle=24, grating_angle=24, start_radius=12.0, grating=grating
@@ -18,5 +18,5 @@ def generate_gds(dataDirname):
 
 
 if __name__ == "__main__":
-    dataDirname = "1_grating_straight_w1326_released_0"
+    dataDirname = "3_grating_straight_w1326_released_1"
     generate_gds(dataDirname)
