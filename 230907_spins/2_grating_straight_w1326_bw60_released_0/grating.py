@@ -324,7 +324,7 @@ def create_objective(
     # Set wavelengths to optimize over
     # wlens = [1326]
     # wlens = [1286, 1306, 1326, 1346, 1366]  # Tim
-    wlens = np.arange(1326 - 200, 1326 + 200, 14)  # Tim
+    wlens = np.arange(1326 - 150, 1326 + 150, 15)  # Tim
     for wlen in wlens:
         epsilon = optplan.Epsilon(
             simulation_space=sim_space,
