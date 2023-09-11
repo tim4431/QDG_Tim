@@ -13,3 +13,63 @@ monitor_list:
 - monitor_names: [mon_power_1326]
   monitor_type: scalar
   scalar_operation: magnitude
+
+- monitor_names: [mon_field_1341]
+  monitor_type: planar
+  vector_operation: magnitude
+
+
+- monitor_names: [mon_eps_1341]
+  monitor_type: planar
+  vector_operation: z
+  scalar_operation: magnitude
+
+
+- monitor_names: [mon_power_1341]
+  monitor_type: scalar
+  scalar_operation: magnitude
+
+- monitor_names: [mon_field_1356]
+  monitor_type: planar
+  vector_operation: magnitude
+
+
+- monitor_names: [mon_eps_1356]
+  monitor_type: planar
+  vector_operation: z
+  scalar_operation: magnitude
+
+
+- monitor_names: [mon_power_1356]
+  monitor_type: scalar
+  scalar_operation: magnitude
+
+- monitor_names: [mon_field_1311]
+  monitor_type: planar
+  vector_operation: magnitude
+
+
+- monitor_names: [mon_eps_1311]
+  monitor_type: planar
+  vector_operation: z
+  scalar_operation: magnitude
+
+
+- monitor_names: [mon_power_1311]
+  monitor_type: scalar
+  scalar_operation: magnitude
+
+- monitor_names: [mon_field_1296]
+  monitor_type: planar
+  vector_operation: magnitude
+
+
+- monitor_names: [mon_eps_1296]
+  monitor_type: planar
+  vector_operation: z
+  scalar_operation: magnitude
+
+
+- monitor_names: [mon_power_1296]
+  monitor_type: scalar
+  scalar_operation: magnitude

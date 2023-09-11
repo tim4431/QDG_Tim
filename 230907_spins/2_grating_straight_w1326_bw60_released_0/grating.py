@@ -324,7 +324,29 @@ def create_objective(
     # Set wavelengths to optimize over
     # wlens = [1326]
     # wlens = [1286, 1306, 1326, 1346, 1366]  # Tim
-    wlens = np.arange(1326 - 150, 1326 + 150, 15)  # Tim
+    wlens = [
+        1176,
+        1191,
+        1206,
+        1221,
+        1236,
+        1251,
+        1266,
+        1281,
+        1296,
+        1311,
+        1326,
+        1341,
+        1356,
+        1371,
+        1386,
+        1401,
+        1416,
+        1431,
+        1446,
+        1461,
+        1476,
+    ]  # Tim
     for wlen in wlens:
         epsilon = optplan.Epsilon(
             simulation_space=sim_space,
@@ -420,7 +442,7 @@ def create_objective(
     l, T = wlens, objectives
     lambda_0 = 1326
     FWHM = 100
-    T_des = analysis.gaussian_curve(l, lambda_0, FWHM)
+    T_des = list(analysis.gaussian_curve(l, lambda_0, FWHM))
     # norm_T_des = analysis.mean_alpha(T_des, alpha=2)
     FOM = sum([float(T_d) * T for T_d, T in zip(T_des, T)])
     obj = FOM
