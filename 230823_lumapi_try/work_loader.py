@@ -12,7 +12,7 @@ def work_loader(workList, prefix):
     cwd = os.getcwd()
     now = datetime.now()
     dt_string = now.strftime("%Y%m%d_%H%M%S")
-    loader_dataName = os.path.join(cwd, dt_string + "_" + prefix)
+    loader_dataName = os.path.join(cwd, "logs", dt_string + "_" + prefix)
     loader_logger = create_logger(loader_dataName + ".log")
     loader_logger.info("Work loader start")
 
