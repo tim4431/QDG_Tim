@@ -4,10 +4,15 @@ import numpy as np
 from typing import Callable
 
 
-def load_csv_data(fileName: str, select_func: Callable | None, key_x: str, key_y: str):
+def _simple_load_csv_data(fileName: str, key_x: str, key_y: str):
     data = pd.read_csv(fileName)
     datax = data[key_x].to_numpy()
     datay = data[key_y].to_numpy()
+    return datax, datay
+
+
+def load_csv_data(fileName: str, select_func: Callable | None, key_x: str, key_y: str):
+    datax, datay = _simple_load_csv_data(fileName, key_x, key_y)
     #
     if select_func is not None:
         select_mask = select_func(datax, datay)
