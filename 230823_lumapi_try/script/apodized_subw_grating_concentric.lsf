@@ -1,0 +1,77 @@
+deleteall;
+
+
+# position
+set("x",0);
+set("y",0);
+set("z",0);
+
+
+# rotaion
+set("first axis","x");
+set("rotation 1",90);
+
+# add input waveguide
+addrect;
+set("name","input");
+set("material","Si (Silicon) - Palik");
+set("x min",-10e-6);
+set("x max",1e-6);
+set("y min",-175e-9);
+set("y max",175e-9);
+set("z min",-wg_h/2);
+set("z max",wg_h/2);
+
+# add taper
+addring;
+set("name","taper");
+set("material","Si (Silicon) - Palik");
+set("inner radius",0);
+set("outer radius",start_radius);
+set("z min",-wg_h/2);
+set("z max",wg_h/2);
+set("theta start",-taper_angle);
+set("theta stop",taper_angle);
+
+# add grating
+x0=start_radius;
+for(j=0:N-1){
+    Lambdai=Lambda_i + (Lambda_f - Lambda_i) * (j / (N - 1));
+    ffLi = ffL_i + (ffL_f - ffL_i) * (j / (N - 1));
+    ffHi = ffH_i + (ffH_f - ffH_i) * (j / (N - 1));
+    ffi = ff_i + (ff_f - ff_i) * (j / (N - 1));
+    Lambda_Li=Lambdai*(1-ffi);
+    Lambda_Hi=Lambdai*ffi;
+    period_Li=Lambda_Li/NL;
+    period_Hi=Lambda_Hi/NH;
+    x_Li=period_Li* ffLi;
+    x_Hi=period_Hi* ffHi;
+
+    # add grating H
+    for(i=1:NH){
+    addring;
+    set("name","grating_H");
+    set("material","Si (Silicon) - Palik");
+    set("inner radius",x0 + period_Hi*(i-0.5)-x_Hi/2);
+    set("outer radius",x0 + period_Hi*(i-0.5)+x_Hi/2);
+    set("z min",-wg_h/2);
+    set("z max",wg_h/2);
+    set("theta start",-taper_angle);
+    set("theta stop",taper_angle);
+    }
+
+    # add grating L
+    for(i=1:NL){
+    addring;
+    set("name","grating_L");
+    set("material","Si (Silicon) - Palik");
+    set("inner radius",x0 + Lambda_Hi + period_Li*(i-0.5)-x_Li/2);
+    set("outer radius",x0 + Lambda_Hi + period_Li*(i-0.5)+x_Li/2);
+    set("z min",-wg_h/2);
+    set("z max",wg_h/2);
+    set("theta start",-taper_angle);
+    set("theta stop",taper_angle);
+    }
+    #
+    x0=x0+Lambdai;
+}
