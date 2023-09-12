@@ -18,5 +18,5 @@
 !/ee71/*
 !/65da
 !/65da/*
-!*.log
-!*_uuid_list.txt
+!/logs
+!/logs/**

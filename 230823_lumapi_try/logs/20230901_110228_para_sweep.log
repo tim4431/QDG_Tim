@@ -1,0 +1,20 @@
+[INFO] - Work loader start
+[INFO] - uuid: bdad created
+[INFO] - uuid: c080 created
+[INFO] - uuid: ab3a created
+[INFO] - uuid: 5e56 created
+[INFO] - uuid: 0982 created
+[INFO] - uuid: 0a61 created
+[INFO] - uuid: bdad finished
+[INFO] - uuid: c080 finished
+[INFO] - uuid: ab3a finished
+[INFO] - uuid: 5e56 finished
+[INFO] - uuid: 0982 finished
+[INFO] - uuid: 0a61 finished
+[INFO] - 0 uuid: bdad finished
+[INFO] - 1 uuid: c080 finished
+[INFO] - 2 uuid: ab3a finished
+[INFO] - 3 uuid: 5e56 finished
+[INFO] - 4 uuid: 0982 finished
+[INFO] - 5 uuid: 0a61 finished
+[INFO] - Work loader end
