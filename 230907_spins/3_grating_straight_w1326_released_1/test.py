@@ -5,7 +5,9 @@ sys.path.append("../..")
 from lib.gaussian.gaussian_fit_1d import arb_fit_1d
 from lib.process_data.load_lumerical_data import load_lumerical_1d
 
-l, T = load_lumerical_1d("./3_grating_straight_w1326_released_1_arc_transmission.txt")
+l, T = load_lumerical_1d(
+    "./3_grating_straight_w1326_released_1_expand_arc_transmission.txt"
+)
 import matplotlib.pyplot as plt
 
 fig, ax = plt.subplots()
