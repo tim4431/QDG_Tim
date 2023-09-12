@@ -24,6 +24,7 @@ def work_loader(workList, prefix):
         # uuid = prefix + "_" + str(i) + "_" + uuid
         uuid_List.append(uuid)
         loader_logger.info("uuid: " + uuid + " created")
+        loader_logger.info("work: " + str(work))
 
     # >>> load work <<<
     uuid_finished = []

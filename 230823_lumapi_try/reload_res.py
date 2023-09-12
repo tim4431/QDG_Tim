@@ -106,7 +106,7 @@ def reload_work(
 
 
 if __name__ == "__main__":
-    uuid = "4e25"
+    uuid = "ee71"
 
     #
     reload_work(
@@ -115,20 +115,20 @@ if __name__ == "__main__":
         tether_typ="empty",
         pause=False,
     )
-    # #
-    # reload_work(
-    #     uuid,
-    #     dimension="3D",
-    #     tether_typ="section_tether",
-    #     pause=False,
-    # )
-    # #
-    # reload_work(
-    #     uuid,
-    #     dimension="3D",
-    #     tether_typ="section_rect_tether_suspend",
-    #     pause=False,
-    # )
+    #
+    reload_work(
+        uuid,
+        dimension="3D",
+        tether_typ="section_rect_tether",
+        pause=False,
+    )
+    #
+    reload_work(
+        uuid,
+        dimension="3D",
+        tether_typ="section_rect_tether_suspend",
+        pause=False,
+    )
     # reload_work(
     #     uuid,
     #     dimension="3D",
