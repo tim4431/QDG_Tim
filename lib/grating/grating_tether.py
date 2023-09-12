@@ -16,12 +16,13 @@ from .grating_concentric import (
 )
 import gdsfactory as gf
 from typing import List, Callable, Union
+from gdsfactory.types import Component
 
 
 @gf.cell
 def grating_mask_tether(
-    grating,
-    grating_mask,
+    grating: Component,
+    grating_mask: Component | None,
     tether=None,
     hole=False,
     suspend=False,
@@ -67,8 +68,6 @@ def grating_mask_tether(
     # >>> add tether <<<
     if tether is not None:
         tether_ref = c << tether
-        tether_ref.xmin = 0
-        tether_ref.y = 0
     # >>> add support <<<
     # outer rectangle is inner rectangle + margin
     # if grating_mask == None, then do not need to add outer rectangle
@@ -109,7 +108,7 @@ def grating_mask_tether(
 
 @gf.cell
 def rect_mask(
-    grating_length: float,
+    grating: List[float],
     grating_angle: float,
     start_radius: float = 10,
     input_length: float = 10,
@@ -117,6 +116,7 @@ def rect_mask(
 ):
     c = gf.Component()
     #
+    grating_length = grating[-1] - patch_length
     SHRINK_WIDTH = 0.1
     DEG2RAD = np.pi / 180
     rect_width = 2 * (start_radius * np.sin(grating_angle * DEG2RAD) - SHRINK_WIDTH)
@@ -129,7 +129,7 @@ def rect_mask(
 
 @gf.cell
 def section_mask(
-    grating_length: float,
+    grating: List[float],
     grating_angle: float,
     start_radius: float = 10,
     input_length: float = 10,
@@ -138,6 +138,7 @@ def section_mask(
 ):
     c = gf.Component()
     # construct
+    grating_length = grating[-1] - patch_length
     L = grating_length - patch_length
     section_length = L + start_radius + patch_length
     DEG2RAD = np.pi / 180
@@ -171,31 +172,56 @@ def section_mask(
 section_rect_mask = gf.partial(section_mask, width_factor=0.8)
 
 
-@gf.cell
-def skeleton(
-    grating_length: float, grating_angle: float, N_skeleton: int, skeleton_span: float
+def add_skeleton(
+    c: Component,
+    grating_length_inner: float,
+    grating_length_outer: float,
+    grating_angle: float,
+    N_skeleton: int,
+    skeleton_span: float,
+    **kwargs,
 ):
-    # construct
-    c = gf.Component()
-
     # skeleton
-    center_angles = np.linspace(
-        -grating_angle + skeleton_span / 2,
-        grating_angle - skeleton_span / 2,
-        N_skeleton,
-    )
+    if N_skeleton == 1:
+        center_angles = [0]
+    else:
+        center_angles = np.linspace(
+            -grating_angle + skeleton_span / 2,
+            grating_angle - skeleton_span / 2,
+            N_skeleton,
+        )
     single_skeleton = gf.components.ring(
-        radius=grating_length / 2,
-        width=grating_length,
+        radius=(grating_length_inner + grating_length_outer) / 2,
+        width=(grating_length_outer - grating_length_inner),
         angle_resolution=0.1,
         angle=skeleton_span,
+        **kwargs,
     )
     for center_angle in center_angles:
         skeleton_ref = c << single_skeleton
-        skeleton_ref.xmin = 0
-        skeleton_ref.ymin = 0
         skeleton_ref.rotate(center_angle - skeleton_span / 2, center=(0, 0))
-    #
+
+
+@gf.cell
+def skeleton(
+    grating_length_inner: float,
+    grating_length_outer: float,
+    grating_angle: float,
+    N_skeleton: int,
+    skeleton_span: float,
+    **kwargs,
+):
+    # construct
+    c = gf.Component()
+    add_skeleton(
+        c,
+        grating_length_inner,
+        grating_length_outer,
+        grating_angle,
+        N_skeleton,
+        skeleton_span,
+        **kwargs,
+    )
     return c
 
 
@@ -243,9 +269,77 @@ def _tether(straight_length: float, angle: float = 0):
     return c
 
 
+def _array_tether(
+    c: Component,
+    GL: float,
+    grating_angle: float,
+    tether_angle: None | float = 0,
+    L_tether_bias: float = 2,
+):
+    DEG2RAD = np.pi / 180
+    grating_angle_rad = grating_angle * DEG2RAD
+    cross_section = gf.cross_section.cross_section(width=0.2, layer="WG")
+    if tether_angle == None:
+        TETHER_ANGLE = grating_angle_rad
+    else:
+        TETHER_ANGLE = tether_angle
+    #
+    SHRINK_LENGTH = 0.07
+    for i, x in enumerate(np.linspace(4, GL - 3, 4)):
+        L_tether = (GL - x) * np.sin(grating_angle_rad) + L_tether_bias
+        # >>> top <<<
+        tether = _tether(straight_length=L_tether, angle=TETHER_ANGLE)
+        tether_ref = c << tether
+        # create port
+        c.add_port(
+            "ou{:d}".format(i),
+            center=(
+                x * np.cos(grating_angle_rad),
+                x * np.sin(grating_angle_rad) - SHRINK_LENGTH,
+            ),
+            cross_section=cross_section,
+            orientation=0,
+        )
+        tether_ref.connect("o1", c.ports["ou{:d}".format(i)])
+        # >>> bottom <<<
+        tether = _tether(straight_length=L_tether, angle=-TETHER_ANGLE)
+        tether_ref_bottom = c << tether
+        # create port
+        c.add_port(
+            "ob{:d}".format(i),
+            center=(
+                x * np.cos(grating_angle_rad),
+                -(x * np.sin(grating_angle_rad) - SHRINK_LENGTH),
+            ),
+            cross_section=cross_section,
+            orientation=180,
+        )
+        tether_ref_bottom.connect("o1", c.ports["ob{:d}".format(i)])
+
+
 @gf.cell
-def section_tether(
-    grating_length: float,
+def section_2skeleton_tether(
+    grating: List[float],
+    grating_angle: float,
+    start_radius: float = 10,
+    input_length: float = 10,
+    patch_length: float = 5,
+):
+    #
+    c = gf.Component()
+    #
+    grating_length = grating[-1] - patch_length
+    GL = grating_length + start_radius
+    add_skeleton(c, 0, GL, grating_angle, N_skeleton=2, skeleton_span=1.5)
+    #
+    _array_tether(c, GL, grating_angle, tether_angle=0, L_tether_bias=2)
+    #
+    return c
+
+
+@gf.cell
+def section_multiskeleton_tether(
+    grating: List[float],
     grating_angle: float,
     start_radius: float = 10,
     input_length: float = 10,
@@ -256,46 +350,31 @@ def section_tether(
     #
     c = gf.Component()
     #
+    grating_length = grating[-1] - patch_length
     GL = grating_length + start_radius
-    sk = skeleton(GL, grating_angle, N_skeleton=2, skeleton_span=1.5)
-    sk_ref = c << sk
-    sk_ref.xmin = 0
-    sk_ref.y = 0
+    gratings = np.array(grating).reshape(-1, 2)
+    # add grating skeleton
+    add_skeleton(c, 0, GL, grating_angle, N_skeleton=2, skeleton_span=1.5)
+    # print(gratings)
+    ATTACH_LENGTH = 10e-3
+    for i in range(1, len(gratings), 2):
+        grating_inner = start_radius + gratings[i][1] - ATTACH_LENGTH
+        grating_outer = start_radius + gratings[i + 1][0] + ATTACH_LENGTH
+        grating_rad = (grating_inner + grating_outer) / 2
+        # print(grating_inner, grating_outer)
+        N_skeleton = 2
+        # N_skeleton = 2 if (i % 4 == 1) else 1
+        add_skeleton(
+            c,
+            grating_inner,
+            grating_outer,
+            grating_angle * (2 / 5),
+            N_skeleton=N_skeleton,
+            skeleton_span=(50e-9 / (grating_rad * 1e-6)) / DEG2RAD,
+        )
     #
-    # add tether
-    cross_section = gf.cross_section.cross_section(width=0.2, layer="WG")
-    # TETHER_ANGLE = grating_angle
-    TETHER_ANGLE = 0
-    for i, x in enumerate(np.linspace(4, GL - 3, 4)):
-        L_tether = (GL - x) * np.sin(grating_angle * DEG2RAD) + 2
-        tether = _tether(straight_length=L_tether, angle=TETHER_ANGLE)
-        tether_ref = c << tether
-        # create port
-        c.add_port(
-            "ou{:d}".format(i),
-            center=(
-                x * np.cos(grating_angle * DEG2RAD),
-                x * np.sin(grating_angle * DEG2RAD) - 0.1,
-            ),
-            cross_section=cross_section,
-            orientation=0,
-        )
-        tether_ref.connect("o1", c.ports["ou{:d}".format(i)])
-        #
-        tether = _tether(straight_length=L_tether, angle=-TETHER_ANGLE)
-        tether_ref_bottom = c << tether
-        # create port
-        c.add_port(
-            "ob{:d}".format(i),
-            center=(
-                x * np.cos(grating_angle * DEG2RAD),
-                -(x * np.sin(grating_angle * DEG2RAD) - 0.1),
-            ),
-            cross_section=cross_section,
-            orientation=180,
-        )
-        tether_ref_bottom.connect("o1", c.ports["ob{:d}".format(i)])
-        #
+    _array_tether(c, GL, grating_angle, tether_angle=0, L_tether_bias=2)
+    #
     return c
 
 
@@ -340,7 +419,7 @@ def grating_tether(
     #
     if tether_func is not None:
         tether = tether_func(
-            grating_length=grating_length,
+            grating=grating,
             grating_angle=grating_angle,
             start_radius=start_radius,
             patch_length=PATCH_LENGTH,
@@ -350,7 +429,7 @@ def grating_tether(
     #
     if mask_func is not None:
         mask = mask_func(
-            grating_length=grating_length,
+            grating=grating,
             grating_angle=grating_angle,
             start_radius=start_radius,
             patch_length=PATCH_LENGTH,
@@ -382,27 +461,34 @@ def recipes(tether_typ: str) -> dict:
     elif tether_typ == "section_tether":
         return {
             "mask_func": section_mask,
-            "tether_func": section_tether,
+            "tether_func": section_2skeleton_tether,
             "grating_angle": 24,
         }
     elif tether_typ == "section_rect_tether":
         return {
             "mask_func": section_rect_mask,
-            "tether_func": section_tether,
+            "tether_func": section_2skeleton_tether,
+            "grating_angle": 24,
+            "suspend": False,
+        }
+    elif tether_typ == "section_rect_tether_multiskeleton":
+        return {
+            "mask_func": section_rect_mask,
+            "tether_func": section_multiskeleton_tether,
             "grating_angle": 24,
             "suspend": False,
         }
     elif tether_typ == "section_rect_tether_suspend":
         return {
             "mask_func": section_rect_mask,
-            "tether_func": section_tether,
+            "tether_func": section_2skeleton_tether,
             "grating_angle": 24,
             "suspend": True,
         }
     elif tether_typ == "section_rect_tether_hole":
         return {
             "mask_func": section_rect_mask,
-            "tether_func": section_tether,
+            "tether_func": section_2skeleton_tether,
             "grating_angle": 24,
             "suspend": False,
             "hole": True,
@@ -410,7 +496,7 @@ def recipes(tether_typ: str) -> dict:
     elif tether_typ == "section_rect_tether_hole_suspend":
         return {
             "mask_func": section_rect_mask,
-            "tether_func": section_tether,
+            "tether_func": section_2skeleton_tether,
             "grating_angle": 24,
             "suspend": True,
             "hole": True,
@@ -418,7 +504,7 @@ def recipes(tether_typ: str) -> dict:
     elif tether_typ == "section_rect_tether_hole_unbox":
         return {
             "mask_func": None,
-            "tether_func": section_tether,
+            "tether_func": section_2skeleton_tether,
             "grating_angle": 24,
             "suspend": False,
             "hole": True,
@@ -427,7 +513,7 @@ def recipes(tether_typ: str) -> dict:
     elif tether_typ == "section_rect_tether_suspend_unbox":
         return {
             "mask_func": None,
-            "tether_func": section_tether,
+            "tether_func": section_2skeleton_tether,
             "grating_angle": 24,
             "suspend": True,
             "hole": False,
@@ -436,7 +522,7 @@ def recipes(tether_typ: str) -> dict:
     elif tether_typ == "section_rect_tether_hole_suspend_unbox":
         return {
             "mask_func": None,
-            "tether_func": section_tether,
+            "tether_func": section_2skeleton_tether,
             "grating_angle": 24,
             "suspend": True,
             "hole": True,
@@ -460,7 +546,7 @@ if __name__ == "__main__":
     NH = 2
     N = 10
     #
-    para = recipes("section_rect_tether_hole_suspend_unbox")
+    para = recipes("section_rect_tether_multiskeleton")
     c = grating_tether(
         N,
         Lambda,

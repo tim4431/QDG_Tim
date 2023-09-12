@@ -18,7 +18,12 @@ sys.path.append("..")
 
 
 def reload_work(
-    uuid: str, dimension: str = "2D", tether_typ=None, pause=False, monitor=True
+    uuid: str,
+    dimension: str = "2D",
+    tether_typ=None,
+    pause=False,
+    monitor=True,
+    advanced_monitor=False,
 ):
     dataName = getdataName(uuid)
     kwargs = load_json(uuid)
@@ -45,7 +50,12 @@ def reload_work(
     ) as fdtd:
         try:
             setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension=dimension)
-            setup_monitor(fdtd, monitor=monitor, movie=False)
+            setup_monitor(
+                fdtd,
+                monitor=monitor,
+                movie=False,
+                advanced_monitor=advanced_monitor,
+            )
             #
             if tether_typ is not None:  # import gds
                 gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)

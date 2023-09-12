@@ -295,7 +295,7 @@ def setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension="2D"):
         # because the definition of 2D source is different from 3D ver.
 
 
-def setup_monitor(fdtd, monitor=False, movie=False):
+def setup_monitor(fdtd, monitor=False, movie=False, advanced_monitor=False):
     if monitor:
         fdtd.setnamed("index_monitor", "enabled", 1)
         fdtd.setnamed("field_monitor", "enabled", 1)
@@ -307,6 +307,11 @@ def setup_monitor(fdtd, monitor=False, movie=False):
         fdtd.setnamed("movie_monitor", "enabled", 1)
     else:
         fdtd.setnamed("movie_monitor", "enabled", 0)
+    #
+    if advanced_monitor:
+        fdtd.setnamed("advanced_field_monitor", "enabled", 1)
+    else:
+        fdtd.setnamed("advanced_field_monitor", "enabled", 0)
 
 
 def load_script(script_name):
