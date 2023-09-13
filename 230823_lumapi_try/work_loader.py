@@ -437,6 +437,20 @@ if __name__ == "__main__":
         "SOURCE_typ": "gaussian_released",
         "start_radius": 12e-6,
     }
+    work_ade1_apodized = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 60e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 10,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "paras_init": "ade1",
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "grating_typ": "apodized_grating",
+        "start_radius": 12e-6,
+    }
 
 if __name__ == "__main__":  # type: ignore
     works_test = [work0]  # type: ignore
@@ -446,8 +460,8 @@ if __name__ == "__main__":  # type: ignore
     # works = [work_inverse_1, work_inverse_2, work_inverse_3]
     # works = [work_4e25_1330, work_4e25_min60]
     # works = [work_4e25_apodized, work_4e25_1336_apodized]
-    works = [ work_grating_2]
+    works = [work_ade1_apodized]
     # works = [work_4e25_inverse]
-    work_loader(works, prefix="grating_test_2")
+    work_loader(works, prefix="ade1_apodized")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)
