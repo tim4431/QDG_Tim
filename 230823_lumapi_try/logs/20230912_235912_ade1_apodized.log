@@ -1,0 +1,6 @@
+[INFO] - Work loader start
+[INFO] - uuid: f686 created
+[INFO] - work: {'lambda_0': 1.326e-06, 'FWHM': 6e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 10, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'paras_init': 'ade1', 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'apodized_grating', 'start_radius': 1.2e-05, 'plot': False, 'NL': 2, 'NH': 3, 'logger': None, 'taper_angle': 24, 'uuid': 'f686'}
+[INFO] - uuid: f686 finished
+[INFO] - 0 uuid: f686 finished
+[INFO] - Work loader end
