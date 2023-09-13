@@ -299,7 +299,7 @@ if __name__ == "__main__":
         "FWHM": 20e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
-        "N": 14,
+        "N": 10,
         "maxiter": 100,
         "MIN_FEATURE_SIZE": 40e-9,
         "FOM_typ": "square",
@@ -312,9 +312,9 @@ if __name__ == "__main__":
         "FWHM": 40e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
-        "N": 12,
+        "N": 10,
         "maxiter": 100,
-        "MIN_FEATURE_SIZE": 40e-9,
+        "MIN_FEATURE_SIZE": 60e-9,
         "FOM_typ": "square",
         "SOURCE_typ": "gaussian_released",
         "grating_typ": "grating",
@@ -445,8 +445,9 @@ if __name__ == "__main__":  # type: ignore
     # works = [work9,work10,work11,work12,work13,work14]
     # works = [work_inverse_1, work_inverse_2, work_inverse_3]
     # works = [work_4e25_1330, work_4e25_min60]
-    works = [work_4e25_apodized, work_4e25_1336_apodized]
+    # works = [work_4e25_apodized, work_4e25_1336_apodized]
+    works = [work_grating_1, work_grating_2]
     # works = [work_4e25_inverse]
-    work_loader(works, prefix="4e25_apodized")
+    work_loader(works, prefix="grating_test")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)
