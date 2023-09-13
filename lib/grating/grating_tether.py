@@ -22,7 +22,7 @@ from gdsfactory.types import Component
 @gf.cell
 def grating_mask_tether(
     grating: Component,
-    grating_mask: Component | None,
+    grating_mask: Union[Component,None],
     tether=None,
     hole=False,
     suspend=False,
@@ -273,7 +273,7 @@ def _array_tether(
     c: Component,
     GL: float,
     grating_angle: float,
-    tether_angle: None | float = 0,
+    tether_angle: Union[None, float]=0,
     L_tether_bias: float = 2,
 ):
     DEG2RAD = np.pi / 180

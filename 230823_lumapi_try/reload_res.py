@@ -126,14 +126,14 @@ if __name__ == "__main__":
         pause=False,
         advanced_monitor=False,
     )
-    #
-    reload_work(
-        "ade1",
-        dimension="3D",
-        tether_typ=None,
-        pause=False,
-        advanced_monitor=True,
-    )
+    # #
+    # reload_work(
+    #     "ade1",
+    #     dimension="3D",
+    #     tether_typ=None,
+    #     pause=False,
+    #     advanced_monitor=True,
+    # )
     #
     reload_work(
         "38b2",
@@ -142,28 +142,28 @@ if __name__ == "__main__":
         pause=False,
         advanced_monitor=False,
     )
-    #
-    reload_work(
-        "38b2",
-        dimension="3D",
-        tether_typ=None,
-        pause=False,
-        advanced_monitor=True,
-    )
-    #
-    reload_work(
-        "4e25",
-        dimension="3D",
-        tether_typ=None,
-        pause=False,
-        advanced_monitor=True,
-    )
-    #
-    reload_work(
-        "4e25",
-        dimension="3D",
-        tether_typ="section_rect_tether_multiskeleton",
-        pause=False,
-        advanced_monitor=False,
-    )
-    #
+    # #
+    # reload_work(
+    #     "38b2",
+    #     dimension="3D",
+    #     tether_typ=None,
+    #     pause=False,
+    #     advanced_monitor=True,
+    # )
+    # #
+    # reload_work(
+    #     "4e25",
+    #     dimension="3D",
+    #     tether_typ=None,
+    #     pause=False,
+    #     advanced_monitor=True,
+    # )
+    # #
+    # reload_work(
+    #     "4e25",
+    #     dimension="3D",
+    #     tether_typ="section_rect_tether_multiskeleton",
+    #     pause=False,
+    #     advanced_monitor=False,
+    # )
+    # #
