@@ -1,6 +1,7 @@
 from json_uuid import load_json, uuid_to_wd, load_paras
 from const_var import DEFAULT_PARA
 import sys
+import gdsfactory as gf
 
 sys.path.append("..")
 import os
@@ -87,27 +88,33 @@ def create_gds(uuid, tether_typ: str = "empty"):
     grating = generate_grating(paras, **kwargs)
     c = grating_tether(grating, start_radius=start_radius * 1e6, **recipe)
     gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
-    c.write_gds(gds_fileName)
+    c.write_gds(gds_fileName, precision=2e-9)
     c.show()
     #
     return gds_fileName
 
 
 if __name__ == "__main__":
-    uuid = "38b2"
+    uuid = "4e25"
     # tether_typ_list = ["empty", "section_tether", "section_rect_tether"]
     tether_typ_avail_list = [
-        "empty",
-        "section_rect_tether",
-        "section_rect_tether_multiskeleton",
-        "section_rect_tether_suspend",
-        "section_rect_tether_hole",
-        "section_rect_tether_hole_suspend",
-        "section_rect_tether_hole_unbox",
-        "section_rect_tether_suspend_unbox",
-        "section_rect_tether_hole_suspend_unbox",
+        "empty",  # 0
+        "section_rect_tether",  # 1
+        #
+        "section_rect_tether_hole",  # 2
+        "section_rect_tether_suspend",  # 3
+        "section_rect_tether_hole_suspend",  # 4
+        #
+        "section_rect_tether_multisuspend",  # 5
+        "section_rect_tether_hole_multisuspend",  # 6
+        #
+        "section_rect_tether_hole_unbox",  # 7
+        "section_rect_tether_suspend_unbox",  # 8
+        "section_rect_tether_hole_suspend_unbox",  # 9
+        #
+        "section_rect_tether_hole_multisuspend_unbox",  # 10
     ]
-    idx_list = [0, 1, 2]
+    idx_list = [10]
     for idx in idx_list:
         tether_typ = tether_typ_avail_list[idx]
         gds_fileName = create_gds(uuid, tether_typ=tether_typ)
