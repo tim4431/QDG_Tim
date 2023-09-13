@@ -49,6 +49,7 @@ def reload_work(
         purpose="{:s}_{:s}_simluated".format(str(tether_typ), dimension),
     ) as fdtd:
         try:
+            # >>> setup simulation <<< #
             setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension=dimension)
             setup_monitor(
                 fdtd,
@@ -56,7 +57,7 @@ def reload_work(
                 movie=False,
                 advanced_monitor=advanced_monitor,
             )
-            #
+            # >>> setup grating <<< #
             if tether_typ is not None:  # import gds
                 gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
                 fdtd.gdsimport(
@@ -73,7 +74,7 @@ def reload_work(
             else:  # setup by script
                 setup_grating_structuregroup(fdtd, **kwargs)
 
-            #
+            # >>> run simulation <<< #
             l, T, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(
                 fdtd, paras, reload=True, **kwargs
             )
@@ -116,45 +117,29 @@ def reload_work(
 
 
 if __name__ == "__main__":
-    uuid = "ee71"
-
+    # uuid = "38b2"
     #
     reload_work(
-        uuid,
+        "38b2",
         dimension="3D",
-        tether_typ="empty",
+        tether_typ=None,
         pause=False,
+        advanced_monitor=True,
     )
     #
     reload_work(
-        uuid,
+        "4e25",
         dimension="3D",
-        tether_typ="section_rect_tether",
+        tether_typ=None,
         pause=False,
+        advanced_monitor=True,
     )
     #
     reload_work(
-        uuid,
+        "4e25",
         dimension="3D",
-        tether_typ="section_rect_tether_suspend",
+        tether_typ="section_rect_tether_multiskeleton",
         pause=False,
+        advanced_monitor=False,
     )
-    # reload_work(
-    #     uuid,
-    #     dimension="3D",
-    #     tether_typ="section_rect_tether_hole",
-    #     pause=False,
-    # )
-    # reload_work(
-    #     uuid,
-    #     dimension="3D",
-    #     tether_typ="section_rect_tether_hole_suspend",
-    #     pause=False,
-    # )
-    # reload_work(
-    #     uuid,
-    #     dimension="2D",
-    #     tether_typ=None,
-    #     monitor=False,
-    #     pause=True,
-    # )
+    #

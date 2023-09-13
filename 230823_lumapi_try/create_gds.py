@@ -51,7 +51,7 @@ def create_gds(uuid, tether_typ: str = "empty"):
 
 
 if __name__ == "__main__":
-    uuid = "ee71"
+    uuid = "4e25"
     # tether_typ_list = ["empty", "section_tether", "section_rect_tether"]
     tether_typ_avail_list = [
         "empty",
