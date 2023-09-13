@@ -16,7 +16,7 @@ from .grating_concentric import (
 )
 import gdsfactory as gf
 from typing import List, Callable, Union
-from gdsfactory.types import Component
+from gdsfactory.typings import Component
 
 
 @gf.cell
