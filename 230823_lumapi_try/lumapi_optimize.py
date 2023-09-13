@@ -410,6 +410,8 @@ def setup_grating_structuregroup(fdtd, **kwargs):
             load_script("{:s}_concentric.lsf".format(grating_typ)),
         )
     elif grating_typ == "apodized_subw_grating":
+        NL = kwargs.get("NL", DEFAULT_PARA["NL"])
+        NH = kwargs.get("NH", DEFAULT_PARA["NH"])
         #
         fdtd.adduserprop("Lambda_i", 2, 1.1e-6)
         fdtd.adduserprop("Lambda_f", 2, 1.1e-6)
@@ -419,6 +421,8 @@ def setup_grating_structuregroup(fdtd, **kwargs):
         fdtd.adduserprop("ffL_f", 0, 0.2)
         fdtd.adduserprop("ffH_i", 0, 0.8)
         fdtd.adduserprop("ffH_f", 0, 0.8)
+        fdtd.adduserprop("NL", 0, NL)
+        fdtd.adduserprop("NH", 0, NH)
         fdtd.adduserprop("N", 0, N)
         #
         fdtd.setnamed(
