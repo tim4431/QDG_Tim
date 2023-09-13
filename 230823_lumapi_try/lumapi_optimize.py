@@ -251,13 +251,13 @@ def calc_min_feature(paras, **kwargs) -> float:
         )
 
 
-def fdtd_iter(fdtd, paras, reload=False, **kwargs):
+def fdtd_iter(fdtd, paras, reload_gds=False, **kwargs):
     """l, T, maxT, FOM=fdtd_iter(fdtd, paras, **kwargs)"""
     #
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     #
     fdtd.switchtolayout()
-    if not reload:
+    if not reload_gds:
         set_params(fdtd, paras, **kwargs)
     fdtd.run()
     l, T = process_data(fdtd, SOURCE_typ)

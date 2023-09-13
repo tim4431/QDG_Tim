@@ -76,7 +76,10 @@ def reload_work(
 
             # >>> run simulation <<< #
             l, T, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(
-                fdtd, paras, reload=True, **kwargs
+                fdtd,
+                paras,
+                reload_gds=False if (tether_typ == None) else True,
+                **kwargs,
             )
             # >>> save data <<< #
             try:
@@ -134,7 +137,7 @@ if __name__ == "__main__":
         pause=False,
         advanced_monitor=True,
     )
-    
+
     # reload_work(
     #     "38b2",
     #     dimension="3D",
