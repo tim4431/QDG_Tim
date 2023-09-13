@@ -54,6 +54,8 @@ def calculate_FOM(l, T, **kwargs):
         _crop_range = 3 * FWHM
     elif grating_typ == "grating":
         _crop_range = 3 * FWHM
+    elif grating_typ == "apodized_grating":
+        _crop_range = 3 * FWHM
     else:
         raise ValueError("calculate_FOM: Invalid grating_typ: {:s}".format(grating_typ))
     l_c, T_c = analysis.data_crop(l, T, lambda_0, _crop_range)
@@ -139,6 +141,17 @@ def set_params(fdtd, paras, **kwargs):
         fdtd.setnamed(grating_typ, "ff", ff)
         fiberx = paras[2]
         #
+    elif grating_typ == "apodized_grating":
+        Lambda_i = paras[0]
+        fdtd.setnamed(grating_typ, "Lambda_i", Lambda_i)
+        Lambda_f = paras[1]
+        fdtd.setnamed(grating_typ, "Lambda_f", Lambda_f)
+        ff_i = paras[2]
+        fdtd.setnamed(grating_typ, "ff_i", ff_i)
+        ff_f = paras[3]
+        fdtd.setnamed(grating_typ, "ff_f", ff_f)
+        fiberx = paras[4]
+        #
     else:
         raise ValueError("set_params: Invalid grating_typ: {:s}".format(grating_typ))
     # >>> set source x <<< #
@@ -216,6 +229,22 @@ def calc_min_feature(paras, **kwargs) -> float:
         Lambda = paras[0]
         ff = paras[1]
         return float(min(Lambda * ff, Lambda * (1 - ff)))  # type: ignore
+    elif grating_typ == "apodized_grating":
+        Lambda_i = paras[0]
+        Lambda_f = paras[1]
+        ff_i = paras[2]
+        ff_f = paras[3]
+        #
+        Lambda_func = _linear_apodize_func(N, Lambda_i, Lambda_f)
+        ff_func = _linear_apodize_func(N, ff_i, ff_f)
+        #
+        _min_feature_size = 1
+        for i in range(N):
+            Lambda = Lambda_func(i)
+            ff = ff_func(i)
+            feature_i = Lambda * min((1 - ff), ff)
+            _min_feature_size = min(_min_feature_size, feature_i)
+        return float(_min_feature_size)
     else:
         raise ValueError(
             "calc_min_feature: Invalid grating_typ: {:s}".format(grating_typ)
@@ -446,6 +475,17 @@ def setup_grating_structuregroup(fdtd, **kwargs):
         fdtd.adduserprop("ff", 0, 0.5)
         #
         fdtd.setnamed(grating_typ, "script", load_script("grating_concentric.lsf"))
+    elif grating_typ == "apodized_grating":
+        #
+        fdtd.adduserprop("N", 0, N)
+        fdtd.adduserprop("Lambda_i", 2, 1.1e-6)
+        fdtd.adduserprop("Lambda_f", 2, 1.1e-6)
+        fdtd.adduserprop("ff_i", 0, 0.5)
+        fdtd.adduserprop("ff_f", 0, 0.5)
+        #
+        fdtd.setnamed(
+            grating_typ, "script", load_script("apodized_grating_concentric.lsf")
+        )
     else:
         raise ValueError(
             "setup_grating_structuregroup: Invalid grating_typ: {:s}".format(
@@ -528,6 +568,19 @@ def convert_paras_init(para, kwargs, kwargs_init):
                     grating_typ_init
                 )
             )
+    elif (
+        grating_typ == "apodized_grating"
+    ):  # can be converted from grating or apodized_grating
+        if grating_typ_init == "apodized_grating":
+            return para
+        elif grating_typ_init == "grating":
+            Lambda_i = para[0]
+            Lambda_f = para[0]
+            ff_i = para[1]
+            ff_f = para[1]
+            fiberx = para[2]
+            paras = np.array([Lambda_i, Lambda_f, ff_i, ff_f, fiberx])
+            return paras
     else:
         raise ValueError(
             "convert_paras_init: Invalid grating_typ: {:s}".format(grating_typ)
@@ -570,6 +623,9 @@ def get_paras_bound(**kwargs):
     elif grating_typ == "grating":  # [Lambda, ff, fiberx]
         paras_min = np.array([0.8e-6, 0.0, 12e-6], dtype=np.float_)
         paras_max = np.array([1.6e-6, 0.5, 20e-6], dtype=np.float_)
+    elif grating_typ == "apodized_grating":  # [Lambda_i, Lambda_f, ff_i, ff_f, fiberx]
+        paras_min = np.array([0.8e-6, 0.8e-6, 0.0, 0.0, 12e-6], dtype=np.float_)
+        paras_max = np.array([1.6e-6, 1.6e-6, 0.5, 0.5, 20e-6], dtype=np.float_)
     else:
         raise ValueError(
             "get_paras_bound: Invalid grating_typ: {:s}".format(grating_typ)
