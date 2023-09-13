@@ -22,7 +22,7 @@ from gdsfactory.typings import Component
 @gf.cell
 def grating_mask_tether(
     grating: Component,
-    grating_mask: Union[Component,None],
+    grating_mask: Union[Component, None],
     tether=None,
     hole=False,
     suspend=False,
@@ -273,7 +273,7 @@ def _array_tether(
     c: Component,
     GL: float,
     grating_angle: float,
-    tether_angle: Union[None, float]=0,
+    tether_angle: Union[None, float] = 0,
     L_tether_bias: float = 2,
 ):
     DEG2RAD = np.pi / 180
@@ -380,13 +380,6 @@ def section_multiskeleton_tether(
 
 def grating_tether(
     grating: List[float],
-    # N: int,
-    # Lambda: float,
-    # ff: float,
-    # ffL: float,
-    # ffH: float,
-    # NL: int,
-    # NH: int,
     #
     mask_func: Union[Callable, None],
     tether_func: Union[Callable, None],
@@ -401,11 +394,11 @@ def grating_tether(
     #
     c = gf.Component("grating_gds")  # here we generate gds with designated cell name
     # construct
-    # generate grating
     from copy import deepcopy
 
     grating = deepcopy(grating)
-    grating[0] = -1  # Tim: to connect to the taper
+    if grating[0] < 40e-3:  # 40nm
+        grating[0] = -1  # Tim: to connect to the taper
     grating_length = grating[-1]
     #
     if PATCH_LENGTH > 0:
@@ -474,12 +467,20 @@ def recipes(tether_typ: str) -> dict:
             "grating_angle": 24,
             "suspend": False,
         }
-    elif tether_typ == "section_rect_tether_multiskeleton":
+    elif tether_typ == "section_rect_tether_multisuspend":
         return {
             "mask_func": section_rect_mask,
             "tether_func": section_multiskeleton_tether,
             "grating_angle": 24,
             "suspend": False,
+        }
+    elif tether_typ == "section_rect_tether_hole_multisuspend":
+        return {
+            "mask_func": section_rect_mask,
+            "tether_func": section_multiskeleton_tether,
+            "grating_angle": 24,
+            "suspend": False,
+            "hole": True,
         }
     elif tether_typ == "section_rect_tether_suspend":
         return {
@@ -531,6 +532,15 @@ def recipes(tether_typ: str) -> dict:
             "hole": True,
             "input_length": 0,
         }
+    elif tether_typ == "section_rect_tether_hole_multisuspend_unbox":
+        return {
+            "mask_func": None,
+            "tether_func": section_multiskeleton_tether,
+            "grating_angle": 24,
+            "suspend": False,
+            "hole": True,
+            "input_length": 0,
+        }
     else:
         return {
             "mask_func": None,
@@ -550,10 +560,10 @@ if __name__ == "__main__":
     N = 10
     #
     grating = subw_grating(N, Lambda, ff, ffL, ffH, NL, NH)
-    para = recipes("section_rect_tether_multiskeleton")
+    recipe = recipes("section_rect_tether_multisuspend")
     c = grating_tether(
         grating,
-        **para,
+        **recipe,
     )
     # c = section_tether(30, 24)
     # d = skeleton(30, 24, 3, 1.5)
