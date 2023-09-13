@@ -27,6 +27,31 @@ def subw_grating(N, Lambda, ff, ffL, ffH, NL, NH):
     return grating
 
 
+def _linear_apodize_func(N, x_i, x_f):
+    return lambda i: x_i + (x_f - x_i) * (i / (N - 1))
+
+
+def apodized_grating(
+    N, NL, NH, Lambda_i, Lambda_f, ffL_i, ffL_f, ffH_i, ffH_f, ff_i, ff_f
+):
+    grating = []
+    Lambda_func = _linear_apodize_func(N, Lambda_i, Lambda_f)
+    ffL_func = _linear_apodize_func(N, ffL_i, ffL_f)
+    ffH_func = _linear_apodize_func(N, ffH_i, ffH_f)
+    ff_func = _linear_apodize_func(N, ff_i, ff_f)
+    #
+    x0 = 0
+    for i in range(N):
+        Lambdai = Lambda_func(i)
+        ffLi = ffL_func(i)
+        ffHi = ffH_func(i)
+        ffi = ff_func(i)
+        grating += _single_subw_grating(x0, Lambdai, ffi, ffLi, ffHi, NL, NH)
+        x0 += Lambdai
+    # grating = [0] + grating + [N * Lambda]
+    return grating
+
+
 def grating_to_pitch_ff(grating):
     pitch_list = []
     ff_list = []

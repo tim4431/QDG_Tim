@@ -379,13 +379,14 @@ def section_multiskeleton_tether(
 
 
 def grating_tether(
-    N: int,
-    Lambda: float,
-    ff: float,
-    ffL: float,
-    ffH: float,
-    NL: int,
-    NH: int,
+    grating: List[float],
+    # N: int,
+    # Lambda: float,
+    # ff: float,
+    # ffL: float,
+    # ffH: float,
+    # NL: int,
+    # NH: int,
     #
     mask_func: Union[Callable, None],
     tether_func: Union[Callable, None],
@@ -399,9 +400,11 @@ def grating_tether(
     PATCH_LENGTH = 0 if (mask_func is None and tether_func is None) else 5
     #
     c = gf.Component("grating_gds")  # here we generate gds with designated cell name
-    # constructW
+    # construct
     # generate grating
-    grating = subw_grating(N, Lambda, ff, ffL, ffH, NL, NH)
+    from copy import deepcopy
+
+    grating = deepcopy(grating)
     grating[0] = -1  # Tim: to connect to the taper
     grating_length = grating[-1]
     #
@@ -546,16 +549,10 @@ if __name__ == "__main__":
     NH = 2
     N = 10
     #
+    grating = subw_grating(N, Lambda, ff, ffL, ffH, NL, NH)
     para = recipes("section_rect_tether_multiskeleton")
     c = grating_tether(
-        N,
-        Lambda,
-        ff,
-        ffL,
-        ffH,
-        NL,
-        NH,
-        start_radius=12,
+        grating,
         **para,
     )
     # c = section_tether(30, 24)

@@ -8,6 +8,7 @@ from lib.grating.grating_tether import (
     grating_tether,
     recipes,
 )
+from lib.grating.subwavelength import subw_grating, apodized_grating
 
 
 def generate_gds_fileName(uuid, tether_typ: str = "empty"):
@@ -28,21 +29,41 @@ def generate_gds_fileName(uuid, tether_typ: str = "empty"):
 def create_gds(uuid, tether_typ: str = "empty"):
     kwargs = load_json(uuid)
     paras = load_paras(uuid)
+    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
     #
     N = kwargs.get("N", DEFAULT_PARA["N"])
     NL = kwargs.get("NL", DEFAULT_PARA["NL"])
     NH = kwargs.get("NH", DEFAULT_PARA["NH"])
     start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
     #
-    Lambda = paras[0]
-    ffL = paras[1]
-    ffH = paras[2]
-    ff = paras[3]
+    recipe = recipes(tether_typ)
     #
-    para = recipes(tether_typ)
-    c = grating_tether(
-        N, Lambda * 1e6, ff, ffL, ffH, NL, NH, start_radius=start_radius * 1e6, **para
-    )
+    if grating_typ == "subw_grating":
+        Lambda = paras[0]
+        ffL = paras[1]
+        ffH = paras[2]
+        ff = paras[3]
+        #
+        grating = subw_grating(N, Lambda, ff, ffL, ffH, NL, NH)
+        grating = [g * 1e6 for g in grating]
+    elif grating_typ == "apodized_subw_grating":
+        Lambda_i = paras[0]
+        Lambda_f = paras[1]
+        ffL_i = paras[2]
+        ffL_f = paras[3]
+        ffH_i = paras[4]
+        ffH_f = paras[5]
+        ff_i = paras[6]
+        ff_f = paras[7]
+        #
+        grating = apodized_grating(
+            N, NL, NH, Lambda_i, Lambda_f, ffL_i, ffL_f, ffH_i, ffH_f, ff_i, ff_f
+        )
+        grating = [g * 1e6 for g in grating]
+    else:
+        raise NotImplementedError
+    #
+    c = grating_tether(grating, start_radius=start_radius * 1e6, **recipe)
     gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
     c.write_gds(gds_fileName)
     c.show()
@@ -51,7 +72,7 @@ def create_gds(uuid, tether_typ: str = "empty"):
 
 
 if __name__ == "__main__":
-    uuid = "ee71"
+    uuid = "38b2"
     # tether_typ_list = ["empty", "section_tether", "section_rect_tether"]
     tether_typ_avail_list = [
         "empty",
@@ -64,7 +85,7 @@ if __name__ == "__main__":
         "section_rect_tether_suspend_unbox",
         "section_rect_tether_hole_suspend_unbox",
     ]
-    idx_list = [2]
+    idx_list = [0, 1, 2]
     for idx in idx_list:
         tether_typ = tether_typ_avail_list[idx]
         gds_fileName = create_gds(uuid, tether_typ=tether_typ)
