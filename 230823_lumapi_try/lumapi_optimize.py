@@ -480,9 +480,6 @@ def convert_paras_init(para, kwargs, kwargs_init):
         if grating_typ_init == "apodized_subw_grating":
             return para
         elif grating_typ_init == "subw_grating":
-            N = kwargs_init.get("N", DEFAULT_PARA["N"])
-            NL = kwargs_init.get("NL", DEFAULT_PARA["NL"])
-            NH = kwargs_init.get("NH", DEFAULT_PARA["NH"])
             Lambda_i = para[0]
             Lambda_f = para[0]
             ffL_i = para[1]
