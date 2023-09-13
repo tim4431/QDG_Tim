@@ -83,25 +83,47 @@ def char_photodiode(
             popt, pcov = curve_fit(g, p_i, v)
             print(popt)
             if not nW:
-                ax.plot(
-                    p_i,
-                    g(p_i, *popt),
-                    alpha=0.5,
-                    c="blue",
-                    label="fit output(V)={:.4f} * p(uW) + {:.6f}".format(
-                        popt[0], popt[1]
-                    ),
-                )
+                if popt[1] < 0:
+                    ax.plot(
+                        p_i,
+                        g(p_i, *popt),
+                        alpha=0.5,
+                        c="blue",
+                        label="fit output(V)={:.4f} * p(uW) - {:.4f}(mV)".format(
+                            popt[0], -popt[1] * 1000
+                        ),
+                    )
+                else:
+                    ax.plot(
+                        p_i,
+                        g(p_i, *popt),
+                        alpha=0.5,
+                        c="blue",
+                        label="fit output(V)={:.4f} * p(uW) + {:.4f}(mV)".format(
+                            popt[0], popt[1] * 1000
+                        ),
+                    )
             else:
-                ax.plot(
-                    p_i,
-                    g(p_i, *popt),
-                    alpha=0.5,
-                    c="blue",
-                    label="fit output(mV)={:.4f} * p(nW) + {:.4f}".format(
-                        popt[0], popt[1]
-                    ),
-                )
+                if popt[1] < 0:
+                    ax.plot(
+                        p_i,
+                        g(p_i, *popt),
+                        alpha=0.5,
+                        c="blue",
+                        label="fit output(mV)={:.4f} * p(nW) - {:.4f}(mV)".format(
+                            popt[0], -popt[1]
+                        ),
+                    )
+                else:
+                    ax.plot(
+                        p_i,
+                        g(p_i, *popt),
+                        alpha=0.5,
+                        c="blue",
+                        label="fit output(mV)={:.4f} * p(nW) + {:.4f}(mV)".format(
+                            popt[0], popt[1]
+                        ),
+                    )
 
 
 fig, ax = plt.subplots()
