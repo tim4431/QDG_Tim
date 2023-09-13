@@ -12,17 +12,44 @@ def _subw_part(x0, L, N, ff):
     return grating
 
 
-def _single_subw_grating(x0, Lambda, ff, ffL, ffH, NL, NH):
+def _single_subw_grating(NL, NH, x0, Lambda, ff, ffL, ffH):
     grating_H = _subw_part(x0, Lambda * ff, NH, ffH)
     grating_L = _subw_part(x0 + Lambda * ff, Lambda * (1 - ff), NL, ffL)
     grating = grating_H + grating_L
     return grating
 
 
+def _single_grating(x0, Lambda, ff):
+    return [x0 + Lambda * (1 - ff), x0 + Lambda]
+
+
+def ordinary_grating(N, Lambda, ff):
+    grating = []
+    for i in range(N):
+        grating += _single_grating(i * Lambda, Lambda, ff)
+    # grating = [0] + grating + [N * Lambda]
+    return grating
+
+
+def apodized_grating(N, Lambda_i, Lambda_f, ff_i, ff_f):
+    grating = []
+    Lambda_func = _linear_apodize_func(N, Lambda_i, Lambda_f)
+    ff_func = _linear_apodize_func(N, ff_i, ff_f)
+    #
+    x0 = 0
+    for i in range(N):
+        Lambdai = Lambda_func(i)
+        ffi = ff_func(i)
+        grating += _single_grating(x0, Lambdai, ffi)
+        x0 += Lambdai
+    # grating = [0] + grating + [N * Lambda]
+    return grating
+
+
 def subw_grating(N, Lambda, ff, ffL, ffH, NL, NH):
     grating = []
     for i in range(N):
-        grating += _single_subw_grating(i * Lambda, Lambda, ff, ffL, ffH, NL, NH)
+        grating += _single_subw_grating(NL, NH, i * Lambda, Lambda, ff, ffL, ffH)
     # grating = [0] + grating + [N * Lambda]
     return grating
 
@@ -31,7 +58,7 @@ def _linear_apodize_func(N, x_i, x_f):
     return lambda i: x_i + (x_f - x_i) * (i / (N - 1))
 
 
-def apodized_grating(
+def apodized_subw_grating(
     N, NL, NH, Lambda_i, Lambda_f, ffL_i, ffL_f, ffH_i, ffH_f, ff_i, ff_f
 ):
     grating = []
@@ -46,7 +73,7 @@ def apodized_grating(
         ffLi = ffL_func(i)
         ffHi = ffH_func(i)
         ffi = ff_func(i)
-        grating += _single_subw_grating(x0, Lambdai, ffi, ffLi, ffHi, NL, NH)
+        grating += _single_subw_grating(NL, NH, x0, Lambdai, ffi, ffLi, ffHi)
         x0 += Lambdai
     # grating = [0] + grating + [N * Lambda]
     return grating

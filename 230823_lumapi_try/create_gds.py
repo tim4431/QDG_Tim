@@ -8,7 +8,12 @@ from lib.grating.grating_tether import (
     grating_tether,
     recipes,
 )
-from lib.grating.subwavelength import subw_grating, apodized_grating
+from lib.grating.subwavelength import (
+    subw_grating,
+    apodized_subw_grating,
+    ordinary_grating,
+    apodized_grating,
+)
 
 
 def generate_gds_fileName(uuid, tether_typ: str = "empty"):
@@ -26,17 +31,12 @@ def generate_gds_fileName(uuid, tether_typ: str = "empty"):
     return gds_fileName
 
 
-def create_gds(uuid, tether_typ: str = "empty"):
-    kwargs = load_json(uuid)
-    paras = load_paras(uuid)
+def generate_grating(paras, **kwargs):
     grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
     #
     N = kwargs.get("N", DEFAULT_PARA["N"])
     NL = kwargs.get("NL", DEFAULT_PARA["NL"])
     NH = kwargs.get("NH", DEFAULT_PARA["NH"])
-    start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
-    #
-    recipe = recipes(tether_typ)
     #
     if grating_typ == "subw_grating":
         Lambda = paras[0]
@@ -45,7 +45,6 @@ def create_gds(uuid, tether_typ: str = "empty"):
         ff = paras[3]
         #
         grating = subw_grating(N, Lambda, ff, ffL, ffH, NL, NH)
-        grating = [g * 1e6 for g in grating]
     elif grating_typ == "apodized_subw_grating":
         Lambda_i = paras[0]
         Lambda_f = paras[1]
@@ -56,13 +55,36 @@ def create_gds(uuid, tether_typ: str = "empty"):
         ff_i = paras[6]
         ff_f = paras[7]
         #
-        grating = apodized_grating(
+        grating = apodized_subw_grating(
             N, NL, NH, Lambda_i, Lambda_f, ffL_i, ffL_f, ffH_i, ffH_f, ff_i, ff_f
         )
-        grating = [g * 1e6 for g in grating]
+    elif grating_typ == "grating":
+        Lambda = paras[0]
+        ff = paras[1]
+        #
+        grating = ordinary_grating(N, Lambda, ff)
+    elif grating_typ == "apodized_grating":
+        Lambda_i = paras[0]
+        Lambda_f = paras[1]
+        ff_i = paras[2]
+        ff_f = paras[3]
+        #
+        grating = apodized_grating(N, Lambda_i, Lambda_f, ff_i, ff_f)
     else:
-        raise NotImplementedError
+        raise ValueError("Unknown grating_typ: {:s}".format(grating_typ))
     #
+    grating = [g * 1e6 for g in grating]  # to convert to um
+    return grating
+
+
+def create_gds(uuid, tether_typ: str = "empty"):
+    kwargs = load_json(uuid)
+    paras = load_paras(uuid)
+    #
+    recipe = recipes(tether_typ)
+    start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
+    #
+    grating = generate_grating(paras, **kwargs)
     c = grating_tether(grating, start_radius=start_radius * 1e6, **recipe)
     gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
     c.write_gds(gds_fileName)
