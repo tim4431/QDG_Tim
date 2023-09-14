@@ -1,4 +1,4 @@
-uuid = "6f5b"
+uuid = "24d0"
 
 # append /uuid,/uuid/* to .gitignore
 import os
