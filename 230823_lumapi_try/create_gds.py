@@ -22,11 +22,12 @@ def generate_gds_fileName(uuid, tether_typ: str = "empty"):
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
     working_directory = uuid_to_wd(uuid)
+    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
     #
     gds_fileName = os.path.join(
         working_directory,
-        "{:s}_subwavelength_concentric_w{:d}_bw{:d}_arc_tether_{:s}.gds".format(
-            uuid, int(lambda_0 * 1e9), int(FWHM * 1e9), str(tether_typ)
+        "{:s}_{:s}_concentric_w{:d}_bw{:d}_arc_tether_{:s}.gds".format(
+            uuid, grating_typ, int(lambda_0 * 1e9), int(FWHM * 1e9), str(tether_typ)
         ),
     )
     return gds_fileName
@@ -95,7 +96,7 @@ def create_gds(uuid, tether_typ: str = "empty"):
 
 
 if __name__ == "__main__":
-    uuid = "4e25"
+    uuid = "ade1"
     # tether_typ_list = ["empty", "section_tether", "section_rect_tether"]
     tether_typ_avail_list = [
         "empty",  # 0
@@ -114,7 +115,7 @@ if __name__ == "__main__":
         #
         "section_rect_tether_hole_multisuspend_unbox",  # 10
     ]
-    idx_list = [10]
+    idx_list = [0, 1, 2, 7]
     for idx in idx_list:
         tether_typ = tether_typ_avail_list[idx]
         gds_fileName = create_gds(uuid, tether_typ=tether_typ)
