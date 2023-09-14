@@ -83,7 +83,7 @@ def calculate_FOM(l, T, **kwargs):
     elif FOM_typ == "single":
         # print("single")
         T_0 = analysis.T_0(l, lambda_0, T)
-        FOM = float(norm_cross_correlation*T_0)
+        FOM = float(norm_cross_correlation * T_0)
     else:
         raise ValueError("Invalid FOM_typ: {:s}".format(FOM_typ))
     #
@@ -594,10 +594,10 @@ def get_paras_bound(**kwargs):
     #
     if grating_typ == "subw_grating":  # [Lambda, ffL, ffH, ff, fiberx]
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
-        if SOURCE_typ in ["gaussian_packaged", "gaussian_airclad"]:
+        if SOURCE_typ in ["gaussian_airclad"]:
             paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
             paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6], dtype=np.float_)
-        elif SOURCE_typ in ["gaussian_released"]:
+        elif SOURCE_typ in ["gaussian_released", "gaussian_packaged"]:
             if NL == 2:
                 paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6], dtype=np.float_)
                 paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6], dtype=np.float_)

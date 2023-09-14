@@ -481,6 +481,47 @@ if __name__ == "__main__":
         "SOURCE_typ": "gaussian_released",
         "start_radius": 12e-6,
     }
+    work_4e25_packaged = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 9,
+        "NL": 2,
+        "NH": 2,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_packaged",
+        "start_radius": 12e-6,
+    }
+    work_4e25_packaged_23 = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 9,
+        "NL": 2,
+        "NH": 3,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 20e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_packaged",
+        "start_radius": 12e-6,
+    }
+    work_grating_1_packaged = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 20e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 18,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_packaged",
+        "grating_typ": "grating",
+        "start_radius": 12e-6,
+    }
 
 if __name__ == "__main__":  # type: ignore
     works_test = [work0]  # type: ignore
@@ -490,8 +531,9 @@ if __name__ == "__main__":  # type: ignore
     # works = [work_inverse_1, work_inverse_2, work_inverse_3]
     # works = [work_4e25_1330, work_4e25_min60]
     # works = [work_4e25_apodized, work_4e25_1336_apodized]
-    works = [work_grating_1,work_grating_1_single]
+    # works = [work_grating_1, work_grating_1_single]
     # works = [work_4e25_inverse]
-    work_loader(works, prefix="grating_test_2")
+    works = [work_4e25_packaged_23, work_4e25_packaged, work_grating_1_packaged]
+    work_loader(works, prefix="packaged_test")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)
