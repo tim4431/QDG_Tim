@@ -598,6 +598,34 @@ if __name__ == "__main__":
         "SOURCE_typ": "gaussian_released",
         "start_radius": 12e-6,
     }
+    work_4e25_1280 = {
+        "lambda_0": 1.28e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 9,
+        "NL": 2,
+        "NH": 2,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
+    }
+    work_4e25_1370 = {
+        "lambda_0": 1.37e-6,
+        "FWHM": 40e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 9,
+        "NL": 2,
+        "NH": 2,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "start_radius": 12e-6,
+    }
     work_4e25_apodized = {
         "lambda_0": 1.326e-6,
         "FWHM": 40e-9,
@@ -732,17 +760,18 @@ if __name__ == "__main__":  # type: ignore
     #     work_grating_1_1400,
     #     work_grating_1_1440,
     # ]
-    works = [
-        work_grating_1_1120,
-        work_grating_1_1160,
-        work_grating_1_1315,
-        work_grating_1_1330,
-        work_grating_1_1335,
-        work_grating_1_1480,
-        work_grating_1_1520,
-    ]
+    # works = [
+    #     work_grating_1_1120,
+    #     work_grating_1_1160,
+    #     work_grating_1_1315,
+    #     work_grating_1_1330,
+    #     work_grating_1_1335,
+    #     work_grating_1_1480,
+    #     work_grating_1_1520,
+    # ]
+    works = [work_4e25_1280, work_4e25_1370]
     # works = [work_4e25_inverse]
     # works = [work_4e25_packaged, work_4e25_packaged_23, work_grating_1_packaged]
-    work_loader(works, prefix="grating_1120-1520_list")
+    work_loader(works, prefix="work_4e25_1280_1370")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)
