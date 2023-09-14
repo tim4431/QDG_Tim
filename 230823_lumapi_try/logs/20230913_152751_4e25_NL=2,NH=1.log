@@ -1,0 +1,10 @@
+[INFO] - Work loader start
+[INFO] - uuid: 2422 created
+[INFO] - work: {'lambda_0': 1.326e-06, 'FWHM': 4e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 9, 'NL': 2, 'NH': 1, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'start_radius': 1.2e-05, 'plot': False, 'grating_typ': 'subw_grating', 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': '2422'}
+[INFO] - uuid: 77e8 created
+[INFO] - work: {'lambda_0': 1.326e-06, 'FWHM': 4e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 9, 'NL': 2, 'NH': 1, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'grating_typ': 'apodized_subw_grating', 'SOURCE_typ': 'gaussian_released', 'start_radius': 1.2e-05, 'plot': False, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': '77e8'}
+[INFO] - uuid: 2422 finished
+[INFO] - uuid: 77e8 finished
+[INFO] - 0 uuid: 2422 finished
+[INFO] - 1 uuid: 77e8 finished
+[INFO] - Work loader end

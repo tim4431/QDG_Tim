@@ -23,6 +23,7 @@ def reload_work(
     tether_typ=None,
     pause=False,
     monitor=True,
+    movie=False,
     advanced_monitor=False,
 ):
     dataName = getdataName(uuid)
@@ -54,7 +55,7 @@ def reload_work(
             setup_monitor(
                 fdtd,
                 monitor=monitor,
-                movie=False,
+                movie=movie,
                 advanced_monitor=advanced_monitor,
             )
             # >>> setup grating <<< #
@@ -132,10 +133,11 @@ if __name__ == "__main__":
     #
     reload_work(
         "ade1",
-        dimension="3D",
+        dimension="2D",
         tether_typ=None,
         pause=False,
-        advanced_monitor=True,
+        movie=True
+        # advanced_monitor=True,
     )
 
     # reload_work(
@@ -146,27 +148,27 @@ if __name__ == "__main__":
     #     advanced_monitor=False,
     # )
     #
-    reload_work(
-        "38b2",
-        dimension="3D",
-        tether_typ=None,
-        pause=False,
-        advanced_monitor=True,
-    )
-    #
-    reload_work(
-        "4e25",
-        dimension="3D",
-        tether_typ=None,
-        pause=False,
-        advanced_monitor=True,
-    )
-    #
-    reload_work(
-        "4e25",
-        dimension="3D",
-        tether_typ="section_rect_tether_multisuspend",
-        pause=False,
-        advanced_monitor=False,
-    )
+    # reload_work(
+    #     "38b2",
+    #     dimension="3D",
+    #     tether_typ=None,
+    #     pause=False,
+    #     advanced_monitor=True,
+    # )
+    # #
+    # reload_work(
+    #     "4e25",
+    #     dimension="3D",
+    #     tether_typ=None,
+    #     pause=False,
+    #     advanced_monitor=True,
+    # )
+    # #
+    # reload_work(
+    #     "4e25",
+    #     dimension="3D",
+    #     tether_typ="section_rect_tether_multisuspend",
+    #     pause=False,
+    #     advanced_monitor=False,
+    # )
     #
