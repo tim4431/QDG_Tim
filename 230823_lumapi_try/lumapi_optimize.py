@@ -83,7 +83,7 @@ def calculate_FOM(l, T, **kwargs):
     elif FOM_typ == "single":
         # print("single")
         T_0 = analysis.T_0(l, lambda_0, T)
-        FOM = T_0
+        FOM = float(norm_cross_correlation*T_0)
     else:
         raise ValueError("Invalid FOM_typ: {:s}".format(FOM_typ))
     #

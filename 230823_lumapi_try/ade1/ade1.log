@@ -1,0 +1,802 @@
+[INFO] - Start loading work: c:\Users\QDG-WS3\Desktop\QDG_Tim\230823_lumapi_try\ade1\ade1_1326.0_bw=20.0
+[INFO] - lambda_0 = 1326.0 nm
+[INFO] - FWHM = 20.0 nm
+[INFO] - FOM_typ = square
+[INFO] - MIN_FEATURE_SIZE = 4e-08
+[INFO] - N = 10
+[INFO] - NH = 3
+[INFO] - NL = 2
+[INFO] - SOURCE_typ = gaussian_released
+[INFO] - alpha = 0.0
+[INFO] - grating_typ = grating
+[INFO] - logger = <Logger c:\Users\QDG-WS3\Desktop\QDG_Tim\230823_lumapi_try\ade1\ade1.log (INFO)>
+[INFO] - maxiter = 100
+[INFO] - paras_init = None
+[INFO] - penalty = [[0.01, 1e-08], [0.02, 1e-07]]
+[INFO] - plot = False
+[INFO] - start_radius = 1.2e-05
+[INFO] - taper_angle = 24
+[INFO] - Iter: 0
+[INFO] - [6.00e-07 7.50e-01 1.65e-05]
+[INFO] - maxT = 0.14116
+[INFO] - lambda_maxT = 1305.7
+[INFO] - FWHM_fit = 29.5
+[INFO] - FOM = 0.02429
+[INFO] - feature_size = 150.0
+[INFO] - Iter: 1
+[INFO] - [6.30e-07 7.50e-01 1.65e-05]
+[INFO] - maxT = 0.12280
+[INFO] - lambda_maxT = 1349.6
+[INFO] - FWHM_fit = 22.7
+[INFO] - FOM = 0.01371
+[INFO] - feature_size = 157.5
+[INFO] - Iter: 2
+[INFO] - [6.000e-07 7.875e-01 1.650e-05]
+[INFO] - maxT = 0.13471
+[INFO] - lambda_maxT = 1346.8
+[INFO] - FWHM_fit = 22.2
+[INFO] - FOM = 0.01960
+[INFO] - feature_size = 127.5
+[INFO] - Iter: 3
+[INFO] - [6.0000e-07 7.5000e-01 1.7325e-05]
+[INFO] - maxT = 0.12169
+[INFO] - lambda_maxT = 1305.7
+[INFO] - FWHM_fit = 28.5
+[INFO] - FOM = 0.01979
+[INFO] - feature_size = 150.0
+[INFO] - Iter: 4
+[INFO] - [5.700e-07 7.750e-01 1.705e-05]
+[INFO] - maxT = 0.16270
+[INFO] - lambda_maxT = 1287.4
+[INFO] - FWHM_fit = 30.7
+[INFO] - FOM = 0.00237
+[INFO] - feature_size = 128.2
+[INFO] - Iter: 5
+[INFO] - [6.17500000e-07 7.55208333e-01 1.66145833e-05]
+[INFO] - maxT = 0.10592
+[INFO] - lambda_maxT = 1338.4
+[INFO] - FWHM_fit = 22.4
+[INFO] - FOM = 0.03575
+[INFO] - feature_size = 151.2
+[INFO] - Iter: 6
+[INFO] - [6.11666667e-07 7.15972222e-01 1.71263889e-05]
+[INFO] - maxT = 0.13765
+[INFO] - lambda_maxT = 1284.8
+[INFO] - FWHM_fit = 32.7
+[INFO] - FOM = 0.00198
+[INFO] - feature_size = 173.7
+[INFO] - Iter: 7
+[INFO] - [6.02430556e-07 7.72598380e-01 1.66304977e-05]
+[INFO] - maxT = 0.11079
+[INFO] - lambda_maxT = 1335.6
+[INFO] - FWHM_fit = 22.8
+[INFO] - FOM = 0.04414
+[INFO] - feature_size = 137.0
+[INFO] - Iter: 8
+[INFO] - [6.13287037e-07 7.68537809e-01 1.58383873e-05]
+[INFO] - maxT = 0.13157
+[INFO] - lambda_maxT = 1346.8
+[INFO] - FWHM_fit = 22.0
+[INFO] - FOM = 0.01903
+[INFO] - feature_size = 142.0
+[INFO] - Iter: 9
+[INFO] - [6.02768133e-07 7.53862043e-01 1.70152890e-05]
+[INFO] - maxT = 0.11331
+[INFO] - lambda_maxT = 1315.1
+[INFO] - FWHM_fit = 27.0
+[INFO] - FOM = 0.04341
+[INFO] - feature_size = 148.4
+[INFO] - Iter: 10
+[INFO] - [6.15132459e-07 7.71112504e-01 1.70069134e-05]
+[INFO] - maxT = 0.13458
+[INFO] - lambda_maxT = 1352.5
+[INFO] - FWHM_fit = 23.6
+[INFO] - FOM = 0.01349
+[INFO] - feature_size = 140.8
+[INFO] - Iter: 11
+[INFO] - [6.03152596e-07 7.54398438e-01 1.66056070e-05]
+[INFO] - maxT = 0.11693
+[INFO] - lambda_maxT = 1316.4
+[INFO] - FWHM_fit = 27.0
+[INFO] - FOM = 0.04962
+[INFO] - feature_size = 148.1
+[INFO] - Iter: 12
+[INFO] - [5.88067523e-07 7.65364241e-01 1.68863458e-05]
+[INFO] - maxT = 0.14081
+[INFO] - lambda_maxT = 1305.7
+[INFO] - FWHM_fit = 28.3
+[INFO] - FOM = 0.02272
+[INFO] - feature_size = 138.0
+[INFO] - Iter: 13
+[INFO] - [6.11368234e-07 7.57324147e-01 1.66712005e-05]
+[INFO] - maxT = 0.10666
+[INFO] - lambda_maxT = 1331.4
+[INFO] - FWHM_fit = 22.5
+[INFO] - FOM = 0.05035
+[INFO] - feature_size = 148.4
+[INFO] - Iter: 14
+[INFO] - [6.08532791e-07 7.69018600e-01 1.62562477e-05]
+[INFO] - maxT = 0.11956
+[INFO] - lambda_maxT = 1341.2
+[INFO] - FWHM_fit = 21.8
+[INFO] - FOM = 0.03281
+[INFO] - feature_size = 140.6
+[INFO] - Iter: 15
+[INFO] - [6.03969103e-07 7.57019659e-01 1.68571554e-05]
+[INFO] - maxT = 0.11403
+[INFO] - lambda_maxT = 1321.8
+[INFO] - FWHM_fit = 25.2
+[INFO] - FOM = 0.05567
+[INFO] - feature_size = 146.8
+[INFO] - Iter: 16
+[INFO] - [6.09896066e-07 7.39896451e-01 1.67921442e-05]
+[INFO] - maxT = 0.12310
+[INFO] - lambda_maxT = 1309.7
+[INFO] - FWHM_fit = 29.0
+[INFO] - FOM = 0.02980
+[INFO] - feature_size = 158.6
+[INFO] - Iter: 17
+[INFO] - [6.03985870e-07 7.65785478e-01 1.66641741e-05]
+[INFO] - maxT = 0.11351
+[INFO] - lambda_maxT = 1330.1
+[INFO] - FWHM_fit = 22.4
+[INFO] - FOM = 0.05563
+[INFO] - feature_size = 141.5
+[INFO] - Iter: 18
+[INFO] - [6.09729543e-07 7.65687751e-01 1.68560797e-05]
+[INFO] - maxT = 0.11058
+[INFO] - lambda_maxT = 1338.4
+[INFO] - FWHM_fit = 22.1
+[INFO] - FOM = 0.03596
+[INFO] - feature_size = 142.9
+[INFO] - Iter: 19
+[INFO] - [6.04522793e-07 7.56750379e-01 1.66577888e-05]
+[INFO] - maxT = 0.11557
+[INFO] - lambda_maxT = 1321.8
+[INFO] - FWHM_fit = 25.1
+[INFO] - FOM = 0.05710
+[INFO] - feature_size = 147.0
+[INFO] - Iter: 20
+[INFO] - [5.96950277e-07 7.62379530e-01 1.67815450e-05]
+[INFO] - maxT = 0.12099
+[INFO] - lambda_maxT = 1316.4
+[INFO] - FWHM_fit = 26.5
+[INFO] - FOM = 0.04954
+[INFO] - feature_size = 141.8
+[INFO] - Iter: 21
+[INFO] - [6.08364493e-07 7.58377352e-01 1.66941889e-05]
+[INFO] - maxT = 0.11027
+[INFO] - lambda_maxT = 1328.7
+[INFO] - FWHM_fit = 22.7
+[INFO] - FOM = 0.05654
+[INFO] - feature_size = 147.0
+[INFO] - Iter: 22
+[INFO] - [6.07279668e-07 7.63589146e-01 1.64869458e-05]
+[INFO] - maxT = 0.11266
+[INFO] - lambda_maxT = 1332.8
+[INFO] - FWHM_fit = 22.8
+[INFO] - FOM = 0.05127
+[INFO] - feature_size = 143.6
+[INFO] - Iter: 23
+[INFO] - [6.04658804e-07 7.58388303e-01 1.67800284e-05]
+[INFO] - maxT = 0.11414
+[INFO] - lambda_maxT = 1323.2
+[INFO] - FWHM_fit = 24.3
+[INFO] - FOM = 0.05847
+[INFO] - feature_size = 146.1
+[INFO] - Iter: 24
+[INFO] - [6.07711523e-07 7.49891878e-01 1.67571634e-05]
+[INFO] - maxT = 0.11164
+[INFO] - lambda_maxT = 1319.1
+[INFO] - FWHM_fit = 26.9
+[INFO] - FOM = 0.05029
+[INFO] - feature_size = 152.0
+[INFO] - Iter: 25
+[INFO] - [6.04762048e-07 7.62474311e-01 1.66835468e-05]
+[INFO] - maxT = 0.11224
+[INFO] - lambda_maxT = 1328.7
+[INFO] - FWHM_fit = 22.6
+[INFO] - FOM = 0.05764
+[INFO] - feature_size = 143.6
+[INFO] - Iter: 26
+[INFO] - [6.07334104e-07 7.62742932e-01 1.67807207e-05]
+[INFO] - maxT = 0.10998
+[INFO] - lambda_maxT = 1331.4
+[INFO] - FWHM_fit = 22.5
+[INFO] - FOM = 0.05180
+[INFO] - feature_size = 144.1
+[INFO] - Iter: 27
+[INFO] - [6.05108483e-07 7.57998827e-01 1.66833996e-05]
+[INFO] - maxT = 0.11691
+[INFO] - lambda_maxT = 1324.6
+[INFO] - FWHM_fit = 23.8
+[INFO] - FOM = 0.05987
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 28
+[INFO] - [6.01321730e-07 7.60863608e-01 1.67371276e-05]
+[INFO] - maxT = 0.11637
+[INFO] - lambda_maxT = 1321.8
+[INFO] - FWHM_fit = 24.9
+[INFO] - FOM = 0.05760
+[INFO] - feature_size = 143.8
+[INFO] - Iter: 29
+[INFO] - [6.06897251e-07 7.58895322e-01 1.67031345e-05]
+[INFO] - maxT = 0.11272
+[INFO] - lambda_maxT = 1327.3
+[INFO] - FWHM_fit = 23.0
+[INFO] - FOM = 0.05862
+[INFO] - feature_size = 146.3
+[INFO] - Iter: 30
+[INFO] - [6.06347644e-07 7.54380657e-01 1.67608282e-05]
+[INFO] - maxT = 0.11246
+[INFO] - lambda_maxT = 1321.8
+[INFO] - FWHM_fit = 24.7
+[INFO] - FOM = 0.05598
+[INFO] - feature_size = 148.9
+[INFO] - Iter: 31
+[INFO] - [6.05092380e-07 7.60788133e-01 1.66996471e-05]
+[INFO] - maxT = 0.11363
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 22.9
+[INFO] - FOM = 0.05901
+[INFO] - feature_size = 144.7
+[INFO] - Iter: 32
+[INFO] - [6.06739938e-07 7.60066552e-01 1.66107591e-05]
+[INFO] - maxT = 0.11311
+[INFO] - lambda_maxT = 1328.7
+[INFO] - FWHM_fit = 22.7
+[INFO] - FOM = 0.05801
+[INFO] - feature_size = 145.6
+[INFO] - Iter: 33
+[INFO] - [6.05092374e-07 7.58737938e-01 1.67447640e-05]
+[INFO] - maxT = 0.11593
+[INFO] - lambda_maxT = 1324.6
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05944
+[INFO] - feature_size = 146.0
+[INFO] - Iter: 34
+[INFO] - [6.03298240e-07 7.59454610e-01 1.67154059e-05]
+[INFO] - maxT = 0.11770
+[INFO] - lambda_maxT = 1323.2
+[INFO] - FWHM_fit = 24.2
+[INFO] - FOM = 0.05941
+[INFO] - feature_size = 145.1
+[INFO] - Iter: 35
+[INFO] - [6.06147457e-07 7.59011840e-01 1.67056910e-05]
+[INFO] - maxT = 0.11278
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.0
+[INFO] - FOM = 0.05861
+[INFO] - feature_size = 146.1
+[INFO] - Iter: 36
+[INFO] - [6.05806506e-07 7.59794596e-01 1.66477279e-05]
+[INFO] - maxT = 0.11446
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 22.8
+[INFO] - FOM = 0.05946
+[INFO] - feature_size = 145.5
+[INFO] - Iter: 37
+[INFO] - [6.06044550e-07 7.60146815e-01 1.66153825e-05]
+[INFO] - maxT = 0.11236
+[INFO] - lambda_maxT = 1327.3
+[INFO] - FWHM_fit = 22.6
+[INFO] - FOM = 0.05794
+[INFO] - feature_size = 145.4
+[INFO] - Iter: 38
+[INFO] - [6.06255746e-07 7.61730886e-01 1.66853111e-05]
+[INFO] - maxT = 0.11093
+[INFO] - lambda_maxT = 1330.1
+[INFO] - FWHM_fit = 22.7
+[INFO] - FOM = 0.05631
+[INFO] - feature_size = 144.5
+[INFO] - Iter: 39
+[INFO] - [6.05347496e-07 7.58776339e-01 1.66837978e-05]
+[INFO] - maxT = 0.11505
+[INFO] - lambda_maxT = 1324.6
+[INFO] - FWHM_fit = 23.5
+[INFO] - FOM = 0.05942
+[INFO] - feature_size = 146.0
+[INFO] - Iter: 40
+[INFO] - [6.05330422e-07 7.60456954e-01 1.66823407e-05]
+[INFO] - maxT = 0.11290
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 22.9
+[INFO] - FOM = 0.05867
+[INFO] - feature_size = 145.0
+[INFO] - Iter: 41
+[INFO] - [6.06033807e-07 7.59272759e-01 1.66863700e-05]
+[INFO] - maxT = 0.11332
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 22.8
+[INFO] - FOM = 0.05878
+[INFO] - feature_size = 145.9
+[INFO] - Iter: 42
+[INFO] - [6.05341157e-07 7.58597417e-01 1.66715090e-05]
+[INFO] - maxT = 0.11523
+[INFO] - lambda_maxT = 1324.6
+[INFO] - FWHM_fit = 23.5
+[INFO] - FOM = 0.05952
+[INFO] - feature_size = 146.1
+[INFO] - Iter: 43
+[INFO] - [6.06106000e-07 7.61085456e-01 1.66727834e-05]
+[INFO] - maxT = 0.11193
+[INFO] - lambda_maxT = 1328.7
+[INFO] - FWHM_fit = 22.6
+[INFO] - FOM = 0.05735
+[INFO] - feature_size = 144.8
+[INFO] - Iter: 44
+[INFO] - [6.05500499e-07 7.59115758e-01 1.66717745e-05]
+[INFO] - maxT = 0.11440
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05943
+[INFO] - feature_size = 145.9
+[INFO] - Iter: 45
+[INFO] - [6.06230119e-07 7.58331788e-01 1.66549075e-05]
+[INFO] - maxT = 0.11551
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.06003
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 46
+[INFO] - [6.06530018e-07 7.57623399e-01 1.66457632e-05]
+[INFO] - maxT = 0.11253
+[INFO] - lambda_maxT = 1324.6
+[INFO] - FWHM_fit = 23.5
+[INFO] - FOM = 0.05857
+[INFO] - feature_size = 147.0
+[INFO] - Iter: 47
+[INFO] - [6.05657610e-07 7.58888669e-01 1.66299033e-05]
+[INFO] - maxT = 0.11408
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05931
+[INFO] - feature_size = 146.0
+[INFO] - Iter: 48
+[INFO] - [6.05735984e-07 7.58968688e-01 1.66416672e-05]
+[INFO] - maxT = 0.11424
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05928
+[INFO] - feature_size = 146.0
+[INFO] - Iter: 49
+[INFO] - [6.05947711e-07 7.59306993e-01 1.66501211e-05]
+[INFO] - maxT = 0.11398
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.0
+[INFO] - FOM = 0.05925
+[INFO] - feature_size = 145.8
+[INFO] - Iter: 50
+[INFO] - [6.05743706e-07 7.58854435e-01 1.66661522e-05]
+[INFO] - maxT = 0.11424
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05940
+[INFO] - feature_size = 146.1
+[INFO] - Iter: 51
+[INFO] - [6.06099244e-07 7.58959102e-01 1.66758825e-05]
+[INFO] - maxT = 0.11400
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05925
+[INFO] - feature_size = 146.1
+[INFO] - Iter: 52
+[INFO] - [6.06101002e-07 7.58123223e-01 1.66811737e-05]
+[INFO] - maxT = 0.11310
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05875
+[INFO] - feature_size = 146.6
+[INFO] - Iter: 53
+[INFO] - [6.05979646e-07 7.59060375e-01 1.66565904e-05]
+[INFO] - maxT = 0.11424
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05958
+[INFO] - feature_size = 146.0
+[INFO] - Iter: 54
+[INFO] - [6.05869737e-07 7.58538630e-01 1.66425509e-05]
+[INFO] - maxT = 0.11335
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.5
+[INFO] - FOM = 0.05908
+[INFO] - feature_size = 146.3
+[INFO] - Iter: 55
+[INFO] - [6.06051430e-07 7.58871504e-01 1.66689384e-05]
+[INFO] - maxT = 0.11314
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 22.8
+[INFO] - FOM = 0.05854
+[INFO] - feature_size = 146.1
+[INFO] - Iter: 56
+[INFO] - [6.06063137e-07 7.58817512e-01 1.66560294e-05]
+[INFO] - maxT = 0.11283
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05863
+[INFO] - feature_size = 146.2
+[INFO] - Iter: 57
+[INFO] - [6.05905844e-07 7.58680219e-01 1.66624040e-05]
+[INFO] - maxT = 0.11444
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05945
+[INFO] - feature_size = 146.2
+[INFO] - Iter: 58
+[INFO] - [6.06142869e-07 7.58749997e-01 1.66688909e-05]
+[INFO] - maxT = 0.11317
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05882
+[INFO] - feature_size = 146.2
+[INFO] - Iter: 59
+[INFO] - [6.06122751e-07 7.58357157e-01 1.66681055e-05]
+[INFO] - maxT = 0.11371
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05908
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 60
+[INFO] - [6.06029607e-07 7.58162779e-01 1.66547205e-05]
+[INFO] - maxT = 0.11156
+[INFO] - lambda_maxT = 1324.6
+[INFO] - FWHM_fit = 23.6
+[INFO] - FOM = 0.05812
+[INFO] - feature_size = 146.6
+[INFO] - Iter: 61
+[INFO] - [6.06119273e-07 7.58627660e-01 1.66659387e-05]
+[INFO] - maxT = 0.11392
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.0
+[INFO] - FOM = 0.05910
+[INFO] - feature_size = 146.3
+[INFO] - Iter: 62
+[INFO] - [6.06047406e-07 7.58735954e-01 1.66540613e-05]
+[INFO] - maxT = 0.11374
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 22.9
+[INFO] - FOM = 0.05890
+[INFO] - feature_size = 146.2
+[INFO] - Iter: 63
+[INFO] - [6.06107054e-07 7.58436073e-01 1.66651796e-05]
+[INFO] - maxT = 0.11382
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05914
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 64
+[INFO] - [6.06042738e-07 7.58337727e-01 1.66557221e-05]
+[INFO] - maxT = 0.11289
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.4
+[INFO] - FOM = 0.05879
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 65
+[INFO] - [6.06103328e-07 7.58567257e-01 1.66638102e-05]
+[INFO] - maxT = 0.11430
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05937
+[INFO] - feature_size = 146.3
+[INFO] - Iter: 66
+[INFO] - [6.06052473e-07 7.58616770e-01 1.66555682e-05]
+[INFO] - maxT = 0.11431
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05929
+[INFO] - feature_size = 146.3
+[INFO] - Iter: 67
+[INFO] - [6.06063844e-07 7.58579125e-01 1.66575706e-05]
+[INFO] - maxT = 0.11302
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05884
+[INFO] - feature_size = 146.3
+[INFO] - Iter: 68
+[INFO] - [6.06013935e-07 7.58564075e-01 1.66599052e-05]
+[INFO] - maxT = 0.11357
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05905
+[INFO] - feature_size = 146.3
+[INFO] - Iter: 69
+[INFO] - [6.06145592e-07 7.58488768e-01 1.66608427e-05]
+[INFO] - maxT = 0.11378
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05913
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 70
+[INFO] - [6.06148076e-07 7.58401312e-01 1.66617556e-05]
+[INFO] - maxT = 0.11376
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05913
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 71
+[INFO] - [6.06335256e-07 7.58250503e-01 1.66584320e-05]
+[INFO] - maxT = 0.11135
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.0
+[INFO] - FOM = 0.05770
+[INFO] - feature_size = 146.6
+[INFO] - Iter: 72
+[INFO] - [6.06080877e-07 7.58498748e-01 1.66595983e-05]
+[INFO] - maxT = 0.11436
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05950
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 73
+[INFO] - [6.06156316e-07 7.58478224e-01 1.66551434e-05]
+[INFO] - maxT = 0.11386
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05918
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 74
+[INFO] - [6.06165950e-07 7.58383739e-01 1.66522568e-05]
+[INFO] - maxT = 0.11336
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05899
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 75
+[INFO] - [6.06149833e-07 7.58466887e-01 1.66590539e-05]
+[INFO] - maxT = 0.11380
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05915
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 76
+[INFO] - [6.06161709e-07 7.58405620e-01 1.66540455e-05]
+[INFO] - maxT = 0.11290
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05857
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 77
+[INFO] - [6.06152307e-07 7.58454123e-01 1.66580105e-05]
+[INFO] - maxT = 0.11381
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05916
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 78
+[INFO] - [6.06159235e-07 7.58418384e-01 1.66550889e-05]
+[INFO] - maxT = 0.11357
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.0
+[INFO] - FOM = 0.05882
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 79
+[INFO] - [6.06153750e-07 7.58446677e-01 1.66574019e-05]
+[INFO] - maxT = 0.11382
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05916
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 80
+[INFO] - [6.06157791e-07 7.58425829e-01 1.66556976e-05]
+[INFO] - maxT = 0.11356
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.0
+[INFO] - FOM = 0.05882
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 81
+[INFO] - [6.06154592e-07 7.58442334e-01 1.66570468e-05]
+[INFO] - maxT = 0.11383
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05916
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 82
+[INFO] - [6.06156950e-07 7.58430173e-01 1.66560527e-05]
+[INFO] - maxT = 0.11348
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05892
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 83
+[INFO] - [6.06155083e-07 7.58439800e-01 1.66568397e-05]
+[INFO] - maxT = 0.11383
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05916
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 84
+[INFO] - [6.06156458e-07 7.58432706e-01 1.66562598e-05]
+[INFO] - maxT = 0.11347
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05892
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 85
+[INFO] - [6.06155370e-07 7.58438322e-01 1.66567189e-05]
+[INFO] - maxT = 0.11383
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05917
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 86
+[INFO] - [6.06156172e-07 7.58434184e-01 1.66563806e-05]
+[INFO] - maxT = 0.11384
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05917
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 87
+[INFO] - [6.06156005e-07 7.58435046e-01 1.66564511e-05]
+[INFO] - maxT = 0.11384
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05917
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 88
+[INFO] - [6.06130624e-07 7.58443095e-01 1.66580347e-05]
+[INFO] - maxT = 0.11347
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05902
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 89
+[INFO] - [6.06180917e-07 7.58429412e-01 1.66550648e-05]
+[INFO] - maxT = 0.11334
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05897
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 90
+[INFO] - [6.06180286e-07 7.58402811e-01 1.66561151e-05]
+[INFO] - maxT = 0.11333
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05897
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 91
+[INFO] - [6.06180821e-07 7.58400052e-01 1.66558896e-05]
+[INFO] - maxT = 0.11333
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05897
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 92
+[INFO] - [6.06180710e-07 7.58400627e-01 1.66559366e-05]
+[INFO] - maxT = 0.11333
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05897
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 93
+[INFO] - [6.06163789e-07 7.58405992e-01 1.66569923e-05]
+[INFO] - maxT = 0.11320
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05878
+[INFO] - feature_size = 146.4
+[INFO] - Iter: 94
+[INFO] - [6.06197318e-07 7.58396871e-01 1.66550124e-05]
+[INFO] - maxT = 0.11527
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05998
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 95
+[INFO] - [6.06196897e-07 7.58379137e-01 1.66557126e-05]
+[INFO] - maxT = 0.11526
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05998
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 96
+[INFO] - [6.06252433e-07 7.58332538e-01 1.66534294e-05]
+[INFO] - maxT = 0.11434
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05951
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 97
+[INFO] - [6.06233966e-07 7.58347841e-01 1.66541716e-05]
+[INFO] - maxT = 0.11549
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05987
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 98
+[INFO] - [6.06182257e-07 7.58390689e-01 1.66562500e-05]
+[INFO] - maxT = 0.11328
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.0
+[INFO] - FOM = 0.05880
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 99
+[INFO] - [6.06223193e-07 7.58356768e-01 1.66546046e-05]
+[INFO] - maxT = 0.11365
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05917
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 100
+[INFO] - [6.06208252e-07 7.58375176e-01 1.66549774e-05]
+[INFO] - maxT = 0.11524
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05988
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 101
+[INFO] - [6.06207971e-07 7.58363354e-01 1.66554442e-05]
+[INFO] - maxT = 0.11524
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05988
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 102
+[INFO] - [6.06232684e-07 7.58342490e-01 1.66544169e-05]
+[INFO] - maxT = 0.11549
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05986
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 103
+[INFO] - [6.06198211e-07 7.58371056e-01 1.66558025e-05]
+[INFO] - maxT = 0.11525
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.05998
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 104
+[INFO] - [6.06216417e-07 7.58355326e-01 1.66550141e-05]
+[INFO] - maxT = 0.11364
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05916
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 105
+[INFO] - [6.06209731e-07 7.58361681e-01 1.66553546e-05]
+[INFO] - maxT = 0.11558
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.06012
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 106
+[INFO] - [6.06217122e-07 7.58334507e-01 1.66557324e-05]
+[INFO] - maxT = 0.11363
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05916
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 107
+[INFO] - [6.06210100e-07 7.58366704e-01 1.66551347e-05]
+[INFO] - maxT = 0.11558
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.06012
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 108
+[INFO] - [6.06235089e-07 7.58335726e-01 1.66544621e-05]
+[INFO] - maxT = 0.11549
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05986
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 109
+[INFO] - [6.06205894e-07 7.58363695e-01 1.66555233e-05]
+[INFO] - maxT = 0.11524
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.2
+[INFO] - FOM = 0.05987
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 110
+[INFO] - [6.06209854e-07 7.58363355e-01 1.66552813e-05]
+[INFO] - maxT = 0.11558
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.3
+[INFO] - FOM = 0.06012
+[INFO] - feature_size = 146.5
+[INFO] - Iter: 111
+[INFO] - [6.06223446e-07 7.58343427e-01 1.66549833e-05]
+[INFO] - maxT = 0.11465
+[INFO] - lambda_maxT = 1325.9
+[INFO] - FWHM_fit = 23.1
+[INFO] - FOM = 0.05955
+[INFO] - feature_size = 146.5
