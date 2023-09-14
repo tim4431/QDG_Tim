@@ -38,9 +38,9 @@ def grating_mask_tether(
     c.add_ports(grating_ref.ports)
     # >>> add hole <<<
     if hole:
-        vhf_hole = gf.components.rectangle(size=(0.35, 0.35), layer="WG")
+        vhf_hole = gf.components.rectangle(size=(0.5, 0.15), layer="WG")
         hole_ref = vhf_hole.ref()
-        hole_ref.xmin = 9
+        hole_ref.x = 9
         hole_ref.y = 0
         grating = gf.geometry.boolean(
             grating_ref, hole_ref, operation="not", layer="WG"
