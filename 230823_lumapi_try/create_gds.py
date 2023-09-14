@@ -108,14 +108,16 @@ if __name__ == "__main__":
         "section_rect_tether_multisuspend",  # 5
         "section_rect_tether_hole_multisuspend",  # 6
         #
-        "section_rect_tether_hole_unbox",  # 7
-        "section_rect_tether_suspend_unbox",  # 8
-        "section_rect_tether_hole_suspend_unbox",  # 9
+        "section_rect_tether_unbox",  # 7
+        "section_rect_tether_hole_unbox",  # 8
+        "section_rect_tether_suspend_unbox",  # 9
+        "section_rect_tether_hole_suspend_unbox",  # 10
         #
-        "section_rect_tether_hole_multisuspend_unbox",  # 10
+        "section_rect_tether_multisuspend_unbox",  # 11
+        "section_rect_tether_hole_multisuspend_unbox",  # 12
     ]
-    uuid = "ee71"
-    idx_list = [5, 6]
+    uuid = "4e25"
+    idx_list = [0, 7, 11]
     for idx in idx_list:
         tether_typ = tether_typ_avail_list[idx]
         gds_fileName = create_gds(uuid, tether_typ=tether_typ)
