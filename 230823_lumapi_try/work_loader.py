@@ -44,22 +44,19 @@ def work_loader(workList, prefix):
 
     #
     # >>> summary <<<
-    with open(loader_dataName + "_uuid_list.txt", "w") as uuid_file:
-        for i, uuid in enumerate(uuid_List):
-            if uuid in uuid_finished:
-                msg = str(i) + " uuid: " + uuid + " finished"
-                loader_logger.info(msg)
-                uuid_file.write(msg + "\n")
-            else:
-                msg = str(i) + " uuid: " + uuid + " unfinished"
-                loader_logger.info(msg)
-                uuid_file.write(msg + "\n")
-                #
-                try:
-                    # os.rmdir(uuid_to_wd(uuid))
-                    shutil.rmtree(uuid_to_wd(uuid))
-                except Exception as e:
-                    loader_logger.error("Error in deleting uuid: " + str(uuid) + str(e))
+    for i, uuid in enumerate(uuid_List):
+        if uuid in uuid_finished:
+            msg = str(i) + " uuid: " + uuid + " finished"
+            loader_logger.info(msg)
+        else:
+            msg = str(i) + " uuid: " + uuid + " unfinished"
+            loader_logger.info(msg)
+            #
+            try:
+                # os.rmdir(uuid_to_wd(uuid))
+                shutil.rmtree(uuid_to_wd(uuid))
+            except Exception as e:
+                loader_logger.error("Error in deleting uuid: " + str(uuid) + str(e))
 
     # >>> end <<<
     loader_logger.info("Work loader end")
