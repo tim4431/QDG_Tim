@@ -28,3 +28,5 @@
 !/c2b1/*
 !/logs
 !/logs/**
+!/grating_sweep
+!/grating_sweep/*
