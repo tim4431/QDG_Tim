@@ -533,7 +533,7 @@ if __name__ == "__main__":  # type: ignore
     # works = [work_4e25_apodized, work_4e25_1336_apodized]
     # works = [work_grating_1, work_grating_1_single]
     # works = [work_4e25_inverse]
-    works = [work_4e25_packaged_23, work_4e25_packaged, work_grating_1_packaged]
+    works = [work_4e25_packaged, work_4e25_packaged_23, work_grating_1_packaged]
     work_loader(works, prefix="packaged_test")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)
