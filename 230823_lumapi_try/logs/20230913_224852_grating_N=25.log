@@ -1,0 +1,6 @@
+[INFO] - Work loader start
+[INFO] - uuid: c2b1 created
+[INFO] - work: {'lambda_0': 1.326e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 25, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'NL': 2, 'NH': 3, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': 'c2b1'}
+[INFO] - uuid: c2b1 finished
+[INFO] - 0 uuid: c2b1 finished
+[INFO] - Work loader end
