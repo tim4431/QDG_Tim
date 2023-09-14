@@ -124,11 +124,33 @@ if __name__ == "__main__":
     # uuid = "38b2"
     #
     reload_work(
-        "4e25",
-        dimension="2D",
-        tether_typ=None,
+        "ee71",
+        dimension="3D",
+        tether_typ="empty",
         pause=False,
         advanced_monitor=False,
-        movie=True
     )
-    
+    #
+    reload_work(
+        "639a",
+        dimension="3D",
+        tether_typ="empty",
+        pause=False,
+        advanced_monitor=False,
+    )
+    #
+    reload_work(
+        "ee71",
+        dimension="3D",
+        tether_typ="section_rect_tether_multisuspend",
+        pause=False,
+        advanced_monitor=False,
+    )
+    #
+    reload_work(
+        "ee71",
+        dimension="3D",
+        tether_typ="section_rect_tether_hole_multisuspend",
+        pause=False,
+        advanced_monitor=False,
+    )
