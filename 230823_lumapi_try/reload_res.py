@@ -139,13 +139,13 @@ if __name__ == "__main__":
         advanced_monitor=False,
     )
     #
-    reload_work(
-        "ee71",
-        dimension="3D",
-        tether_typ="section_rect_tether_multisuspend",
-        pause=False,
-        advanced_monitor=False,
-    )
+    # reload_work(
+    #     "ee71",
+    #     dimension="3D",
+    #     tether_typ="section_rect_tether_multisuspend",
+    #     pause=False,
+    #     advanced_monitor=False,
+    # )
     #
     reload_work(
         "ee71",
