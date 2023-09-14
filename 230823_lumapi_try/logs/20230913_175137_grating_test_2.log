@@ -1,0 +1,10 @@
+[INFO] - Work loader start
+[INFO] - uuid: 639a created
+[INFO] - work: {'lambda_0': 1.326e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 18, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'NL': 2, 'NH': 3, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': '639a'}
+[INFO] - uuid: 3d7f created
+[INFO] - work: {'lambda_0': 1.326e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 18, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'single', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'NL': 2, 'NH': 3, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': '3d7f'}
+[INFO] - uuid: 639a finished
+[INFO] - uuid: 3d7f finished
+[INFO] - 0 uuid: 639a finished
+[INFO] - 1 uuid: 3d7f finished
+[INFO] - Work loader end
