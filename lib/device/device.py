@@ -41,8 +41,15 @@ def ljm_read_range_resolution(handle: Any, numAIN: int):
     return aValues
 
 
-def ljm_auto_range_resolution(handle, numAIN, estimated_v):
-    if estimated_v < 0.8:
+def ljm_auto_range_resolution(handle, numAIN):
+    ljm_conf_range_resolution(handle, numAIN, 10.00, 1)
+    estimated_v = ljm.eReadName(handle, "AIN{:d}".format(numAIN))
+    if abs(estimated_v) < 0.8:
         ljm_conf_range_resolution(handle, numAIN, 1.00, 8)
-    elif estimated_v < 20:
+    elif abs(estimated_v) < 20:
         ljm_conf_range_resolution(handle, numAIN, 10.00, 8)
+
+
+def ljm_auto_range_read(handle, numAIN):
+    ljm_auto_range_resolution(handle, numAIN)
+    return ljm.eReadName(handle, "AIN{:d}".format(numAIN))
