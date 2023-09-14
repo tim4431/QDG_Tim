@@ -96,7 +96,7 @@ def create_gds(uuid, tether_typ: str = "empty"):
 
 
 if __name__ == "__main__":
-    uuid = "ade1"
+    uuid = "639a"
     # tether_typ_list = ["empty", "section_tether", "section_rect_tether"]
     tether_typ_avail_list = [
         "empty",  # 0
@@ -115,7 +115,7 @@ if __name__ == "__main__":
         #
         "section_rect_tether_hole_multisuspend_unbox",  # 10
     ]
-    idx_list = [0, 1, 2, 7]
+    idx_list = [0, 1, 2]
     for idx in idx_list:
         tether_typ = tether_typ_avail_list[idx]
         gds_fileName = create_gds(uuid, tether_typ=tether_typ)

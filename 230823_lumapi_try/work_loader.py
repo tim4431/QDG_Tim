@@ -44,22 +44,19 @@ def work_loader(workList, prefix):
 
     #
     # >>> summary <<<
-    with open(loader_dataName + "_uuid_list.txt", "w") as uuid_file:
-        for i, uuid in enumerate(uuid_List):
-            if uuid in uuid_finished:
-                msg = str(i) + " uuid: " + uuid + " finished"
-                loader_logger.info(msg)
-                uuid_file.write(msg + "\n")
-            else:
-                msg = str(i) + " uuid: " + uuid + " unfinished"
-                loader_logger.info(msg)
-                uuid_file.write(msg + "\n")
-                #
-                try:
-                    # os.rmdir(uuid_to_wd(uuid))
-                    shutil.rmtree(uuid_to_wd(uuid))
-                except Exception as e:
-                    loader_logger.error("Error in deleting uuid: " + str(uuid) + str(e))
+    for i, uuid in enumerate(uuid_List):
+        if uuid in uuid_finished:
+            msg = str(i) + " uuid: " + uuid + " finished"
+            loader_logger.info(msg)
+        else:
+            msg = str(i) + " uuid: " + uuid + " unfinished"
+            loader_logger.info(msg)
+            #
+            try:
+                # os.rmdir(uuid_to_wd(uuid))
+                shutil.rmtree(uuid_to_wd(uuid))
+            except Exception as e:
+                loader_logger.error("Error in deleting uuid: " + str(uuid) + str(e))
 
     # >>> end <<<
     loader_logger.info("Work loader end")
@@ -299,12 +296,25 @@ if __name__ == "__main__":
         "FWHM": 20e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
-        "N": 18,
+        "N": 25,
         "maxiter": 100,
         "MIN_FEATURE_SIZE": 40e-9,
         "FOM_typ": "square",
         "SOURCE_typ": "gaussian_released",
         "grating_typ": "grating",
+        "start_radius": 12e-6,
+    }
+    work_grating_1_apodized = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 20e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 25,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "grating_typ": "apodized_grating",
         "start_radius": 12e-6,
     }
     #
@@ -531,7 +541,9 @@ if __name__ == "__main__":  # type: ignore
     # works = [work_inverse_1, work_inverse_2, work_inverse_3]
     # works = [work_4e25_1330, work_4e25_min60]
     # works = [work_4e25_apodized, work_4e25_1336_apodized]
-    # works = [work_grating_1, work_grating_1_single]
+    works = [
+        work_grating_1,
+    ]
     # works = [work_4e25_inverse]
     works = [work_4e25_packaged, work_4e25_packaged_23, work_grating_1_packaged]
     work_loader(works, prefix="packaged_test")
