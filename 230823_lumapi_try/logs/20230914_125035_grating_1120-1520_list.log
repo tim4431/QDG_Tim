@@ -1,0 +1,30 @@
+[INFO] - Work loader start
+[INFO] - uuid: 0eb0 created
+[INFO] - work: {'lambda_0': 1.12e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 25, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'NL': 2, 'NH': 3, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': '0eb0'}
+[INFO] - uuid: 570e created
+[INFO] - work: {'lambda_0': 1.16e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 25, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'NL': 2, 'NH': 3, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': '570e'}
+[INFO] - uuid: e7ec created
+[INFO] - work: {'lambda_0': 1.315e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 25, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'NL': 2, 'NH': 3, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': 'e7ec'}
+[INFO] - uuid: 04ae created
+[INFO] - work: {'lambda_0': 1.33e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 25, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'NL': 2, 'NH': 3, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': '04ae'}
+[INFO] - uuid: 6f5b created
+[INFO] - work: {'lambda_0': 1.335e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 25, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'NL': 2, 'NH': 3, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': '6f5b'}
+[INFO] - uuid: a72b created
+[INFO] - work: {'lambda_0': 1.48e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 25, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'NL': 2, 'NH': 3, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': 'a72b'}
+[INFO] - uuid: aa7c created
+[INFO] - work: {'lambda_0': 1.52e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 25, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'NL': 2, 'NH': 3, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': 'aa7c'}
+[INFO] - uuid: 0eb0 finished
+[INFO] - uuid: 570e finished
+[INFO] - uuid: e7ec finished
+[INFO] - uuid: 04ae finished
+[INFO] - uuid: 6f5b finished
+[INFO] - uuid: a72b finished
+[INFO] - uuid: aa7c finished
+[INFO] - 0 uuid: 0eb0 finished
+[INFO] - 1 uuid: 570e finished
+[INFO] - 2 uuid: e7ec finished
+[INFO] - 3 uuid: 04ae finished
+[INFO] - 4 uuid: 6f5b finished
+[INFO] - 5 uuid: a72b finished
+[INFO] - 6 uuid: aa7c finished
+[INFO] - Work loader end
