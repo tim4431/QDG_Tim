@@ -421,7 +421,7 @@ def setup_grating_structuregroup(fdtd, **kwargs):
     fdtd.adduserprop("taper_angle", 0, taper_angle)
     fdtd.adduserprop("wg_h", 2, 220e-9)
     #
-    if grating_typ in ["subw_grating", "subw_grating_notaper"]:
+    if grating_typ in ["subw_grating"]:
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
         NH = kwargs.get("NH", DEFAULT_PARA["NH"])
         #
@@ -597,7 +597,7 @@ def get_paras_bound(**kwargs):
         if SOURCE_typ in ["gaussian_packaged", "gaussian_airclad"]:
             paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
             paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6], dtype=np.float_)
-        elif SOURCE_typ in ["gaussian_released", "gaussian_released_notaper"]:
+        elif SOURCE_typ in ["gaussian_released"]:
             if NL == 2:
                 paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6], dtype=np.float_)
                 paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6], dtype=np.float_)
@@ -621,8 +621,8 @@ def get_paras_bound(**kwargs):
         paras_min = np.array([10e-6] + [200e-9] * N + [0.05] * N, dtype=np.float_)
         paras_max = np.array([25e-6] + [1.1e-6] * N + [0.95] * N, dtype=np.float_)
     elif grating_typ == "grating":  # [Lambda, ff, fiberx]
-        paras_min = np.array([0.8e-6, 0.0, 12e-6], dtype=np.float_)
-        paras_max = np.array([1.6e-6, 0.5, 20e-6], dtype=np.float_)
+        paras_min = np.array([0.2e-6, 0.5, 13e-6], dtype=np.float_)
+        paras_max = np.array([1.0e-6, 1.0, 20e-6], dtype=np.float_)
     elif grating_typ == "apodized_grating":  # [Lambda_i, Lambda_f, ff_i, ff_f, fiberx]
         paras_min = np.array([0.8e-6, 0.8e-6, 0.0, 0.0, 12e-6], dtype=np.float_)
         paras_max = np.array([1.6e-6, 1.6e-6, 0.5, 0.5, 20e-6], dtype=np.float_)
