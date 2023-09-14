@@ -1,12 +1,12 @@
-uuid = "ee71"
+uuid = "ade1"
 
 # append /uuid,/uuid/* to .gitignore
 import os
 
 with open(".gitignore", "a") as f:
     f.write("\n")
-    f.write("/" + uuid + "\n")
-    f.write("/" + uuid + "/*\n")
+    f.write("!/" + uuid + "\n")
+    f.write("!/" + uuid + "/*\n")
 
 # create .gitignore in uuid folder
 with open(os.path.join(uuid, ".gitignore"), "w") as f:
