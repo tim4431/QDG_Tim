@@ -20,7 +20,10 @@ def _generate_uuid(data):
 
 def uuid_to_wd(uuid):
     cwd = os.getcwd()
-    return os.path.join(cwd, uuid)
+    if cwd.endswith(uuid):  # if cwd ends with uuid
+        return cwd
+    else:
+        return os.path.join(cwd, uuid)
 
 
 def setup_wd(uuid):
@@ -88,18 +91,4 @@ def load_paras(uuid):
 
 
 if __name__ == "__main__":
-    # Sample JSON data
-    data = {
-        "lambda_0": 1.326e-6,
-        "FWHM": 0.0833e-6,
-        "alpha": 0.02,
-        "penalty": (0.05, 50e-9),
-        "maxiter": 90,
-        "SOURCE_typ": "gaussian",
-    }
-    uuid = save_json(data)
-    print(uuid_to_wd(uuid))
-    print(uuid)
-    print(uuid_to_jsonname(uuid))
-    data = load_json(uuid)
-    print(data)
+    uuid_to_wd("e199")
