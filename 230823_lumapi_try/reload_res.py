@@ -124,7 +124,7 @@ if __name__ == "__main__":
     # uuid = "38b2"
     #
     reload_work(
-        "4cb4",
+        "38b2",
         dimension="3D",
         tether_typ="empty",
         pause=False,
@@ -139,13 +139,13 @@ if __name__ == "__main__":
         advanced_monitor=False,
     )
     #
-    reload_work(
-        "24d0",
-        dimension="3D",
-        tether_typ="empty",
-        pause=False,
-        advanced_monitor=False,
-    )
+    # reload_work(
+    #     "24d0",
+    #     dimension="3D",
+    #     tether_typ="empty",
+    #     pause=False,
+    #     advanced_monitor=False,
+    # )
     #
     # reload_work(
     #     "ee71",
