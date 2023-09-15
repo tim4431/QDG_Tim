@@ -9,6 +9,7 @@ from lib.gaussian.gaussian_fit_1d import arb_fit_1d
 if __name__ == "__main__":
     fig, ax = plt.subplots(figsize=(12, 8))
     uuidList = [
+        # "4c42",
         "0eb0",
         "570e",
         "e199",
@@ -23,6 +24,7 @@ if __name__ == "__main__":
         # "1807",
     ]
     lambdaList = [
+        # 1080,
         1120,
         1160,
         1200,
@@ -64,7 +66,7 @@ if __name__ == "__main__":
     )
     print(popt)
     # popt = [0.2, 1 / 500, 0, 0]
-    x = np.linspace(1120, 1520, 100)
+    x = np.linspace(np.min(lambdaList), np.max(lambdaList), 100)
     ax.plot(
         x,
         f(x, *popt),
