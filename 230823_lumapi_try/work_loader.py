@@ -801,6 +801,9 @@ if __name__ == "__main__":  # type: ignore
     # ]
     works = [
         work_grating_1_1120,
+        work_grating_1_1440,
+        work_grating_1_1480,
+        work_grating_1_1520,
         work_grating_1_1560_released,
         work_grating_1_1560_packaged,
     ]
