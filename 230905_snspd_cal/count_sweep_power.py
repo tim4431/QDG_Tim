@@ -34,7 +34,7 @@ theo_cnt_2l = (power2l * 1e-6) * (10 ** (-95.64 / 10)) / (h * c / 1326e-9)
 efficiency_2l = C2l / theo_cnt_2l
 std_efficiency_2l = stdC2l / theo_cnt_2l
 #
-
+plt.figure(figsize=(6, 6))
 
 plt.plot(
     theo_cnt_1l / 1e3,

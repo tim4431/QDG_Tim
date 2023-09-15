@@ -313,7 +313,7 @@ if __name__ == "__main__":
         "maxiter": 100,
         "MIN_FEATURE_SIZE": 40e-9,
         "FOM_typ": "square",
-        "SOURCE_typ": "gaussian_packaged",
+        "SOURCE_typ": "gaussian_released",
         "grating_typ": "grating",
         "start_radius": 12e-6,
     }
@@ -475,6 +475,32 @@ if __name__ == "__main__":
     }
     work_grating_1_1520 = {
         "lambda_0": 1.52e-6,
+        "FWHM": 20e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 25,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_packaged",
+        "grating_typ": "grating",
+        "start_radius": 12e-6,
+    }
+    work_grating_1_1560_released = {
+        "lambda_0": 1.56e-6,
+        "FWHM": 20e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 25,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "grating_typ": "grating",
+        "start_radius": 12e-6,
+    }
+    work_grating_1_1560_packaged = {
+        "lambda_0": 1.56e-6,
         "FWHM": 20e-9,
         "alpha": 0.00,
         "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
@@ -760,22 +786,30 @@ if __name__ == "__main__":  # type: ignore
     #     work_grating_1_1400,
     #     work_grating_1_1440,
     # ]
+    # works = [
+    #     work_grating_1_1120,
+    #     work_grating_1_1160,
+    #     work_grating_1_1200,
+    #     work_grating_1_1240,
+    #     work_grating_1_1280,
+    #     work_grating_1_1320,
+    #     work_grating_1_1360,
+    #     work_grating_1_1400,
+    #     work_grating_1_1440,
+    #     work_grating_1_1480,
+    #     work_grating_1_1520,
+    # ]
     works = [
         work_grating_1_1120,
-        work_grating_1_1160,
-        work_grating_1_1200,
-        work_grating_1_1240,
-        work_grating_1_1280,
-        work_grating_1_1320,
-        work_grating_1_1360,
-        work_grating_1_1400,
         work_grating_1_1440,
         work_grating_1_1480,
         work_grating_1_1520,
+        work_grating_1_1560_released,
+        work_grating_1_1560_packaged,
     ]
     # works = [work_4e25_1280, work_4e25_1370]
     # works = [work_4e25_inverse]
     # works = [work_4e25_packaged, work_4e25_packaged_23, work_grating_1_packaged]
-    work_loader(works, prefix="grating_1120-1520_list_packaged")
+    work_loader(works, prefix="grating_1120,1560_append")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)

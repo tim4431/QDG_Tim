@@ -116,7 +116,7 @@ if __name__ == "__main__":
         "section_rect_tether_multisuspend_unbox",  # 11
         "section_rect_tether_hole_multisuspend_unbox",  # 12
     ]
-    uuid = "4e25"
+    uuid = "38b2"
     idx_list = [6]
     for idx in idx_list:
         tether_typ = tether_typ_avail_list[idx]

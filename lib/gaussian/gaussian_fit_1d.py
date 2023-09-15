@@ -158,6 +158,8 @@ def arb_fit_1d(ax, x_data, y_data, name, x_range=None):
     )
     #
     _annote_wrapper(ax, amp, x0, x_left, x_right)
+    #
+    return amp, x0, FWMH, CE
 
 
 if __name__ == "__main__":
