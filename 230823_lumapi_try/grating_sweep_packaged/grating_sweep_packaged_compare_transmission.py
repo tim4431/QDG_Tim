@@ -9,18 +9,18 @@ from lib.gaussian.gaussian_fit_1d import arb_fit_1d
 if __name__ == "__main__":
     fig, ax = plt.subplots(figsize=(12, 8))
     uuidList = [
-        "0eb0",
-        "570e",
-        "e199",
-        "793c",
-        "e86b",
-        "15a5",
-        "d1fd",
+        "e72f",
+        "5777",
+        "f755",
+        "e46f",
+        "739f",
+        "ba7e",
+        "b60e",
         "6ade",
-        "674e",
-        "a72b",
-        "aa7c",
-        # "1807",
+        "0694",
+        "df22",
+        "61f2",
+        # "070f",
     ]
     lambdaList = [
         1120,
@@ -59,8 +59,8 @@ if __name__ == "__main__":
         f,
         x0List,
         ampList,
-        p0=[0.3, 0.5, 3900, 0],
-        bounds=([0, 0, 0, -2 * np.pi], [1, 1, 6000, 2 * np.pi]),
+        p0=[0.33, 0.38, 4900, 0],
+        bounds=([0, 0, 0, -2 * np.pi], [1, 1, 8000, 2 * np.pi]),
     )
     print(popt)
     # popt = [0.2, 1 / 500, 0, 0]
@@ -74,5 +74,7 @@ if __name__ == "__main__":
     ax.set_ylabel("transmission")
     ax.legend()
     #
-    plt.savefig("grating_sweep_compare_transmission.png", dpi=200, bbox_inches="tight")
+    plt.savefig(
+        "grating_sweep_packaged_compare_transmission.png", dpi=200, bbox_inches="tight"
+    )
     plt.show()

@@ -4,12 +4,15 @@
 !subw_fiber_template.fsp
 !subw_gaussian_released_template.fsp
 !subw_gaussian_packaged_template.fsp
+!subw_gaussian_airclad_template.fsp
 !/script
 !/script/*
 !/logs
 !/logs/**
 !/grating_sweep
 !/grating_sweep/*
+!/grating_sweep_packaged
+!/grating_sweep_packaged/*
 #
 !/4cb4
 !/4cb4/*
