@@ -480,7 +480,7 @@ def recipes(tether_typ: str) -> dict:
             "tether_func": section_multiskeleton_tether,
             "grating_angle": 24,
             "suspend": False,
-            "hole": True,
+            "hole": (0.5, 0.5),
         }
     elif tether_typ == "section_rect_tether_suspend":
         return {
@@ -556,7 +556,7 @@ def recipes(tether_typ: str) -> dict:
             "tether_func": section_multiskeleton_tether,
             "grating_angle": 24,
             "suspend": False,
-            "hole": True,
+            "hole": (0.5, 0.5),
             "input_length": 0,
         }
     else:

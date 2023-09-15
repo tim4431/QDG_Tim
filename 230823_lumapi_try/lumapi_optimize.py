@@ -621,8 +621,8 @@ def get_paras_bound(**kwargs):
         paras_min = np.array([10e-6] + [200e-9] * N + [0.05] * N, dtype=np.float_)
         paras_max = np.array([25e-6] + [1.1e-6] * N + [0.95] * N, dtype=np.float_)
     elif grating_typ == "grating":  # [Lambda, ff, fiberx]
-        paras_min = np.array([0.2e-6, 0.5, 13e-6], dtype=np.float_)
-        paras_max = np.array([1.0e-6, 1.0, 20e-6], dtype=np.float_)
+        paras_min = np.array([0.2e-6, 0.6, 14e-6], dtype=np.float_)
+        paras_max = np.array([0.9e-6, 1.0, 20e-6], dtype=np.float_)
     elif grating_typ == "apodized_grating":  # [Lambda_i, Lambda_f, ff_i, ff_f, fiberx]
         paras_min = np.array([0.8e-6, 0.8e-6, 0.0, 0.0, 12e-6], dtype=np.float_)
         paras_max = np.array([1.6e-6, 1.6e-6, 0.5, 0.5, 20e-6], dtype=np.float_)
