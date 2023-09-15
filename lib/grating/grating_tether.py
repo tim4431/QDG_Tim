@@ -20,6 +20,14 @@ from gdsfactory.typings import Component
 
 
 @gf.cell
+def _diamond(w, h):
+    c = gf.Component()
+    pts = [(-w / 2, 0), (0, -h / 2), (w / 2, 0), (0, h / 2), (-w / 2, 0)]
+    c.add_polygon(pts, layer="WG")
+    return c
+
+
+@gf.cell
 def grating_mask_tether(
     grating: Component,
     grating_mask: Union[Component, None],
@@ -38,12 +46,19 @@ def grating_mask_tether(
     c.add_ports(grating_ref.ports)
     # >>> add hole <<<
     if hole:
-        vhf_hole = gf.components.rectangle(size=hole, layer="WG")
-        hole_ref = vhf_hole.ref()
-        hole_ref.x = 9
-        hole_ref.y = 0
+        size, shape = hole  # type: ignore
+        if shape == "rect":
+            vhf_hole_ref = gf.components.rectangle(size=size, layer="WG").ref()
+        elif shape == "diamond":  # polygon
+            w, h = size
+            vhf_hole_ref = _diamond(w, h).ref()
+        else:
+            raise ValueError("Unknown hole shape")
+        #
+        vhf_hole_ref.x = 9
+        vhf_hole_ref.y = 0
         grating = gf.geometry.boolean(
-            grating_ref, hole_ref, operation="not", layer="WG"
+            grating_ref, vhf_hole_ref, operation="not", layer="WG"
         )
     # >>> add suspension <<<
     SUSPEND_XMIN = 11
@@ -480,7 +495,7 @@ def recipes(tether_typ: str) -> dict:
             "tether_func": section_multiskeleton_tether,
             "grating_angle": 24,
             "suspend": False,
-            "hole": (0.5, 0.5),
+            "hole": ((1, 0.3), "diamond"),
         }
     elif tether_typ == "section_rect_tether_suspend":
         return {

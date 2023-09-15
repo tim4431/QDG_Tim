@@ -126,7 +126,7 @@ if __name__ == "__main__":
     reload_work(
         "38b2",
         dimension="3D",
-        tether_typ="empty",
+        tether_typ="section_rect_tether_hole_multisuspend",
         pause=False,
         advanced_monitor=False,
     )
@@ -155,10 +155,10 @@ if __name__ == "__main__":
     #     advanced_monitor=False,
     # )
     #
-    reload_work(
-        "ee71",
-        dimension="3D",
-        tether_typ="section_rect_tether_hole_multisuspend",
-        pause=False,
-        advanced_monitor=False,
-    )
+    # reload_work(
+    #     "ee71",
+    #     dimension="3D",
+    #     tether_typ="section_rect_tether_hole_multisuspend",
+    #     pause=False,
+    #     advanced_monitor=False,
+    # )
