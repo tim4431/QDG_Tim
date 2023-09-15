@@ -10,6 +10,8 @@
 !/logs/**
 !/grating_sweep
 !/grating_sweep/*
+!/grating_sweep_packaged
+!/grating_sweep_packaged/*
 #
 !/4cb4
 !/4cb4/*
