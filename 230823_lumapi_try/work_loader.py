@@ -799,7 +799,11 @@ if __name__ == "__main__":  # type: ignore
     #     work_grating_1_1480,
     #     work_grating_1_1520,
     # ]
-    works=[work_grating_1_1120,work_grating_1_1560_released,work_grating_1_1560_packaged]
+    works = [
+        work_grating_1_1120,
+        work_grating_1_1560_released,
+        work_grating_1_1560_packaged,
+    ]
     # works = [work_4e25_1280, work_4e25_1370]
     # works = [work_4e25_inverse]
     # works = [work_4e25_packaged, work_4e25_packaged_23, work_grating_1_packaged]
