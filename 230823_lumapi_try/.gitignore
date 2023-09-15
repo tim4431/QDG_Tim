@@ -4,6 +4,7 @@
 !subw_fiber_template.fsp
 !subw_gaussian_released_template.fsp
 !subw_gaussian_packaged_template.fsp
+!subw_gaussian_airclad_template.fsp
 !/script
 !/script/*
 !/logs
