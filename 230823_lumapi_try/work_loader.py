@@ -469,6 +469,28 @@ if __name__ == "__main__":
         "grating_typ": "grating",
         "start_radius": 12e-6,
     }
+    work_grating_1_1560_released = {
+        "lambda_0": 1.56e-6,
+        "FWHM": 20e-9,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 35,
+        "maxiter": 80,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "grating_typ": "grating",
+        "start_radius": 12e-6,
+    }
+    work_grating_1_1600_released = {
+        "lambda_0": 1.60e-6,
+        "FWHM": 20e-9,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 35,
+        "maxiter": 80,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "grating_typ": "grating",
+        "start_radius": 12e-6,
+    }
 
     work_grating_1_apodized = {
         "lambda_0": 1.326e-6,
@@ -757,23 +779,24 @@ if __name__ == "__main__":  # type: ignore
     #     work_grating_1_1480,
     #     work_grating_1_1520,
     # ]
-    works = [
-        work_grating_1_1080,
-        work_grating_1_1080_airclad,
-        work_grating_1_1120_airclad,
-        work_grating_1_1160_airclad,
-        work_grating_1_1200_airclad,
-        work_grating_1_1240_airclad,
-        work_grating_1_1280_airclad,
-        work_grating_1_1320_airclad,
-        work_grating_1_1360_airclad,
-        work_grating_1_1400_airclad,
-        work_grating_1_1440_airclad,
-        work_grating_1_1480_airclad,
-        work_grating_1_1520_airclad,
-        work_grating_1_1560_airclad,
-        work_grating_1_1600_airclad,
-    ]
+    # works = [
+    #     work_grating_1_1080,
+    #     work_grating_1_1080_airclad,
+    #     work_grating_1_1120_airclad,
+    #     work_grating_1_1160_airclad,
+    #     work_grating_1_1200_airclad,
+    #     work_grating_1_1240_airclad,
+    #     work_grating_1_1280_airclad,
+    #     work_grating_1_1320_airclad,
+    #     work_grating_1_1360_airclad,
+    #     work_grating_1_1400_airclad,
+    #     work_grating_1_1440_airclad,
+    #     work_grating_1_1480_airclad,
+    #     work_grating_1_1520_airclad,
+    #     work_grating_1_1560_airclad,
+    #     work_grating_1_1600_airclad,
+    # ]
+    works = [work_grating_1_1560_released, work_grating_1_1600_released]
     # works = [work_4e25_1280, work_4e25_1370]
     # works = [work_4e25_inverse]
     # works = [work_4e25_packaged, work_4e25_packaged_23, work_grating_1_packaged]

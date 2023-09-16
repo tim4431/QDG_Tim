@@ -9,22 +9,23 @@ from lib.gaussian.gaussian_fit_1d import arb_fit_1d
 if __name__ == "__main__":
     fig, ax = plt.subplots(figsize=(12, 8))
     uuidList = [
-        # "4c42",
-        "0eb0",
-        "570e",
-        "e199",
-        "793c",
-        "e86b",
-        "15a5",
-        "d1fd",
-        "6ade",
-        "674e",
-        "a72b",
-        "aa7c",
-        # "1807",
+        "686a",
+        "cde0",
+        "83a3",
+        "4087",
+        "de6b",
+        "c158",
+        "8cfd",
+        "bb01",
+        "ee95",
+        "4117",
+        "1574",
+        "224e",
+        "fdb9",
+        "fbfd",
     ]
     lambdaList = [
-        # 1080,
+        1080,
         1120,
         1160,
         1200,
@@ -36,7 +37,8 @@ if __name__ == "__main__":
         1440,
         1480,
         1520,
-        # 1560,
+        1560,
+        1600,
     ]
     ampList = []
     x0List = []
@@ -52,8 +54,6 @@ if __name__ == "__main__":
     # print(ampList)
 
     # fit amp-x0 using amp = A*sin(ax+b)+B
-    # def f(x, A, g, d, b):
-    #     return A * (1 + g * np.cos(4 * np.pi * d / x + b))
     def f(x, A, g, d, b, g1, d1, b1):
         return (
             A
@@ -63,18 +63,11 @@ if __name__ == "__main__":
 
     from scipy.optimize import curve_fit
 
-    # popt, pcov = curve_fit(
-    #     f,
-    #     x0List,
-    #     ampList,
-    #     p0=[0.3, 0.5, 3900, 0],
-    #     bounds=([0, 0, 0, -2 * np.pi], [1, 1, 6000, 2 * np.pi]),
-    # )
     popt, pcov = curve_fit(
         f,
         x0List,
         ampList,
-        p0=[0.9, 0.4, 3900, 0, 0.8, 230, 0],
+        p0=[0.34, 0.3, 5100, -0.8, 0.15, 900, -1],
         bounds=(
             [0, 0, 0, -2 * np.pi, 0, 0, -2 * np.pi],
             [1, 1, 6000, 2 * np.pi, 1, 1000, 2 * np.pi],
@@ -90,7 +83,9 @@ if __name__ == "__main__":
     )
     ax.set_xlabel("wavelength (nm)")
     ax.set_ylabel("transmission")
-    ax.legend()
+    # ax.legend()
     #
-    plt.savefig("grating_sweep_compare_transmission.png", dpi=200, bbox_inches="tight")
+    plt.savefig(
+        "grating_sweep_airclad_compare_transmission.png", dpi=200, bbox_inches="tight"
+    )
     plt.show()
