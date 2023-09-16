@@ -796,11 +796,32 @@ if __name__ == "__main__":  # type: ignore
     #     work_grating_1_1560_airclad,
     #     work_grating_1_1600_airclad,
     # ]
-    works = [work_grating_1_1560_released, work_grating_1_1600_released]
+    import numpy as np
+
+    works = []
+    work_template = {
+        "FWHM": 20e-9,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 35,
+        "maxiter": 80,
+        "FOM_typ": "square",
+        "grating_typ": "grating",
+        "start_radius": 12e-6,
+    }
+    for lambda_0 in range(800, 1720, 20):
+        work = work_template.copy()
+        work["lambda_0"] = lambda_0 * 1e-9
+        work["SOURCE_typ"] = "gaussian_released"
+        works.append(work)
+    # for lambda_0 in range(820, 1720, 20):
+    #     work = work_template.copy()
+    #     work["lambda_0"] = lambda_0 * 1e-9
+    #     work["SOURCE_typ"] = "gaussian_airclad"
+    #     works.append(work)
     # works = [work_4e25_1280, work_4e25_1370]
     # works = [work_4e25_inverse]
     # works = [work_4e25_packaged, work_4e25_packaged_23, work_grating_1_packaged]
-    work_loader(works, prefix="grating_1560,1600_relased")
+    work_loader(works, prefix="grating_800-1700_relased,airclad")
     # work_loader(works, prefix="grating_1560,1600_airclad")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)

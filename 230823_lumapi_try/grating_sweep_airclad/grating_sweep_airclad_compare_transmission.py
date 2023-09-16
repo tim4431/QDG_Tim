@@ -46,7 +46,7 @@ if __name__ == "__main__":
         dataName = "{:s}_{:.1f}_bw=20.0_transmission.txt".format(uuid, lambda_0)
         data = np.loadtxt(dataName)
         amp, x0, _, _ = arb_fit_1d(
-            ax, data[:, 0] * 1e3, data[:, 1], "{:.1f}".format(lambda_0)
+            ax, data[:, 0] * 1e3, data[:, 1], "{:.1f}".format(lambda_0), label=False
         )
         ampList.append(amp)
         x0List.append(x0)
@@ -67,10 +67,10 @@ if __name__ == "__main__":
         f,
         x0List,
         ampList,
-        p0=[0.34, 0.3, 5100, -0.8, 0.15, 900, -1],
+        p0=[0.34, 0.3, 5100, -0.8, 0.14, 1500, -1],
         bounds=(
             [0, 0, 0, -2 * np.pi, 0, 0, -2 * np.pi],
-            [1, 1, 6000, 2 * np.pi, 1, 1000, 2 * np.pi],
+            [1, 1, 8000, 2 * np.pi, 1, 3000, 2 * np.pi],
         ),
     )
     print(popt)
@@ -79,11 +79,13 @@ if __name__ == "__main__":
     ax.plot(
         x,
         f(x, *popt),
-        label=r"$fit={:.2f}*(1+{:.2f}*cos(4 \pi x/{:.2f}+{:.2f}))$".format(*popt),
+        label=r"$fit={:.2f}*(1+{:.2f}*cos(4\pi*{:.0f}/x{:+.2f}))* (1+{:.0f}*cos(4\pi*{:.2f}/x{:+.2f}))$".format(
+            *popt
+        ),
     )
     ax.set_xlabel("wavelength (nm)")
     ax.set_ylabel("transmission")
-    # ax.legend()
+    ax.legend()
     #
     plt.savefig(
         "grating_sweep_airclad_compare_transmission.png", dpi=200, bbox_inches="tight"
