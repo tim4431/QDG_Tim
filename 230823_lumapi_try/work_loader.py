@@ -800,10 +800,7 @@ if __name__ == "__main__":  # type: ignore
     # works = [work_4e25_1280, work_4e25_1370]
     # works = [work_4e25_inverse]
     # works = [work_4e25_packaged, work_4e25_packaged_23, work_grating_1_packaged]
-<<<<<<< HEAD
     work_loader(works, prefix="grating_1560,1600_relased")
-=======
-    work_loader(works, prefix="grating_1560,1600_airclad")
->>>>>>> 271f910c9685ee4760fea7bbba9019376ad2db81
+    # work_loader(works, prefix="grating_1560,1600_airclad")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)
