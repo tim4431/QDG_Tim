@@ -1,4 +1,4 @@
-pinName = "AIN0"
+pinName = "AIN2"
 RECORD_INTERVAL_S = 20  # in s
 ALERT_INTERVAL_S = 60 * 10  # in s
 TEMPERATURE_THRESHOLD = 16  # in C

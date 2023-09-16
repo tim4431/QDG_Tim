@@ -42,7 +42,7 @@ def _annote_wrapper(ax, amp, x0, xl, xr):
     # Add labels and legend
     ax.set_xlabel(r"$\lambda$ (nm)")
     ax.set_ylabel(r"$T(\lambda$)")
-    ax.legend(loc="upper right")
+    # ax.legend(loc="upper right")
 
 
 def _fit_gaussian(x_data, y_data, p0):
@@ -83,7 +83,7 @@ def gaussian_fit_1d(ax, x_data, y_data, name, x_range=None):
     return amp, x0, FWMH
 
 
-def arb_fit_1d(ax, x_data, y_data, name, x_range=None):
+def arb_fit_1d(ax, x_data, y_data, name, x_range=None, label=True):
     x_data, y_data = _data_wrapper(x_data, y_data, x_range)
     max_index = np.argmax(y_data)
     amp_coarse = y_data[max_index]
@@ -153,7 +153,9 @@ def arb_fit_1d(ax, x_data, y_data, name, x_range=None):
     ax.plot(
         x_data,
         y_data,
-        label="{:s}, {:.1f}_{:.1f}_{:.1f}dB".format(name, x0, FWMH, CE),
+        label="{:s}, {:.1f}_{:.1f}_{:.1f}dB".format(name, x0, FWMH, CE)
+        if label
+        else None,
         alpha=0.5,
     )
     #

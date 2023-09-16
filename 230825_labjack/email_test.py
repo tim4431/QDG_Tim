@@ -12,6 +12,7 @@ EMAIL_SLACK_MONITOR = (
 EMAIL_SLACK_GENERAL = "general-aaaadgmklzajn2v73ykaooqrci@quantumdevicesgroup.slack.com"
 EMAIL_GROUP = "quantumdevices@lists.berkeley.edu"
 #
+# >>> PRODUCTION <<<
 emergency_email_list = [
     EMAIL_SELF,
     EMAIL_SLACK_MONITOR,
@@ -19,6 +20,7 @@ emergency_email_list = [
     EMAIL_GROUP,
 ]
 notice_email_list = [EMAIL_SELF, EMAIL_SLACK_MONITOR]
+# >>> DEBUG <<<
 # emergency_email_list = [EMAIL_SELF]
 # notice_email_list = [EMAIL_SELF]
 
