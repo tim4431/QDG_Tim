@@ -12,15 +12,15 @@ EMAIL_SLACK_MONITOR = (
 EMAIL_SLACK_GENERAL = "general-aaaadgmklzajn2v73ykaooqrci@quantumdevicesgroup.slack.com"
 EMAIL_GROUP = "quantumdevices@lists.berkeley.edu"
 #
-emergency_email_list = [
-    EMAIL_SELF,
-    EMAIL_SLACK_MONITOR,
-    EMAIL_SLACK_GENERAL,
-    EMAIL_GROUP,
-]
-notice_email_list = [EMAIL_SELF, EMAIL_SLACK_MONITOR]
-# emergency_email_list = [EMAIL_SELF]
-# notice_email_list = [EMAIL_SELF]
+# emergency_email_list = [
+#     EMAIL_SELF,
+#     EMAIL_SLACK_MONITOR,
+#     EMAIL_SLACK_GENERAL,
+#     EMAIL_GROUP,
+# ]
+# notice_email_list = [EMAIL_SELF, EMAIL_SLACK_MONITOR]
+emergency_email_list = [EMAIL_SELF]
+notice_email_list = [EMAIL_SELF]
 
 
 def temp_warning(temperature: float, img_fileName=None):
