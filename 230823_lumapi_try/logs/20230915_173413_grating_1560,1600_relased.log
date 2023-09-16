@@ -1,0 +1,10 @@
+[INFO] - Work loader start
+[INFO] - uuid: b60c created
+[INFO] - work: {'lambda_0': 1.56e-06, 'FWHM': 2e-08, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 35, 'maxiter': 80, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'alpha': 0.02, 'NL': 2, 'NH': 3, 'MIN_FEATURE_SIZE': 50.0, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': 'b60c'}
+[INFO] - uuid: 338d created
+[INFO] - work: {'lambda_0': 1.6e-06, 'FWHM': 2e-08, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 35, 'maxiter': 80, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'plot': False, 'alpha': 0.02, 'NL': 2, 'NH': 3, 'MIN_FEATURE_SIZE': 50.0, 'paras_init': None, 'logger': None, 'taper_angle': 24, 'uuid': '338d'}
+[INFO] - uuid: b60c finished
+[INFO] - uuid: 338d finished
+[INFO] - 0 uuid: b60c finished
+[INFO] - 1 uuid: 338d finished
+[INFO] - Work loader end
