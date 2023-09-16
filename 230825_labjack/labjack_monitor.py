@@ -4,8 +4,8 @@ import os
 from time_util import *
 from email_test import temp_warning, schedule_report
 import threading
-from load_data import plot_data
-
+from load_data import plot_data, load_data
+import numpy as np
 
 #
 _, fileTimeStr, fileDateStr = get_time_date()
@@ -53,7 +53,7 @@ while 1:
 
     # Read AIN0
     result = ljm.eReadName(handle, pinName)
-    tempertureK = 100.0 * result
+    tempertureK = 55.56 * result + 255.37
     tempertureC = tempertureK - 273.15
 
     logging.info("Temperature: %0.1f C" % (tempertureC))
@@ -71,13 +71,15 @@ while 1:
             lastWarning is None
             or (curtime - lastWarning).total_seconds() > ALERT_INTERVAL_S
         ):
-            logging.info("Temperature Warning: %0.1f C" % (tempertureC))
-            lastWarning = curtime
-            img_fileName = plot_data(fileDateStr, span="1H")
-            # create another thread to send email
-            threading.Thread(
-                target=temp_warning, args=(tempertureC, img_fileName)
-            ).start()
+            timedata, tempdata = load_data(fileDateStr, span="1H")
+            if len(tempdata) > 5 and np.mean(tempdata[-5:]) > TEMPERATURE_THRESHOLD:
+                logging.info("Temperature Warning: %0.1f C" % (tempertureC))
+                lastWarning = curtime
+                img_fileName = plot_data(fileDateStr, span="1H")
+                # create another thread to send email
+                threading.Thread(
+                    target=temp_warning, args=(tempertureC, img_fileName)
+                ).start()
 
 
 _, endTimeStr, _ = get_time_date()
