@@ -72,7 +72,7 @@ def load_json(uuid):
         return _default_wrapper(data)
 
 
-def getdataName(uuid):
+def getprefixName(uuid) -> str:
     data = load_json(uuid)
     lambda_0 = data.get("lambda_0", None)
     FWHM = data.get("FWHM", None)
@@ -80,9 +80,14 @@ def getdataName(uuid):
         FWHM is not None
     ), "lambda_0 and FWHM must be specified"
     #
-    dataName = "{:s}_{:.1f}_bw={:.1f}".format(uuid, lambda_0 * 1e9, FWHM * 1e9)
+    prefixName = "{:s}_{:.1f}_bw={:.1f}".format(uuid, lambda_0 * 1e9, FWHM * 1e9)
+    return prefixName
+
+
+def getdataName(uuid) -> str:
+    prefixName = getprefixName(uuid)
     wd = uuid_to_wd(uuid)
-    return os.path.join(wd, dataName)
+    return os.path.join(wd, prefixName)
 
 
 def load_paras(uuid):
