@@ -16,4 +16,5 @@ DEFAULT_PARA = {
     "logger": None,
     "start_radius": 10e-6,
     "taper_angle": 24,
+    "source_angle": 10,
 }

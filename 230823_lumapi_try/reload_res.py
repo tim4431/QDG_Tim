@@ -51,7 +51,7 @@ def reload_work(
     ) as fdtd:
         try:
             # >>> setup simulation <<< #
-            setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension=dimension)
+            setup_source(fdtd, dimension=dimension, **kwargs)
             setup_monitor(
                 fdtd,
                 monitor=monitor,

@@ -807,6 +807,7 @@ if __name__ == "__main__":  # type: ignore
         "FOM_typ": "square",
         "grating_typ": "grating",
         "start_radius": 12e-6,
+        "source_angle": 27,
     }
     for lambda_0 in range(800, 1720, 20):
         work = work_template.copy()
@@ -821,7 +822,7 @@ if __name__ == "__main__":  # type: ignore
     # works = [work_4e25_1280, work_4e25_1370]
     # works = [work_4e25_inverse]
     # works = [work_4e25_packaged, work_4e25_packaged_23, work_grating_1_packaged]
-    work_loader(works, prefix="grating_800-1700_relased,airclad")
+    work_loader(works, prefix="grating_800-1700_released_source27")
     # work_loader(works, prefix="grating_1560,1600_airclad")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)
