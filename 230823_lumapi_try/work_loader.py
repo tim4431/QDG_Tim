@@ -823,6 +823,7 @@ if __name__ == "__main__":  # type: ignore
     # works = [work_4e25_inverse]
     # works = [work_4e25_packaged, work_4e25_packaged_23, work_grating_1_packaged]
     work_loader(works, prefix="grating_800-1700_released_source27")
+    # work_loader(works, prefix="grating_800-1700_released_fiber27")
     # work_loader(works, prefix="grating_1560,1600_airclad")
     # work_loader(works, prefix="4e25_square_bw100_inverse")
     # work_loader(works_test)
