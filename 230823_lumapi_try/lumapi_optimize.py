@@ -354,7 +354,12 @@ def optimize_wrapper(fdtd, paras, **kwargs):
     )  # take care of the minus and plus sign!
 
 
-def setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension="2D"):
+def setup_source(fdtd, dimension="2D", **kwargs):
+    lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
+    FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
+    SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
+    source_angle = kwargs.get("source_angle", DEFAULT_PARA["source_angle"])
+    #
     # set source
     if "gaussian" in SOURCE_typ:
         fdtd.setnamed("source", "center wavelength", lambda_0)
@@ -371,12 +376,12 @@ def setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension="2D"):
     # set dimension of fdtd
     if dimension == "2D":
         fdtd.setnamed("FDTD", "dimension", dimension)
-        fdtd.setnamed("source", "angle theta", -10)
+        fdtd.setnamed("source", "angle theta", -source_angle)
         fdtd.setnamed("source", "polarization angle", 90)  # TE mode
     elif dimension == "3D":
         fdtd.setnamed("FDTD", "dimension", dimension)
         fdtd.setnamed("FDTD", "z min bc", "Anti-Symmetric")
-        fdtd.setnamed("source", "angle theta", -10)
+        fdtd.setnamed("source", "angle theta", -source_angle)
         fdtd.setnamed("source", "angle phi", -90)
         fdtd.setnamed("source", "polarization angle", 90)  # TE mode
         # because the definition of 2D source is different from 3D ver.
@@ -712,7 +717,7 @@ def run_optimize(dataName, **kwargs):
             #
         }
         # >>> setting up simulation <<< #
-        setup_source(fdtd, lambda_0, FWHM, SOURCE_typ, dimension="2D")
+        setup_source(fdtd, dimension="2D",**kwargs)
         setup_monitor(fdtd, monitor=False, movie=False)
         setup_grating_structuregroup(fdtd, **kwargs)
         #
