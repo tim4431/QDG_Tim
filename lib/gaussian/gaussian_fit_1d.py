@@ -22,7 +22,7 @@ def _data_wrapper(x_data, y_data, x_range):
     return x_data, y_data
 
 
-def _annote_wrapper(ax, amp, x0, xl, xr):
+def _annote_wrapper(ax, amp, x0, xl, xr, label=True):
     # center, FWMH
     # get current plot color
     if ax is None:
@@ -42,7 +42,8 @@ def _annote_wrapper(ax, amp, x0, xl, xr):
     # Add labels and legend
     ax.set_xlabel(r"$\lambda$ (nm)")
     ax.set_ylabel(r"$T(\lambda$)")
-    # ax.legend(loc="upper right")
+    if label:
+        ax.legend(loc="upper right")
 
 
 def _fit_gaussian(x_data, y_data, p0):
@@ -159,7 +160,7 @@ def arb_fit_1d(ax, x_data, y_data, name, x_range=None, label=True):
         alpha=0.5,
     )
     #
-    _annote_wrapper(ax, amp, x0, x_left, x_right)
+    _annote_wrapper(ax, amp, x0, x_left, x_right, label=label)
     #
     return amp, x0, FWMH, CE
 

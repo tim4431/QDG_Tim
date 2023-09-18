@@ -9,54 +9,55 @@ from lib.gaussian.gaussian_fit_1d import arb_fit_1d
 if __name__ == "__main__":
     fig, ax = plt.subplots(figsize=(12, 8))
     uuidList = [
-        # "82d5",
-        # "0a7a",
-        # "8e24",
-        # "d491",
-        # "61a5",
-        # "f38f",
-        # "d6b1",
-        # "e00e",
-        # "cf31",
-        # "a67d",
-        "f855",
-        "98f0",
-        "45ec",
-        "686a",
-        "92da",
-        "cde0",
-        "c62e",
-        "c2bc",
-        "4901",
-        "8572",
-        "3442",
-        "de6b",
-        "8977",
-        "c158",
-        "71de",
-        "8cfd",
-        "7081",
-        "6184",
-        "b2a6",
-        "bae3",
-        "3140",
-        "c4e5",
-        "7e80",
-        "1574",
-        "f951",
-        "224e",
-        "231c",
-        "fdb9",
-        "3d59",
-        "6469",
-        "ea47",
-        "1074",
-        "e435",
-        "1920",
-        "f1f8",
+        # "0918",
+        # "caa4",
+        # "e71b",
+        # "498d",
+        # "b920",
+        # "0003",
+        # "7241",
+        # "e0f9",
+        "315c",
+        "aa10",
+        "0ce5",
+        "fb22",
+        "c951",
+        "ae7c",
+        "baaf",
+        "792d",
+        "b1c2",
+        "9f91",
+        "b415",
+        "9acb",
+        "6b48",
+        "b7b6",
+        "0759",
+        "c541",
+        "8b48",
+        "7d44",
+        "b151",
+        "f504",
+        "3616",
+        "2a88",
+        "0022",
+        "39b9",
+        "32fc",
+        "4c2c",
+        "93ea",
+        "1332",
+        "ec72",
+        "209f",
+        "50b3",
+        "a596",
+        "0a0b",
+        "48bb",
+        "1859",
+        "df5e",
+        "dbd6",
+        "a668",
     ]
 
-    lambdaList = range(1020, 1720, 20)
+    lambdaList = range(960, 1720, 20)
     ampList = []
     x0List = []
     dataList = []
@@ -104,7 +105,7 @@ if __name__ == "__main__":
         ax.plot(
             x,
             f2(x, *popt),
-            label=r"$fit={:.2f}*(1+{:.2f}*cos(4\pi*{:.0f}/x{:+.2f}))* (1+{:.0f}*cos(4\pi*{:.2f}/x{:+.2f}))$".format(
+            label=r"$fit={:.2f}*(1+{:.2f}*cos(4\pi*{:.0f}/x{:+.2f}))* (1+{:.2f}*cos(4\pi*{:.0f}/x{:+.2f}))$".format(
                 *popt
             ),
         )
@@ -136,12 +137,14 @@ if __name__ == "__main__":
     )
     #
     print(popt)
-    popt = [0.27, 0.37, 5161, -0.97, 0.19, 560, 1.58]
+    popt = [0.21, 0.66, 3612, -2.02, 0.58, 295, -2.60]
     # plot_data_f1(*popt)
     plot_data_f2(*popt)
     ax.set_xlabel("wavelength (nm)")
     ax.set_ylabel("transmission")
     ax.legend()
     #
-    plt.savefig("grating_sweep_compare_airclad_1.png", dpi=200, bbox_inches="tight")
+    plt.savefig(
+        "grating_sweep_compare_released_2_fiber27.png", dpi=200, bbox_inches="tight"
+    )
     plt.show()
