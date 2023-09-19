@@ -1,12 +1,14 @@
 from labjack import ljm  # type: ignore
 import sys
-
-sys.path.append(r"\\QDG-LABBEAR\\Users\\QDG-LABBEAR-SERVER\\Desktop\\LANAS\\DataBear")
-from RemoteDevice import RemoteDevice  # type: ignore
 from typing import List, Tuple, Union, Any
 
 
+sys.path.append(r"\\QDG-LABBEAR\\Users\\QDG-LABBEAR-SERVER\\Desktop\\LANAS\\DataBear")
+
+
 def init_laser():
+    from RemoteDevice import RemoteDevice  # type: ignore
+
     laser = RemoteDevice("SantecTSL570")
     laser.write_laser_status("On")
     laser.write_wavelength(1326.0)
@@ -15,6 +17,8 @@ def init_laser():
 
 
 def init_picoharp():
+    from RemoteDevice import RemoteDevice  # type: ignore
+
     return RemoteDevice("PicoHarp300")
 
 
