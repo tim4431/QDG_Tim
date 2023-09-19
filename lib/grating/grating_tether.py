@@ -385,7 +385,7 @@ def section_multiskeleton_tether(
             grating_outer,
             grating_angle * (2 / 5),
             N_skeleton=N_skeleton,
-            skeleton_span=(50e-9 / (grating_rad * 1e-6)) / DEG2RAD,
+            skeleton_span=(55e-9 / (grating_rad * 1e-6)) / DEG2RAD,
         )
     #
     _array_tether(c, GL, grating_angle, tether_angle=0, L_tether_bias=2)

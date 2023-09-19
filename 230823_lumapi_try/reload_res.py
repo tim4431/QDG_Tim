@@ -121,45 +121,11 @@ def reload_work(
 
 
 if __name__ == "__main__":
-    # uuid = "38b2"
     #
     reload_work(
         "3ac8",
-        dimension="2D",
-        tether_typ=None,
-        movie=True,
-        pause=True,
+        dimension="3D",
+        tether_typ="empty",
+        pause=False,
         advanced_monitor=False,
     )
-    #
-    # reload_work(
-    #     "5d5e",
-    #     dimension="3D",
-    #     tether_typ="empty",
-    #     pause=False,
-    #     advanced_monitor=False,
-    # )
-    #
-    # reload_work(
-    #     "24d0",
-    #     dimension="3D",
-    #     tether_typ="empty",
-    #     pause=False,
-    #     advanced_monitor=False,
-    # )
-    #
-    # reload_work(
-    #     "ee71",
-    #     dimension="3D",
-    #     tether_typ="section_rect_tether_multisuspend",
-    #     pause=False,
-    #     advanced_monitor=False,
-    # )
-    #
-    # reload_work(
-    #     "ee71",
-    #     dimension="3D",
-    #     tether_typ="section_rect_tether_hole_multisuspend",
-    #     pause=False,
-    #     advanced_monitor=False,
-    # )
