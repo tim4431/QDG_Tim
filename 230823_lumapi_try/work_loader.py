@@ -88,7 +88,7 @@ if __name__ == "__main__":  # type: ignore
     )
     # sweep source_angle from 10 to 30, spacing 5
     work_4e25_sweep_source_angle = work_para_sweeper(
-        work_4e25, np.arange(10, 35, 5), "source_angle"
+        work_4e25, range(10, 35, 5), "source_angle"
     )
     # sourcefixed at 17
     work_4e25_sourcefixed = deepcopy(work_4e25)
