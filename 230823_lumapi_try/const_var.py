@@ -17,4 +17,5 @@ DEFAULT_PARA = {
     "start_radius": 10e-6,
     "taper_angle": 24,
     "source_angle": 10,
+    "source_x": 17e-6,
 }

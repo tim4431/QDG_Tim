@@ -43,21 +43,9 @@ def calculate_FOM(l, T, **kwargs):
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
     alpha = kwargs.get("alpha", DEFAULT_PARA["alpha"])
     FOM_typ = kwargs.get("FOM_typ", DEFAULT_PARA["FOM_typ"])
-    grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
 
     # >>> analysis <<< #
-    if grating_typ == "subw_grating":
-        _crop_range = 3 * FWHM
-    elif grating_typ == "apodized_subw_grating":
-        _crop_range = 3 * FWHM
-    elif grating_typ == "inverse_grating":
-        _crop_range = 3 * FWHM
-    elif grating_typ == "grating":
-        _crop_range = 3 * FWHM
-    elif grating_typ == "apodized_grating":
-        _crop_range = 3 * FWHM
-    else:
-        raise ValueError("calculate_FOM: Invalid grating_typ: {:s}".format(grating_typ))
+    _crop_range = 3 * FWHM
     l_c, T_c = analysis.data_crop(l, T, lambda_0, _crop_range)
     T_des = analysis.gaussian_curve(l_c, lambda_0, FWHM)
     cross_correlation = analysis.cross_correlation(T_c, T_des)
@@ -106,6 +94,18 @@ def set_params(fdtd, paras, **kwargs):
         ff = paras[3]
         fdtd.setnamed(grating_typ, "ff", ff)
         fiberx = paras[4]
+        #
+    elif grating_typ == "subw_grating_sourcefixed":
+        #
+        Lambda = paras[0]
+        fdtd.setnamed(grating_typ, "Lambda", Lambda)
+        ffL = paras[1]
+        fdtd.setnamed(grating_typ, "ffL", ffL)
+        ffH = paras[2]
+        fdtd.setnamed(grating_typ, "ffH", ffH)
+        ff = paras[3]
+        fdtd.setnamed(grating_typ, "ff", ff)
+        fiberx = kwargs.get("source_x", DEFAULT_PARA["source_x"])
         #
     elif grating_typ == "apodized_subw_grating":
         # i for initial, f for final
@@ -169,7 +169,7 @@ def calc_min_feature(paras, **kwargs) -> float:
     grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
     #
-    if grating_typ == "subw_grating":
+    if grating_typ in ["subw_grating", "subw_grating_sourcefixed"]:
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
         NH = kwargs.get("NH", DEFAULT_PARA["NH"])
         #
@@ -426,7 +426,7 @@ def setup_grating_structuregroup(fdtd, **kwargs):
     fdtd.adduserprop("taper_angle", 0, taper_angle)
     fdtd.adduserprop("wg_h", 2, 220e-9)
     #
-    if grating_typ in ["subw_grating"]:
+    if grating_typ in ["subw_grating", "subw_grating_sourcefixed"]:
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
         NH = kwargs.get("NH", DEFAULT_PARA["NH"])
         #
@@ -617,6 +617,9 @@ def get_paras_bound(**kwargs):
             raise ValueError(
                 "get_paras_bound: Invalid SOURCE_typ: {:s}".format(SOURCE_typ)
             )
+    elif grating_typ == "subw_grating_sourcefixed":  # [Lambda, ffL, ffH, ff]
+        paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3], dtype=np.float_)
+        paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7], dtype=np.float_)
     elif (
         grating_typ == "apodized_subw_grating"
     ):  # [Lambda_i, Lambda_f, ffL_i, ffL_f, ffH_i, ffH_f, ff_i, ff_f, fiberx]
@@ -717,7 +720,7 @@ def run_optimize(dataName, **kwargs):
             #
         }
         # >>> setting up simulation <<< #
-        setup_source(fdtd, dimension="2D",**kwargs)
+        setup_source(fdtd, dimension="2D", **kwargs)
         setup_monitor(fdtd, monitor=False, movie=False)
         setup_grating_structuregroup(fdtd, **kwargs)
         #
