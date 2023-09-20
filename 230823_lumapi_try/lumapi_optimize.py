@@ -441,7 +441,7 @@ def setup_grating_structuregroup(fdtd, **kwargs):
         fdtd.setnamed(
             grating_typ,
             "script",
-            load_script("{:s}_concentric.lsf".format(grating_typ)),
+            load_script("subw_grating_concentric.lsf"),
         )
     elif grating_typ == "apodized_subw_grating":
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
