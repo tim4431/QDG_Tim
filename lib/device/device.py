@@ -12,6 +12,7 @@ def init_laser():
     laser = RemoteDevice("SantecTSL570")
     laser.write_laser_status("On")
     laser.write_wavelength(1326.0)
+    laser.write_power(-15.0)
     laser.write_coherence_control("Off")
     return laser
 
