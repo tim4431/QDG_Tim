@@ -88,7 +88,7 @@ if __name__ == "__main__":  # type: ignore
     )
     # sweep source_angle from 10 to 30, spacing 5
     work_4e25_sweep_source_angle = work_para_sweeper(
-        work_4e25, np.arange(10, 35, 5), "source_angle"
+        work_4e25, range(10,35,5), "source_angle"
     )
     # sourcefixed at 17
     work_4e25_sourcefixed = deepcopy(work_4e25)
@@ -99,8 +99,8 @@ if __name__ == "__main__":  # type: ignore
         work_4e25_sourcefixed, np.arange(1296, 1366, 10) * 1e-9, "lambda_0"
     )
     # merge works
-    works = work_4e25_sweep_lambda + work_4e25_sweep_source_angle
-    # works = work_4e25_sweep_lambda_sourcefixed
+    # works = work_4e25_sweep_lambda + work_4e25_sweep_source_angle
+    works = work_4e25_sweep_lambda + work_4e25_sweep_source_angle+work_4e25_sweep_lambda_sourcefixed
     print(len(works))
     #
     work_loader(works, "4e25_sweep_lambda_source_angle")
