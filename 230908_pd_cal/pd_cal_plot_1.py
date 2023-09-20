@@ -11,6 +11,8 @@ for att in np.arange(9.00, 13.50, 0.5):
     p_calc = p_lookup[8.5] * (10 ** ((att - 8.5) / 10))
     p_lookup[att] = p_calc
 p_max = np.max(list(p_lookup.values()))
+print(p_lookup)
+exit(0)
 
 
 def char_photodiode(
