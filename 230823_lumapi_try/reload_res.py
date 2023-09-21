@@ -37,8 +37,8 @@ def reload_work(
             print("Unknown key: {:s}".format(key))
     #
     paras = load_paras(uuid)
-    kwargs["source_angle"]=14.85
-    paras[0] = paras[0] * (1325/1360)
+    # kwargs["source_angle"]=14.85
+    # paras[0] = paras[0] * (1325/1360)
     print("Loaded paras: ", paras)
     # >>> load kwargs <<< #
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
