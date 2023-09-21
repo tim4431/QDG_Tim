@@ -92,6 +92,6 @@ if __name__ == "__main__":  # type: ignore
     # 639a_minback
     work_grating_639a_minback = work_grating_639a
     work_grating_639a_minback["simulation_typ"] = 2
-    works = [work_4e25_minback, work_grating_639a_minback]
+    works = [work_grating_639a_minback, work_4e25_minback]
     #
     work_loader(works, "min_back,4e25,639a_test")
