@@ -11,6 +11,7 @@ from copy import deepcopy
 from merge_data_transmission import merge_data_transmission
 import time
 
+
 def work_loader(workList, prefix, merge_data=False):
     cwd = os.getcwd()
     now = datetime.now()
@@ -81,10 +82,16 @@ def work_para_sweeper(work_template, sweep_range, sweep_var_name):
 
 if __name__ == "__main__":  # type: ignore
     print("sleeping")
-    time.sleep(3600*5)
-    from works.w_230918_4e25 import work_4e25
-    work_4e25_minback=work_4e25
-    work_4e25_minback["simulation_typ"]=2
-    works=[]
+    time.sleep(3600 * 5)
+    from works.w_subw_4e25 import work_4e25
+    from works.w_grating_639a import work_grating_639a
+
+    # 4e25_minback
+    work_4e25_minback = work_4e25
+    work_4e25_minback["simulation_typ"] = 2
+    # 639a_minback
+    work_grating_639a_minback = work_grating_639a
+    work_grating_639a_minback["simulation_typ"] = 2
+    works = [work_4e25_minback, work_grating_639a_minback]
     #
-    work_loader(works, "4e25_sweep_lambda_source_angle_2")
+    work_loader(works, "min_back,4e25,639a_test")
