@@ -184,7 +184,7 @@ def section_mask(
     return c
 
 
-section_rect_mask = gf.partial(section_mask, width_factor=0.8)
+section_rect_mask = gf.partial(section_mask, width_factor=0.8)  # type: ignore
 
 
 def add_skeleton(
@@ -196,7 +196,8 @@ def add_skeleton(
     skeleton_span: float,
     **kwargs,
 ):
-    # skeleton
+    DEG2RAD = np.pi / 180
+    # >>> create center angles <<<
     if N_skeleton == 1:
         center_angles = [0]
     else:
@@ -205,16 +206,30 @@ def add_skeleton(
             grating_angle - skeleton_span / 2,
             N_skeleton,
         )
-    single_skeleton = gf.components.ring(
-        radius=(grating_length_inner + grating_length_outer) / 2,
-        width=(grating_length_outer - grating_length_inner),
-        angle_resolution=0.1,
-        angle=skeleton_span,
-        **kwargs,
-    )
-    for center_angle in center_angles:
-        skeleton_ref = c << single_skeleton
-        skeleton_ref.rotate(center_angle - skeleton_span / 2, center=(0, 0))
+    # >>> create skeleton <<<
+    grating_length_mean = (grating_length_inner + grating_length_outer) / 2
+    grating_thickness = grating_length_outer - grating_length_inner
+    if (skeleton_span < 5) and (grating_thickness < 1):  # use rectangle to approximate
+        single_skeleton = gf.components.rectangle(
+            size=(grating_thickness, skeleton_span * DEG2RAD * grating_length_mean),
+            layer="WG",
+            centered=True,
+        )
+        for center_angle in center_angles:
+            skeleton_ref = c << single_skeleton
+            skeleton_ref.move((grating_length_mean, 0))
+            skeleton_ref.rotate(center_angle, center=(0, 0))
+    else:
+        single_skeleton = gf.components.ring(
+            radius=grating_length_mean,
+            width=grating_thickness,
+            angle_resolution=0.1,
+            angle=skeleton_span,
+            **kwargs,
+        )
+        for center_angle in center_angles:
+            skeleton_ref = c << single_skeleton
+            skeleton_ref.rotate(center_angle - skeleton_span / 2, center=(0, 0))
 
 
 @gf.cell

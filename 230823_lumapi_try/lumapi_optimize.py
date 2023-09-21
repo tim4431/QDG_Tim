@@ -38,7 +38,9 @@ def process_data(fdtd, SOURCE_typ) -> tuple:
     return l, T
 
 
-def calculate_FOM(l, T, **kwargs):
+def calculate_FOM(
+    l, T, crop_factor: float = 3.0, **kwargs
+) -> Tuple[float, float, float, float]:
     # >>> load paras <<< #
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
@@ -46,7 +48,7 @@ def calculate_FOM(l, T, **kwargs):
     FOM_typ = kwargs.get("FOM_typ", DEFAULT_PARA["FOM_typ"])
 
     # >>> analysis <<< #
-    _crop_range = 3 * FWHM
+    _crop_range = crop_factor * FWHM
     l_c, T_c = analysis.data_crop(l, T, lambda_0, _crop_range)
     T_des = analysis.gaussian_curve(l_c, lambda_0, FWHM)
     cross_correlation = analysis.cross_correlation(T_c, T_des)
@@ -274,7 +276,8 @@ def fdtd_iter(
             set_params(fdtd, paras, **kwargs)
         fdtd.run()
         lT, T = process_data(fdtd, SOURCE_typ)
-        maxT, lambda_maxT, FWHM_fit_T, FOMT = calculate_FOM(lT, T, **kwargs)  # type: ignore
+        maxT, lambda_maxT, FWHM_fit_T, FOMT = calculate_FOM(lT, T, crop_factor=3.0, **kwargs)  # type: ignore
+    #
     # >>> run simulation, backward, 2 <<< #
     if simulation_typ in [1, 2]:
         fdtd.switchtolayout()
@@ -283,7 +286,8 @@ def fdtd_iter(
             set_params(fdtd, paras, **kwargs)
         fdtd.run()
         lR, R = process_data(fdtd, SOURCE_typ)
-        maxR, lambda_maxR, FWHM_fit_R, FOMR = calculate_FOM(lR, R, **kwargs)  # type: ignore
+        maxR, lambda_maxR, FWHM_fit_R, FOMR = calculate_FOM(lR, R, crop_factor=1.0, **kwargs)  # type: ignore
+    #
     # >>> Return result
     if simulation_typ == 0:
         return lT, T, np.zeros_like(lT), maxT, lambda_maxT, FWHM_fit_T, FOMT  # type: ignore
