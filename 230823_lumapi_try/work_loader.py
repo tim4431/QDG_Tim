@@ -9,7 +9,7 @@ import shutil
 import numpy as np
 from copy import deepcopy
 from merge_data_transmission import merge_data_transmission
-
+import time
 
 def work_loader(workList, prefix, merge_data=False):
     cwd = os.getcwd()
@@ -80,6 +80,8 @@ def work_para_sweeper(work_template, sweep_range, sweep_var_name):
 
 
 if __name__ == "__main__":  # type: ignore
+    print("sleeping")
+    time.sleep(3600*5)
     from works.w_230918_4e25 import work_4e25
 
     # # sweep lambda from 1296 to 1356, spacing 10

@@ -13,7 +13,7 @@ import sys
 import os
 import matplotlib.pyplot as plt
 from create_gds import generate_gds_fileName
-
+import time
 sys.path.append("..")
 
 
@@ -37,7 +37,8 @@ def reload_work(
             print("Unknown key: {:s}".format(key))
     #
     paras = load_paras(uuid)
-    # paras[0] = paras[0] * 1.05
+    kwargs["source_angle"]=14.85
+    paras[0] = paras[0] * (1325/1360)
     print("Loaded paras: ", paras)
     # >>> load kwargs <<< #
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
@@ -123,9 +124,9 @@ def reload_work(
 if __name__ == "__main__":
     #
     reload_work(
-        "3ac8",
+        "666e",
         dimension="3D",
-        tether_typ="empty",
+        tether_typ=None,
         pause=False,
         advanced_monitor=False,
     )

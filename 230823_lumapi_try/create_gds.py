@@ -116,8 +116,8 @@ if __name__ == "__main__":
         "section_rect_tether_multisuspend_unbox",  # 11
         "section_rect_tether_hole_multisuspend_unbox",  # 12
     ]
-    uuid = "3ac8"
-    idx_list = [0, 11]
+    uuid = "666e"
+    idx_list = [0]
     for idx in idx_list:
         tether_typ = tether_typ_avail_list[idx]
         gds_fileName = create_gds(uuid, tether_typ=tether_typ)
