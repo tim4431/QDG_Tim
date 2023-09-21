@@ -58,7 +58,7 @@ def calculate_FOM(l, T, **kwargs):
     # >>> FOM <<< #
     if FOM_typ == "square":
         # print("square")
-        print(norm_T, norm_cross_correlation)
+        # print(norm_T, norm_cross_correlation)
         # FOM = float((norm_T + alpha) * norm_cross_correlation)
         FOM = float(norm_T * norm_cross_correlation)
     elif FOM_typ == "linear":
@@ -376,7 +376,7 @@ def optimize_wrapper(fdtd, paras, plot=False, **kwargs):
         # twin axis to plot FWHM
         fig_FWHM_his.set_data(np.arange(len(FWHMHist)), np.asarray(FWHMHist) * 1e9)
         axs[1, 2].relim()
-        axs[1, 2].autosc0ale_view()
+        axs[1, 2].autoscale_view()
         #
         fig.canvas.flush_events()
     #
