@@ -38,20 +38,16 @@ def process_data(fdtd, SOURCE_typ) -> tuple:
     return l, T
 
 
-def calculate_FOM(
-    l, T, crop_factor: float = 3.0, **kwargs
-) -> Tuple[float, float, float, float]:
+def calculate_FOM_T(l, T, **kwargs) -> Tuple[float, float, float, float]:
     # >>> load paras <<< #
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
-    # alpha = kwargs.get("alpha", DEFAULT_PARA["alpha"])
     FOM_typ = kwargs.get("FOM_typ", DEFAULT_PARA["FOM_typ"])
 
     # >>> analysis <<< #
-    _crop_range = crop_factor * FWHM
+    _crop_range = 3 * FWHM
     l_c, T_c = analysis.data_crop(l, T, lambda_0, _crop_range)
     T_des = analysis.gaussian_curve(l_c, lambda_0, FWHM)
-    cross_correlation = analysis.cross_correlation(T_c, T_des)
     norm_cross_correlation = analysis.norm_cross_correlation(T_c, T_des)
     maxT, lambda_maxT, FWHM_fit, CE = arb_fit_1d(False, l, T, "")  # type: ignore
     norm_T = analysis.mean_alpha(T_c, 2)
@@ -59,23 +55,41 @@ def calculate_FOM(
 
     # >>> FOM <<< #
     if FOM_typ == "square":
-        # print("square")
-        # print(norm_T, norm_cross_correlation)
         # FOM = float((norm_T + alpha) * norm_cross_correlation)
         FOM = float(norm_T * norm_cross_correlation)
     elif FOM_typ == "linear":
-        # print("linear")
-        # T_c1 = _data_crop(l, T, lambda_0, FWHM)
-        # mean_CE = _mean_CE(T_c1)
-        # print(mean_CE)
         FOM = float(norm_T * (FWHM / FWHM_fit))
-        # FWHM_range = 30e-9
-        # FOM = float(maxT * FWHM_range / (FWHM_range + np.abs(FWHM_fit - FWHM)))
-        # FOM = float(((T_div + alpha) ** 0.2) * norm_cross_correlation)
     elif FOM_typ == "single":
         # print("single")
         T_0 = analysis.T_0(l, lambda_0, T)
         FOM = float(norm_cross_correlation * T_0)
+    else:
+        raise ValueError("Invalid FOM_typ: {:s}".format(FOM_typ))
+    #
+    return maxT, lambda_maxT, FWHM_fit, FOM
+
+
+def calculate_FOM_TR(l, T, R, **kwargs) -> Tuple[float, float, float, float]:
+    # >>> load paras <<< #
+    lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
+    FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
+    FOM_typ = kwargs.get("FOM_typ", DEFAULT_PARA["FOM_typ"])
+
+    # >>> analysis <<< #
+    _crop_range = 3 * FWHM
+    l_c, T_c = analysis.data_crop(l, T, lambda_0, _crop_range)
+    T_des = analysis.gaussian_curve(l_c, lambda_0, FWHM)
+    norm_cross_correlation = analysis.norm_cross_correlation(T_c, T_des)
+    maxT, lambda_maxT, FWHM_fit, CE = arb_fit_1d(False, l, T, "")  # type: ignore
+    norm_T = analysis.mean_alpha(T_c, 2)
+    #
+    _crop_range = 1 * FWHM
+    l_c, R_c = analysis.data_crop(l, R, lambda_0, _crop_range)
+    norm_R = analysis.mean_alpha(R_c, 2)
+
+    # >>> FOM <<< #
+    if FOM_typ == "square":
+        FOM = float((norm_T - norm_R) * norm_cross_correlation)
     else:
         raise ValueError("Invalid FOM_typ: {:s}".format(FOM_typ))
     #
@@ -276,7 +290,6 @@ def fdtd_iter(
             set_params(fdtd, paras, **kwargs)
         fdtd.run()
         lT, T = process_data(fdtd, SOURCE_typ)
-        maxT, lambda_maxT, FWHM_fit_T, FOMT = calculate_FOM(lT, T, crop_factor=3.0, **kwargs)  # type: ignore
     #
     # >>> run simulation, backward, 2 <<< #
     if simulation_typ in [1, 2]:
@@ -286,15 +299,17 @@ def fdtd_iter(
             set_params(fdtd, paras, **kwargs)
         fdtd.run()
         lR, R = process_data(fdtd, SOURCE_typ)
-        maxR, lambda_maxR, FWHM_fit_R, FOMR = calculate_FOM(lR, R, crop_factor=1.0, **kwargs)  # type: ignore
     #
     # >>> Return result
     if simulation_typ == 0:
+        maxT, lambda_maxT, FWHM_fit_T, FOMT = calculate_FOM_T(lT, T, **kwargs)# type: ignore
         return lT, T, np.zeros_like(lT), maxT, lambda_maxT, FWHM_fit_T, FOMT  # type: ignore
     elif simulation_typ == 1:
+        maxR, lambda_maxR, FWHM_fit_R, FOMR = calculate_FOM_T(lR, R, **kwargs)# type: ignore
         return lR, np.zeros_like(lR), R, maxR, lambda_maxR, FWHM_fit_R, FOMR  # type: ignore
     elif simulation_typ == 2:
-        return lT, T, R, maxT, lambda_maxT, FWHM_fit_T, FOMT - FOMR  # type: ignore
+        maxT, lambda_maxT, FWHM_fit_T, FOMTR = calculate_FOM_TR(lT, T, R, **kwargs)# type: ignore
+        return lT, T, R, maxT, lambda_maxT, FWHM_fit_T, FOMTR  # type: ignore
     else:
         raise ValueError("Invalid simulation_typ")
 
