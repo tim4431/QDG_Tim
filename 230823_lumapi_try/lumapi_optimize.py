@@ -268,8 +268,8 @@ def fdtd_iter(
     #
     # >>> run simulation, forward, 1 <<< #
     if simulation_typ in [0, 2]:
-        setup_source(fdtd, dimension="2D", simulation_dir=0, **kwargs)
         fdtd.switchtolayout()
+        setup_source(fdtd, dimension="2D", simulation_dir=0, **kwargs)
         if not reload_gds:
             set_params(fdtd, paras, **kwargs)
         fdtd.run()
@@ -277,8 +277,8 @@ def fdtd_iter(
         maxT, lambda_maxT, FWHM_fit_T, FOMT = calculate_FOM(lT, T, **kwargs)  # type: ignore
     # >>> run simulation, backward, 2 <<< #
     if simulation_typ in [1, 2]:
-        setup_source(fdtd, dimension="2D", simulation_dir=1, **kwargs)
         fdtd.switchtolayout()
+        setup_source(fdtd, dimension="2D", simulation_dir=1, **kwargs)
         if not reload_gds:
             set_params(fdtd, paras, **kwargs)
         fdtd.run()
