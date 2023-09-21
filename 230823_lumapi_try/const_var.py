@@ -2,7 +2,7 @@ DEFAULT_PARA = {
     "plot": False,
     "lambda_0": 1.326e-6,
     "FWHM": 0.0833e-6,
-    "alpha": 0.02,
+    "alpha": 0.00,
     "penalty": [[0.01, 10e-9]],
     "SOURCE_typ": "gaussian_released",
     "NL": 2,

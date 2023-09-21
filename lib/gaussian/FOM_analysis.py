@@ -52,7 +52,7 @@ class FOM_analysis:
     def mean_CE(self, f):
         return np.mean(10 * np.log10(np.asarray(f)))
 
-    def cw_penalty(self, penalty, lambda_0, lambda_maxT) -> float:
+    def center_wavelength_penalty(self, penalty, lambda_0, lambda_maxT) -> float:
         """penalty for center wavelength shifting"""
         _sum = 0
         for p_coeff, lambda_range in penalty:
@@ -60,3 +60,12 @@ class FOM_analysis:
                 p_coeff * lambda_range / (lambda_range + np.abs(lambda_0 - lambda_maxT))
             )
         return float(_sum)
+
+    def feature_size_penalty(self, feature_size, MIN_FEATURE_SIZE) -> float:
+        fs_penalty = (
+            0.3
+            * int(feature_size < MIN_FEATURE_SIZE)
+            * (MIN_FEATURE_SIZE - feature_size)
+            / MIN_FEATURE_SIZE
+        )
+        return fs_penalty

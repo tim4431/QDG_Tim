@@ -1,1 +1,1 @@
-print("gaussian" in "gaussian_released")
+print(1 & 2)

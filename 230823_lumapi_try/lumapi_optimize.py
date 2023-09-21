@@ -10,6 +10,7 @@ from lib.gaussian.gaussian_fit_1d import arb_fit_1d
 from lib.lumerical.util import add_lumerical_path
 from lib.gaussian.FOM_analysis import FOM_analysis
 from json_uuid import load_json, uuid_to_wd, load_paras, getdataName
+from typing import Union, List, Tuple, Dict, Any, Optional, Callable, Iterable
 
 analysis = FOM_analysis()
 
@@ -19,7 +20,7 @@ add_lumerical_path()
 from const_var import DEFAULT_PARA
 
 
-def process_data(fdtd, SOURCE_typ):
+def process_data(fdtd, SOURCE_typ) -> tuple:
     if "gaussian" in SOURCE_typ:
         res = fdtd.getresult("output", "T")
         mod_overlap = fdtd.getresult("output_TE", "expansion for output_TE")
@@ -41,7 +42,7 @@ def calculate_FOM(l, T, **kwargs):
     # >>> load paras <<< #
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
-    alpha = kwargs.get("alpha", DEFAULT_PARA["alpha"])
+    # alpha = kwargs.get("alpha", DEFAULT_PARA["alpha"])
     FOM_typ = kwargs.get("FOM_typ", DEFAULT_PARA["FOM_typ"])
 
     # >>> analysis <<< #
@@ -50,15 +51,16 @@ def calculate_FOM(l, T, **kwargs):
     T_des = analysis.gaussian_curve(l_c, lambda_0, FWHM)
     cross_correlation = analysis.cross_correlation(T_c, T_des)
     norm_cross_correlation = analysis.norm_cross_correlation(T_c, T_des)
-    # maxT, lambda_maxT = _T_max(l, T)
     maxT, lambda_maxT, FWHM_fit, CE = arb_fit_1d(False, l, T, "")  # type: ignore
     norm_T = analysis.mean_alpha(T_c, 2)
+    #
 
     # >>> FOM <<< #
     if FOM_typ == "square":
         # print("square")
         print(norm_T, norm_cross_correlation)
-        FOM = float((norm_T + alpha) * norm_cross_correlation)
+        # FOM = float((norm_T + alpha) * norm_cross_correlation)
+        FOM = float(norm_T * norm_cross_correlation)
     elif FOM_typ == "linear":
         # print("linear")
         # T_c1 = _data_crop(l, T, lambda_0, FWHM)
@@ -251,59 +253,82 @@ def calc_min_feature(paras, **kwargs) -> float:
         )
 
 
-def fdtd_iter(fdtd, paras, reload_gds=False, **kwargs):
-    """l, T, maxT, FOM=fdtd_iter(fdtd, paras, **kwargs)"""
+def fdtd_iter(
+    fdtd, paras, simulation_typ: int, reload_gds=False, **kwargs
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, float, float, float, float]:
+    """
+    - l, T, R, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(fdtd, paras, simulation_typ, reload_gds, **kwargs)
+    - simulation_typ (int): 0 - forward only, 1 - back reflection only, 2 - both
+    """
     #
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     #
-    fdtd.switchtolayout()
-    if not reload_gds:
-        set_params(fdtd, paras, **kwargs)
-    fdtd.run()
-    l, T = process_data(fdtd, SOURCE_typ)
-    #
-    maxT, lambda_maxT, FWHM_fit, FOM = calculate_FOM(l, T, **kwargs)
-    #
-    return l, T, maxT, lambda_maxT, FWHM_fit, FOM
+    # >>> run simulation, forward, 1 <<< #
+    if simulation_typ in [0, 2]:
+        setup_source(fdtd, dimension="2D", simulation_typ=0, **kwargs)
+        fdtd.switchtolayout()
+        if not reload_gds:
+            set_params(fdtd, paras, **kwargs)
+        fdtd.run()
+        lT, T = process_data(fdtd, SOURCE_typ)
+        maxT, lambda_maxT, FWHM_fit_T, FOMT = calculate_FOM(lT, T, **kwargs)  # type: ignore
+    # >>> run simulation, backward, 2 <<< #
+    if simulation_typ in [1, 2]:
+        setup_source(fdtd, dimension="2D", simulation_typ=1, **kwargs)
+        fdtd.switchtolayout()
+        if not reload_gds:
+            set_params(fdtd, paras, **kwargs)
+        fdtd.run()
+        lR, R = process_data(fdtd, SOURCE_typ)
+        maxR, lambda_maxR, FWHM_fit_R, FOMR = calculate_FOM(lR, R, **kwargs)  # type: ignore
+    # >>> Return result
+    if simulation_typ == 0:
+        return lT, T, np.zeros_like(lT), maxT, lambda_maxT, FWHM_fit_T, FOMT  # type: ignore
+    elif simulation_typ == 1:
+        return lR, np.zeros_like(lR), R, maxR, lambda_maxR, FWHM_fit_R, FOMR  # type: ignore
+    elif simulation_typ == 2:
+        return lT, T, R, maxT, lambda_maxT, FWHM_fit_T, FOMT - FOMR  # type: ignore
+    else:
+        raise ValueError("Invalid simulation_typ")
 
 
-def optimize_wrapper(fdtd, paras, **kwargs):
+def optimize_wrapper(fdtd, paras, plot=False, **kwargs):
+    # >>> Plot <<< #
     fig = kwargs.get("fig", None)
     axs = kwargs.get("axs", None)
     fig_transmission = kwargs.get("fig_transmission", None)
+    fig_reflection = kwargs.get("fig_reflection", None)
     fig_FOM_his = kwargs.get("fig_FOM_his", None)
     fig_feature_his = kwargs.get("fig_feature_his", None)
     fig_lambda0_his = kwargs.get("fig_lambda0_his", None)
     fig_FWHM_his = kwargs.get("fig_FWHM_his", None)
-    plot = kwargs.get("plot", False)
+    #
     # >>> History <<< #
     transmissionHist = kwargs.get("transmissionHist", [])
+    reflectionHist = kwargs.get("reflectionHist", [])
     parasHist = kwargs.get("parasHist", [])
     FOMHist = kwargs.get("FOMHist", [])
     featureHist = kwargs.get("featureHist", [])
     lambda0Hist = kwargs.get("lambda0Hist", [])
     FWHMHist = kwargs.get("FWHMHist", [])
+    #
     # >>> Analyse <<< #
-    l, T, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(
-        fdtd, paras, reload=False, **kwargs
+    simulation_typ = kwargs.get("simulation_typ", DEFAULT_PARA["simulation_typ"])
+    l, T, R, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(
+        fdtd, paras, simulation_typ=simulation_typ, reload=False, **kwargs
     )
     #
     # >>> Figure of merit <<< #
     # Feature size penalty
     feature_size = calc_min_feature(paras, **kwargs)
     MIN_FEATURE_SIZE = kwargs.get("MIN_FEATURE_SIZE", DEFAULT_PARA["MIN_FEATURE_SIZE"])
-    feature_size_penalty = (
-        0.3
-        * int(feature_size < MIN_FEATURE_SIZE)
-        * (MIN_FEATURE_SIZE - feature_size)
-        / MIN_FEATURE_SIZE
-    )
+    feature_size_penalty = analysis.feature_size_penalty(feature_size, MIN_FEATURE_SIZE)
     # Center wavelength penalty
     penalty = kwargs.get("penalty", DEFAULT_PARA["penalty"])
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
-    cw_penalty = analysis.cw_penalty(penalty, lambda_0, lambda_maxT)
-    print("penalty: ", cw_penalty)
+    cw_penalty = analysis.center_wavelength_penalty(penalty, lambda_0, lambda_maxT)
     #
+    # >>> Logging <<< #
     logger = kwargs.get("logger", DEFAULT_PARA["logger"])
     if logger is not None:
         logger.info("Iter: {:d}".format(len(FOMHist)))
@@ -315,6 +340,7 @@ def optimize_wrapper(fdtd, paras, **kwargs):
         logger.info("feature_size = {:.1f}".format(feature_size * 1e9))
     #
     transmissionHist.append((l, T))
+    reflectionHist.append((l, R))
     parasHist.append(paras)
     FOMHist.append(FOM)
     featureHist.append(feature_size)
@@ -326,25 +352,29 @@ def optimize_wrapper(fdtd, paras, **kwargs):
         axs[0, 0].relim()
         axs[0, 0].autoscale_view()
         #
-        fig_FOM_his.set_data(np.arange(len(FOMHist)), FOMHist)
+        fig_reflection.set_data(l, R)
         axs[0, 1].relim()
         axs[0, 1].autoscale_view()
+        #
+        fig_FOM_his.set_data(np.arange(len(FOMHist)), FOMHist)
+        axs[0, 2].relim()
+        axs[0, 2].autoscale_view()
         # twin axis to plot feature size
         fig_feature_his.set_data(
             np.arange(len(featureHist)), np.asarray(featureHist) * 1e9
         )
-        axs[0, 2].relim()
-        axs[0, 2].autoscale_view()
+        axs[1, 0].relim()
+        axs[1, 0].autoscale_view()
         #
         fig_lambda0_his.set_data(
             np.arange(len(lambda0Hist)), np.asarray(lambda0Hist) * 1e9
         )
-        axs[1, 0].relim()
-        axs[1, 0].autoscale_view()
-        # twin axis to plot FWHM
-        fig_FWHM_his.set_data(np.arange(len(FWHMHist)), np.asarray(FWHMHist) * 1e9)
         axs[1, 1].relim()
         axs[1, 1].autoscale_view()
+        # twin axis to plot FWHM
+        fig_FWHM_his.set_data(np.arange(len(FWHMHist)), np.asarray(FWHMHist) * 1e9)
+        axs[1, 2].relim()
+        axs[1, 2].autosc0ale_view()
         #
         fig.canvas.flush_events()
     #
@@ -354,26 +384,23 @@ def optimize_wrapper(fdtd, paras, **kwargs):
     )  # take care of the minus and plus sign!
 
 
-def setup_source(fdtd, dimension="2D", **kwargs):
+def setup_source(fdtd, dimension="2D", simulation_typ: int = 0, **kwargs):
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     source_angle = kwargs.get("source_angle", DEFAULT_PARA["source_angle"])
     #
-    # set source
+    # >>> set source span and wavelength <<< #
     if "gaussian" in SOURCE_typ:
         fdtd.setnamed("source", "center wavelength", lambda_0)
         fdtd.setnamed("source", "wavelength span", max(400e-9, FWHM * 3))
+        fdtd.setnamed("source_wg", "center wavelength", lambda_0)
+        fdtd.setnamed("source_wg", "wavelength span", max(400e-9, FWHM * 3))
         fdtd.setnamed("output_TE", "wavelength center", lambda_0)
         fdtd.setnamed("output_TE", "wavelength span", max(400e-9, FWHM * 3))
-    elif SOURCE_typ == "fiber":
-        fdtd.setglobalsource("center wavelength", lambda_0)
-        fdtd.setglobalsource("wavelength span", max(400e-9, FWHM * 3))
-    # set monitor
-    fdtd.setglobalmonitor(
-        "frequency points", 300
-    )  # setting the global frequency resolution
-    # set dimension of fdtd
+    else:
+        raise ValueError("setup_source: Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
+    # >>> set gaussian source angle <<< #
     if dimension == "2D":
         fdtd.setnamed("FDTD", "dimension", dimension)
         fdtd.setnamed("source", "angle theta", -source_angle)
@@ -385,6 +412,21 @@ def setup_source(fdtd, dimension="2D", **kwargs):
         fdtd.setnamed("source", "angle phi", -90)
         fdtd.setnamed("source", "polarization angle", 90)  # TE mode
         # because the definition of 2D source is different from 3D ver.
+    # >>> set source type <<< #
+    if simulation_typ == 0:  # forward
+        fdtd.setnamed("source", "enabled", 1)
+        fdtd.setnamed("source_wg", "enabled", 0)
+    elif simulation_typ == 1:  # backward
+        fdtd.setnamed("source", "enabled", 0)
+        fdtd.setnamed("source_wg", "enabled", 1)
+    else:
+        raise ValueError(
+            "setup_source: Invalid simulation_typ: {:d}".format(simulation_typ)
+        )
+    # >>> set monitor <<< #
+    fdtd.setglobalmonitor(
+        "frequency points", 300
+    )  # setting the global frequency resolution
 
 
 def setup_monitor(fdtd, monitor=False, movie=False, advanced_monitor=False):
@@ -650,6 +692,7 @@ def get_paras_bound(**kwargs):
 
 def run_optimize(dataName, **kwargs):
     transmissionHist = []
+    reflectionHist = []
     parasHist = []
     FOMHist = []
     featureHist = []
@@ -688,22 +731,23 @@ def run_optimize(dataName, **kwargs):
     fig.subplots_adjust(wspace=0.3, hspace=0.3)
     (fig_transmission,) = axs[0, 0].plot([], [])
     axs[0, 0].set_title("Transmission")
-    (fig_FOM_his,) = axs[0, 1].plot([], [])
-    axs[0, 1].set_title("FOM")
-    (fig_feature_his,) = axs[0, 2].plot([], [])
-    axs[0, 2].set_title("Feature size")
-    (fig_lambda0_his,) = axs[1, 0].plot([], [])
-    axs[1, 0].set_title("lambda0")
-    (fig_FWHM_his,) = axs[1, 1].plot([], [])
-    axs[1, 1].set_title("FWHM")
+    (fig_reflection,) = axs[0, 1].plot([], [])
+    axs[0, 1].set_title("Reflection")
+    (fig_FOM_his,) = axs[0, 2].plot([], [])
+    axs[0, 2].set_title("FOM")
+    (fig_feature_his,) = axs[1, 0].plot([], [])
+    axs[1, 0].set_title("Feature size")
+    (fig_lambda0_his,) = axs[1, 1].plot([], [])
+    axs[1, 1].set_title("lambda0")
+    (fig_FWHM_his,) = axs[1, 2].plot([], [])
+    axs[1, 2].set_title("FWHM")
     #
     with load_template(dataName, SOURCE_typ, purpose="scan") as fdtd:
         kwargs1 = {
             **kwargs,
             #
-            "plot": True,
-            #
             "transmissionHist": transmissionHist,
+            "reflectionHist": reflectionHist,
             "parasHist": parasHist,
             "FOMHist": FOMHist,
             "featureHist": featureHist,
@@ -713,6 +757,7 @@ def run_optimize(dataName, **kwargs):
             "fig": fig,
             "axs": axs,
             "fig_transmission": fig_transmission,
+            "fig_reflection": fig_reflection,
             "fig_FOM_his": fig_FOM_his,
             "fig_feature_his": fig_feature_his,
             "fig_lambda0_his": fig_lambda0_his,
@@ -720,29 +765,35 @@ def run_optimize(dataName, **kwargs):
             #
         }
         # >>> setting up simulation <<< #
-        setup_source(fdtd, dimension="2D", **kwargs)
         setup_monitor(fdtd, monitor=False, movie=False)
         setup_grating_structuregroup(fdtd, **kwargs)
         #
         paras = opt.minimize(
-            lambda para: optimize_wrapper(fdtd, para, **kwargs1),
+            lambda para: optimize_wrapper(fdtd, para, plot=True, **kwargs1),
             paras,
             method="Nelder-Mead",
             bounds=paras_bounds,
             options={"disp": True, "maxiter": maxiter, "adaptive": True},
         )
-
     #
     logger = kwargs.get("logger", DEFAULT_PARA["logger"])
     logger.info("Final Parameter: ")
     logger.info(paras.x)
-    # savedata
+    # >>> savedata, using try-catch to avoid error <<< #
     try:
         l, T = transmissionHist[-1]
         a = np.transpose(np.vstack((l * 1e6, T)))  # wavelength in um
         np.savetxt(
             "{:s}_transmission.txt".format(dataName), a
         )  # using lambda,T on each row to save the transmission data
+    except Exception as e:
+        logger.error(e)
+    try:
+        l, R = reflectionHist[-1]
+        a = np.transpose(np.vstack((l * 1e6, R)))  # wavelength in um
+        np.savetxt(
+            "{:s}_reflection.txt".format(dataName), a
+        )  # using lambda,R on each row to save the transmission data
     except Exception as e:
         logger.error(e)
     try:

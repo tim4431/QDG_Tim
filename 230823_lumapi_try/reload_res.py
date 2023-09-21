@@ -14,45 +14,47 @@ import os
 import matplotlib.pyplot as plt
 from create_gds import generate_gds_fileName
 import time
+
 sys.path.append("..")
 
 
 def reload_work(
     uuid: str,
     dimension: str = "2D",
+    #
+    simulation_typ: int = 0,
     tether_typ=None,
     pause=False,
     monitor=True,
     movie=False,
     advanced_monitor=False,
 ):
+    # >>> load uuid <<< #
     dataName = getdataName(uuid)
     kwargs = load_json(uuid)
     kwargs["plot"] = False
+    print("Loading work: ", uuid)
     # print kwargs
     for key, value in kwargs.items():
         if key in DEFAULT_PARA.keys():
             print("{:s} = {:s}".format(key, str(value)))
         else:
             print("Unknown key: {:s}".format(key))
-    #
+    # >>> load paras <<< #
     paras = load_paras(uuid)
-    # kwargs["source_angle"]=14.85
-    # paras[0] = paras[0] * (1325/1360)
     print("Loaded paras: ", paras)
-    # >>> load kwargs <<< #
-    SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
-    lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
-    FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
+    #
     # >>> begin simulation <<< #
+    SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     with load_template(
         dataName,
         SOURCE_typ,
-        purpose="{:s}_{:s}_simluated".format(str(tether_typ), dimension),
+        purpose="{:s}_{:s}_simluated_{:d}".format(
+            str(tether_typ), dimension, simulation_typ
+        ),
     ) as fdtd:
         try:
-            # >>> setup simulation <<< #
-            setup_source(fdtd, dimension=dimension, **kwargs)
+            # >>> setup monitor <<< #
             setup_monitor(
                 fdtd,
                 monitor=monitor,
@@ -77,41 +79,72 @@ def reload_work(
                 setup_grating_structuregroup(fdtd, **kwargs)
 
             # >>> run simulation <<< #
-            l, T, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(
+            l, T, R, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(
                 fdtd,
                 paras,
+                simulation_typ=simulation_typ,
                 reload_gds=False if (tether_typ == None) else True,
                 **kwargs,
             )
             # >>> save data <<< #
-            try:
-                a = np.transpose(np.vstack((l * 1e6, T)))  # wavelength in um
-                np.savetxt(
-                    "{:s}_{:s}_{:s}_simulated_transmission.txt".format(
-                        dataName, str(tether_typ), dimension
-                    ),
-                    a,
-                )
-            except Exception as e:
-                print("reload_res: save data Error: ", str(e))
+            if simulation_typ == 0:
+                try:
+                    a = np.transpose(np.vstack((l * 1e6, T)))  # wavelength in um
+                    np.savetxt(
+                        "{:s}_{:s}_{:s}_simulated_transmission.txt".format(
+                            dataName, str(tether_typ), dimension
+                        ),
+                        a,
+                    )
+                except Exception as e:
+                    print("reload_res: save transmission Error: ", str(e))
+            elif simulation_typ == 1:
+                try:
+                    a = np.transpose(np.vstack((l * 1e6, R)))  # wavelength in um
+                    np.savetxt(
+                        "{:s}_{:s}_{:s}_simulated_reflection.txt".format(
+                            dataName, str(tether_typ), dimension
+                        ),
+                        a,
+                    )
+                except Exception as e:
+                    print("reload_res: save reflection Error: ", str(e))
             # >>> plot <<< #
-            try:
-                plt.figure(figsize=(9, 6))
-                plt.plot(l * 1e9, T)
-                plt.xlabel("Wavelength (nm)")
-                plt.ylabel("Transmission")
-                plt.title("Transmission vs wavelength")
-                plt.savefig(
-                    "{:s}_{:s}_{:s}_simulated_transmission.png".format(
-                        dataName, str(tether_typ), dimension
-                    ),
-                    bbox_inches="tight",
-                    dpi=100,
-                )
-                plt.close()
-            except Exception as e:
-                print("reload_res: save figure Error: ", str(e))
-            #
+            if simulation_typ == 0:
+                try:
+                    plt.figure(figsize=(9, 6))
+                    plt.plot(l * 1e9, T)
+                    plt.xlabel("Wavelength (nm)")
+                    plt.ylabel("Transmission")
+                    plt.title("Transmission vs wavelength")
+                    plt.savefig(
+                        "{:s}_{:s}_{:s}_simulated_transmission.png".format(
+                            dataName, str(tether_typ), dimension
+                        ),
+                        bbox_inches="tight",
+                        dpi=100,
+                    )
+                    plt.close()
+                except Exception as e:
+                    print("reload_res: save transmission figure Error: ", str(e))
+            elif simulation_typ == 1:
+                try:
+                    plt.figure(figsize=(9, 6))
+                    plt.plot(l * 1e9, T)
+                    plt.xlabel("Wavelength (nm)")
+                    plt.ylabel("Reflection")
+                    plt.title("Reflection vs wavelength")
+                    plt.savefig(
+                        "{:s}_{:s}_{:s}_simulated_reflection.png".format(
+                            dataName, str(tether_typ), dimension
+                        ),
+                        bbox_inches="tight",
+                        dpi=100,
+                    )
+                    plt.close()
+                except Exception as e:
+                    print("reload_res: save reflection figure Error: ", str(e))
+            # >>> print result <<< #
             print(maxT, lambda_maxT, FWHM_fit, FOM)
         except Exception as e:
             print("reload_res: Error: ", e)
@@ -124,8 +157,9 @@ def reload_work(
 if __name__ == "__main__":
     #
     reload_work(
-        "666e",
-        dimension="3D",
+        "15a5",
+        dimension="2D",
+        simulation_typ=1,
         tether_typ=None,
         pause=False,
         advanced_monitor=False,
