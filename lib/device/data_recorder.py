@@ -1,12 +1,21 @@
 import numpy as np
 import time
 
-from typing import Callable
+from typing import Callable, Union, List
 
 
-def appenddata(dataName, x, y):
+def init_csv(dataName: str, xname: str, yname: List[str]):
+    with open(dataName, "w") as f:
+        # xname, yname[0], yname[1], ...
+        f.write("{:s},\t{:s}\n".format(xname, ",\t".join(yname)))
+
+
+def appenddata(dataName: str, x: float, y: List[float]):
     with open(dataName, "a") as f:
-        f.write("{:.2f},{:.8f}\n".format(float(x), float(y)))
+        # x, y[0], y[1], ...
+        f.write(
+            "{:.4f},\t{:s}\n".format(x, ",\t".join(["{:.8f}".format(yi) for yi in y]))
+        )
 
 
 def nop(x):
@@ -16,26 +25,48 @@ def nop(x):
 def data_recorder(
     dataName: str,
     xname: str,
+    yname: Union[List[str], str],
     x_list: np.ndarray,
     x_func: Callable,
-    y_func: Callable,
+    y_func: Union[List[Callable], Callable],
     idx_start: int = 0,
-    wait: float = 2.0,
+    wait: Union[None, float] = 2.0,
     measure_num=1,
 ):
-    for x in x_list[idx_start:]:
-        print("{:s}: {:.2f}".format(xname, x))
+    """
+    - dataName: file name to save data
+    - wait: None: no wait, 0: manual input, else: wait time in seconds
+    """
+    # assertion
+    if isinstance(yname, str):
+        yname = [yname]
+    if isinstance(y_func, Callable):
+        y_func = [y_func]
+    assert len(yname) == len(y_func), "yname and y_func should have same length"
+    # init csv file
+    init_csv(dataName, xname, yname)
+    # Measure
+    # using tqdm
+    from tqdm import tqdm
+
+    for idx, x in enumerate(tqdm(x_list[idx_start:])):
+        print("{:s}: \t{:.4f}".format(xname, x))
         x_func(x)
+        # wait
         if wait is not None:  # if is none, just don't wait
             if wait == 0:  # manual input
                 a = input()
             else:
                 time.sleep(wait)
-        #
-        print("begin")
+        # measure
+        print("Begin Measuring")
         for j in range(measure_num):
-            y = float(y_func())
-            print(y)
+            y = []
+            for yname_i, y_func_i in zip(yname, y_func):
+                y_i = float(y_func_i())
+                print("{:s}: \t{:.8f}".format(yname_i, y_i))
+                y.append(y_i)
+            #
             appenddata(dataName, x, y)
-            time.sleep(0.2)
-        print("finished")
+            time.sleep(0.001)
+        print("Finished Measuring")

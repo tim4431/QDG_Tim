@@ -1,7 +1,7 @@
 from labjack import ljm  # type: ignore
 import sys
 from typing import List, Tuple, Union, Any
-
+import numpy as np
 
 sys.path.append(r"\\QDG-LABBEAR\\Users\\QDG-LABBEAR-SERVER\\Desktop\\LANAS\\DataBear")
 
