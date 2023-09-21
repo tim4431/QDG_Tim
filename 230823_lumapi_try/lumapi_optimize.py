@@ -254,7 +254,7 @@ def calc_min_feature(paras, **kwargs) -> float:
 
 
 def fdtd_iter(
-    fdtd, paras, simulation_typ: int, reload_gds=False, **kwargs
+    fdtd, paras, reload_gds=False, reload_simulation_typ=None, **kwargs
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, float, float, float, float]:
     """
     - l, T, R, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(fdtd, paras, simulation_typ, reload_gds, **kwargs)
@@ -262,6 +262,9 @@ def fdtd_iter(
     """
     #
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
+    simulation_typ = kwargs.get("simulation_typ", DEFAULT_PARA["simulation_typ"])
+    if reload_simulation_typ is not None:
+        simulation_typ = reload_simulation_typ
     #
     # >>> run simulation, forward, 1 <<< #
     if simulation_typ in [0, 2]:

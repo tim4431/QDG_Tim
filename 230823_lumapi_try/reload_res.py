@@ -22,7 +22,7 @@ def reload_work(
     uuid: str,
     dimension: str = "2D",
     #
-    simulation_typ: int = 0,
+    reload_simulation_typ: int = 0,
     tether_typ=None,
     pause=False,
     monitor=True,
@@ -50,7 +50,7 @@ def reload_work(
         dataName,
         SOURCE_typ,
         purpose="{:s}_{:s}_simluated_{:d}".format(
-            str(tether_typ), dimension, simulation_typ
+            str(tether_typ), dimension, reload_simulation_typ
         ),
     ) as fdtd:
         try:
@@ -82,12 +82,12 @@ def reload_work(
             l, T, R, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(
                 fdtd,
                 paras,
-                simulation_typ=simulation_typ,
+                reload_simulation_typ=reload_simulation_typ,
                 reload_gds=False if (tether_typ == None) else True,
                 **kwargs,
             )
             # >>> save data <<< #
-            if simulation_typ == 0:
+            if reload_simulation_typ == 0:
                 try:
                     a = np.transpose(np.vstack((l * 1e6, T)))  # wavelength in um
                     np.savetxt(
@@ -98,7 +98,7 @@ def reload_work(
                     )
                 except Exception as e:
                     print("reload_res: save transmission Error: ", str(e))
-            elif simulation_typ == 1:
+            elif reload_simulation_typ == 1:
                 try:
                     a = np.transpose(np.vstack((l * 1e6, R)))  # wavelength in um
                     np.savetxt(
@@ -110,7 +110,7 @@ def reload_work(
                 except Exception as e:
                     print("reload_res: save reflection Error: ", str(e))
             # >>> plot <<< #
-            if simulation_typ == 0:
+            if reload_simulation_typ == 0:
                 try:
                     plt.figure(figsize=(9, 6))
                     plt.plot(l * 1e9, T)
@@ -127,7 +127,7 @@ def reload_work(
                     plt.close()
                 except Exception as e:
                     print("reload_res: save transmission figure Error: ", str(e))
-            elif simulation_typ == 1:
+            elif reload_simulation_typ == 1:
                 try:
                     plt.figure(figsize=(9, 6))
                     plt.plot(l * 1e9, R)
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     reload_work(
         "15a5",
         dimension="2D",
-        simulation_typ=1,
+        reload_simulation_typ=1,
         tether_typ=None,
         pause=False,
         advanced_monitor=False,
@@ -167,7 +167,7 @@ if __name__ == "__main__":
     reload_work(
         "4e25",
         dimension="2D",
-        simulation_typ=1,
+        reload_simulation_typ=1,
         tether_typ=None,
         pause=False,
         advanced_monitor=False,
