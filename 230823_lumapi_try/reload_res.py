@@ -130,7 +130,7 @@ def reload_work(
             elif simulation_typ == 1:
                 try:
                     plt.figure(figsize=(9, 6))
-                    plt.plot(l * 1e9, T)
+                    plt.plot(l * 1e9, R)
                     plt.xlabel("Wavelength (nm)")
                     plt.ylabel("Reflection")
                     plt.title("Reflection vs wavelength")
@@ -158,6 +158,14 @@ if __name__ == "__main__":
     #
     reload_work(
         "15a5",
+        dimension="2D",
+        simulation_typ=1,
+        tether_typ=None,
+        pause=False,
+        advanced_monitor=False,
+    )
+    reload_work(
+        "4e25",
         dimension="2D",
         simulation_typ=1,
         tether_typ=None,

@@ -83,30 +83,8 @@ if __name__ == "__main__":  # type: ignore
     print("sleeping")
     time.sleep(3600*5)
     from works.w_230918_4e25 import work_4e25
-
-    # # sweep lambda from 1296 to 1356, spacing 10
-    # work_4e25_sweep_lambda = work_para_sweeper(
-    #     work_4e25, np.arange(1296, 1366, 10) * 1e-9, "lambda_0"
-    # )
-    # sweep source_angle from 10 to 30, spacing 5
-    work_4e25_sweep_source_angle = work_para_sweeper(
-        work_4e25, range(16, 31, 3), "source_angle"
-    )
-    # sourcefixed at 17
-    work_4e25_sourcefixed = deepcopy(work_4e25)
-    work_4e25_sourcefixed["grating_typ"] = "subw_grating_sourcefixed"
-    work_4e25_sourcefixed["source_x"] = 17e-6
-    # sweep lambda from 1296 to 1356, spacing 10
-    work_4e25_sweep_lambda_sourcefixed = work_para_sweeper(
-        work_4e25_sourcefixed, np.arange(1296, 1366, 10) * 1e-9, "lambda_0"
-    )
-    # merge works
-    # works = work_4e25_sweep_lambda + work_4e25_sweep_source_angle
-    works = (
-        # work_4e25_sweep_lambda
-        work_4e25_sweep_lambda_sourcefixed
-        + work_4e25_sweep_source_angle
-    )
-    print(len(works))
+    work_4e25_minback=work_4e25
+    work_4e25_minback["simulation_typ"]=2
+    works=[]
     #
     work_loader(works, "4e25_sweep_lambda_source_angle_2")

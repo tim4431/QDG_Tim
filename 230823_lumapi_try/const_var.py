@@ -18,4 +18,5 @@ DEFAULT_PARA = {
     "taper_angle": 24,
     "source_angle": 10,
     "source_x": 17e-6,
+    "simulation_typ":0,
 }
