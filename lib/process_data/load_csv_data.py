@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from typing import Callable
+from typing import Callable, Union
 
 
 def _simple_load_csv_data(fileName: str, key_x: str, key_y: str):
@@ -11,7 +11,7 @@ def _simple_load_csv_data(fileName: str, key_x: str, key_y: str):
     return datax, datay
 
 
-def load_csv_data(fileName: str, select_func: Callable | None, key_x: str, key_y: str):
+def load_csv_data(fileName: str, select_func: [Callable, None], key_x: str, key_y: str):
     datax, datay = _simple_load_csv_data(fileName, key_x, key_y)
     #
     if select_func is not None:
