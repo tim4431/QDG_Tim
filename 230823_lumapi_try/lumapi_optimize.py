@@ -268,7 +268,7 @@ def fdtd_iter(
     #
     # >>> run simulation, forward, 1 <<< #
     if simulation_typ in [0, 2]:
-        setup_source(fdtd, dimension="2D", simulation_typ=0, **kwargs)
+        setup_source(fdtd, dimension="2D", simulation_dir=0, **kwargs)
         fdtd.switchtolayout()
         if not reload_gds:
             set_params(fdtd, paras, **kwargs)
@@ -277,7 +277,7 @@ def fdtd_iter(
         maxT, lambda_maxT, FWHM_fit_T, FOMT = calculate_FOM(lT, T, **kwargs)  # type: ignore
     # >>> run simulation, backward, 2 <<< #
     if simulation_typ in [1, 2]:
-        setup_source(fdtd, dimension="2D", simulation_typ=1, **kwargs)
+        setup_source(fdtd, dimension="2D", simulation_dir=1, **kwargs)
         fdtd.switchtolayout()
         if not reload_gds:
             set_params(fdtd, paras, **kwargs)
@@ -386,7 +386,10 @@ def optimize_wrapper(fdtd, paras, plot=False, **kwargs):
     )  # take care of the minus and plus sign!
 
 
-def setup_source(fdtd, dimension="2D", simulation_typ: int = 0, **kwargs):
+def setup_source(fdtd, dimension="2D", simulation_dir: int = 0, **kwargs):
+    """
+    - simulation_dir: 0 - forward, 1 - backward
+    """
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
@@ -415,15 +418,15 @@ def setup_source(fdtd, dimension="2D", simulation_typ: int = 0, **kwargs):
         fdtd.setnamed("source", "polarization angle", 90)  # TE mode
         # because the definition of 2D source is different from 3D ver.
     # >>> set source type <<< #
-    if simulation_typ == 0:  # forward
+    if simulation_dir == 0:  # forward
         fdtd.setnamed("source", "enabled", 1)
         fdtd.setnamed("source_wg", "enabled", 0)
-    elif simulation_typ == 1:  # backward
+    elif simulation_dir == 1:  # backward
         fdtd.setnamed("source", "enabled", 0)
         fdtd.setnamed("source_wg", "enabled", 1)
     else:
         raise ValueError(
-            "setup_source: Invalid simulation_typ: {:d}".format(simulation_typ)
+            "setup_source: Invalid simulation_dir: {:d}".format(simulation_dir)
         )
     # >>> set monitor <<< #
     fdtd.setglobalmonitor(
