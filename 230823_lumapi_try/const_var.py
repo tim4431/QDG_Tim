@@ -1,5 +1,4 @@
 DEFAULT_PARA = {
-    "plot": False,
     "lambda_0": 1.326e-6,
     "FWHM": 0.0833e-6,
     "alpha": 0.00,
@@ -18,5 +17,5 @@ DEFAULT_PARA = {
     "taper_angle": 24,
     "source_angle": 10,
     "source_x": 17e-6,
-    "simulation_typ":0,
+    "simulation_typ": 0,
 }

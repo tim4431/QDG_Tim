@@ -43,7 +43,8 @@ def uuid_to_logname(uuid):
 
 def save_json(data):
     # Generate a uuid
-    uuid = _generate_uuid(_default_wrapper(data))
+    # uuid = _generate_uuid(_default_wrapper(data))
+    uuid = _generate_uuid(data)
     data["uuid"] = uuid
     # Save the JSON object to a file
     setup_wd(uuid)
@@ -53,11 +54,11 @@ def save_json(data):
     return uuid
 
 
-def _default_wrapper(data):
-    for key in DEFAULT_PARA.keys():
-        if key not in data:
-            data[key] = DEFAULT_PARA[key]
-    return data
+# def _default_wrapper(data):
+#     for key in DEFAULT_PARA.keys():
+#         if key not in data:
+#             data[key] = DEFAULT_PARA[key]
+#     return data
 
 
 def load_json(uuid):
@@ -66,10 +67,11 @@ def load_json(uuid):
         data = json.load(json_file)
         # check if uuid is correct
         if "uuid" in data:
-            if uuid != data["uuid"]:
-                raise ValueError("uuid is not correct, file is modified")
+            # if uuid != data["uuid"]:
+            #     raise ValueError("uuid is not correct, file is modified")
             data.pop("uuid")
-        return _default_wrapper(data)
+        # return _default_wrapper(data)
+        return data
 
 
 def getprefixName(uuid) -> str:

@@ -81,8 +81,8 @@ def work_para_sweeper(work_template, sweep_range, sweep_var_name):
 
 
 if __name__ == "__main__":  # type: ignore
-    print("sleeping")
-    time.sleep(3600 * 5)
+    # print("sleeping")
+    # time.sleep(3600 * 5)
     from works.w_subw_4e25 import work_4e25
     from works.w_grating_639a import work_grating_639a
 
