@@ -316,9 +316,8 @@ def optimize_wrapper(fdtd, paras, plot=False, **kwargs):
     FWHMHist = kwargs.get("FWHMHist", [])
     #
     # >>> Analyse <<< #
-    simulation_typ = kwargs.get("simulation_typ", DEFAULT_PARA["simulation_typ"])
     l, T, R, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(
-        fdtd, paras, simulation_typ=simulation_typ, reload=False, **kwargs
+        fdtd, paras, reload=False, **kwargs
     )
     #
     # >>> Figure of merit <<< #
