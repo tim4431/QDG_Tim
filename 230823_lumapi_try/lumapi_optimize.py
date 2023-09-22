@@ -89,7 +89,8 @@ def calculate_FOM_TR(l, T, R, **kwargs) -> Tuple[float, float, float, float]:
 
     # >>> FOM <<< #
     if FOM_typ == "square":
-        FOM = float((norm_T - norm_R) * norm_cross_correlation)
+        print(norm_T, norm_R)
+        FOM = float((norm_T - norm_R / 5) * norm_cross_correlation)
     else:
         raise ValueError("Invalid FOM_typ: {:s}".format(FOM_typ))
     #
@@ -302,13 +303,13 @@ def fdtd_iter(
     #
     # >>> Return result
     if simulation_typ == 0:
-        maxT, lambda_maxT, FWHM_fit_T, FOMT = calculate_FOM_T(lT, T, **kwargs)# type: ignore
+        maxT, lambda_maxT, FWHM_fit_T, FOMT = calculate_FOM_T(lT, T, **kwargs)  # type: ignore
         return lT, T, np.zeros_like(lT), maxT, lambda_maxT, FWHM_fit_T, FOMT  # type: ignore
     elif simulation_typ == 1:
-        maxR, lambda_maxR, FWHM_fit_R, FOMR = calculate_FOM_T(lR, R, **kwargs)# type: ignore
+        maxR, lambda_maxR, FWHM_fit_R, FOMR = calculate_FOM_T(lR, R, **kwargs)  # type: ignore
         return lR, np.zeros_like(lR), R, maxR, lambda_maxR, FWHM_fit_R, FOMR  # type: ignore
     elif simulation_typ == 2:
-        maxT, lambda_maxT, FWHM_fit_T, FOMTR = calculate_FOM_TR(lT, T, R, **kwargs)# type: ignore
+        maxT, lambda_maxT, FWHM_fit_T, FOMTR = calculate_FOM_TR(lT, T, R, **kwargs)  # type: ignore
         return lT, T, R, maxT, lambda_maxT, FWHM_fit_T, FOMTR  # type: ignore
     else:
         raise ValueError("Invalid simulation_typ")
@@ -837,10 +838,27 @@ def run_optimize(dataName, **kwargs):
     except Exception as e:
         logger.error(e)
     plt.ioff()
-    return transmissionHist, parasHist, FOMHist, featureHist, lambda0Hist, FWHMHist
+    return (
+        transmissionHist,
+        reflectionHist,
+        parasHist,
+        FOMHist,
+        featureHist,
+        lambda0Hist,
+        FWHMHist,
+    )
 
 
-def plot_result(transmission, FOMHist, featureHist, lambda0Hist, FWHMHist, dataName):
+def plot_result(
+    transmission: tuple,
+    reflection: tuple,
+    FOMHist: List[float],
+    featureHist: List[float],
+    lambda0Hist: List[float],
+    FWHMHist: List[float],
+    dataName: str,
+    simulation_typ: int = 0,
+) -> None:
     fig = plt.figure(figsize=(14, 6))
     grid = GridSpec(1, 3, width_ratios=[2, 1, 1])
     ax0 = plt.subplot(grid[0])
@@ -849,13 +867,14 @@ def plot_result(transmission, FOMHist, featureHist, lambda0Hist, FWHMHist, dataN
     #
     fig.subplots_adjust(wspace=0.35)
     # plot the final transmission
-    l, T = transmission
-    arb_fit_1d(ax0, l * 1e9, T, "2D")
-    # ax0.plot(l * 1e9, T)
-    # ax0.scatter(l * 1e9, T, marker="+", alpha=0.4)
-    # ax0.set_xlabel(r"$\lambda$(nm)")
-    # ax0.set_ylabel(r"T($\lambda$)")
-    # ax0.set_title("Transmission_lambda")
+    if simulation_typ in [0, 2]:
+        l, T = transmission
+        arb_fit_1d(ax0, l * 1e9, T, "2D")
+    # plot reflection in twinx
+    if simulation_typ in [1, 2]:
+        ax0_2 = ax0.twinx()
+        l, R = reflection
+        arb_fit_1d(ax0_2, l * 1e9, R, "2D")
     #
     # plot the FOM history
     ax1.plot(np.asarray(FOMHist), color="blue", alpha=0.5, label="FOM")
@@ -910,6 +929,7 @@ def load_work(uuid, logger):
     #
     (
         transmissionHist,
+        reflectionHist,
         parasHist,
         FOMHist,
         featureHist,
@@ -917,7 +937,14 @@ def load_work(uuid, logger):
         FWHMHist,
     ) = run_optimize(dataName, **kwargs)
     plot_result(
-        transmissionHist[-1], FOMHist, featureHist, lambda0Hist, FWHMHist, dataName
+        transmissionHist[-1],
+        reflectionHist[-1],
+        FOMHist,
+        featureHist,
+        lambda0Hist,
+        FWHMHist,
+        dataName,
+        simulation_typ=kwargs.get("simulation_typ", DEFAULT_PARA["simulation_typ"]),
     )
     #
     logger.info("Work done: {:s}".format(dataName))
