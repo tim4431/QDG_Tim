@@ -847,6 +847,15 @@ def run_optimize(dataName, **kwargs):
         np.savetxt("{:s}_featureHist.txt".format(dataName), featureHist)
     except Exception as e:
         logger.error(e)
+    try:
+        np.savetxt("{:s}_lambda0Hist.txt".format(dataName), lambda0Hist)
+    except Exception as e:
+        logger.error(e)
+    try:
+        np.savetxt("{:s}_FWHMHist.txt".format(dataName), FWHMHist)
+    except Exception as e:
+        logger.error(e)
+    #
     plt.ioff()
     return (
         transmissionHist,
@@ -869,51 +878,102 @@ def plot_result(
     dataName: str,
     simulation_typ: int = 0,
 ) -> None:
-    fig = plt.figure(figsize=(14, 6))
+    fig = plt.figure(figsize=(15, 6))
     grid = GridSpec(1, 3, width_ratios=[2, 1, 1])
     ax0 = plt.subplot(grid[0])
     ax1 = plt.subplot(grid[1])
     ax2 = plt.subplot(grid[2])
     #
-    fig.subplots_adjust(wspace=0.35)
+    fig.subplots_adjust(wspace=0.3)
     # plot the final transmission
     if simulation_typ in [0, 2]:
         l, T = transmission
-        arb_fit_1d(ax0, l * 1e9, T, "2D")
+        arb_fit_1d(ax0, l * 1e9, T, r"$T(\lambda)$", label=True)
+        ax0.legend(loc="upper left")
     # plot reflection in twinx
     if simulation_typ in [1, 2]:
         ax0_2 = ax0.twinx()
+        ax0_2.set_ylabel(r"$R(\lambda)$")
         l, R = reflection
-        arb_fit_1d(ax0_2, l * 1e9, R, "2D")
+        arb_fit_1d(
+            ax0_2,
+            l * 1e9,
+            R,
+            "",
+            label=r"$R(\lambda)$",
+            annotation=False,
+            color="orange",
+        )
+        ax0_2.legend(loc="upper right")
     #
+    ax0.set_title("Transmission / Reflection")
     # plot the FOM history
     ax1.plot(np.asarray(FOMHist), color="blue", alpha=0.5, label="FOM")
     ax1.set_xlabel("Iteration num")
-    ax1.set_ylabel("Figure of merit(FOM)")
-    ax1.set_title("FOM_feature_iter")
+    # ax1.set_ylabel("Figure of merit(FOM)")
+    ax1.set_title("FOM / feature_size")
     ax1.legend(loc="upper right")
     # add double y axis to record feature size
     ax1_2 = ax1.twinx()
     ax1_2.plot(
         np.asarray(featureHist) * 1e9, color="orange", alpha=0.5, label="feature size"
     )
-    ax1_2.set_ylabel("Feature size(nm)")
+    # ax1_2.set_ylabel("Feature size(nm)")
     ax1_2.legend(loc="lower right")
     #
     # plot lambda0 history
-    ax2.plot(np.asarray(lambda0Hist) * 1e9, color="blue", alpha=0.5, label="lambda0")
+    ax2.plot(
+        np.asarray(lambda0Hist) * 1e9, color="blue", alpha=0.5, label="lambda0(nm)"
+    )
     ax2.set_xlabel("Iteration num")
-    ax2.set_ylabel("lambda0(nm)")
-    ax2.set_title("lambda0_FWHM_iter")
+    # ax2.set_ylabel("lambda0(nm)")
+    ax2.set_title("lambda0 / FWHM")
     ax2.legend(loc="upper right")
     # add double y axis to record FWHM
     ax2_2 = ax2.twinx()
-    ax2_2.plot(np.asarray(FWHMHist) * 1e9, color="orange", alpha=0.5, label="FWHM")
-    ax2_2.set_ylabel("FWHM(nm)")
+    ax2_2.plot(np.asarray(FWHMHist) * 1e9, color="orange", alpha=0.5, label="FWHM(nm)")
+    # ax2_2.set_ylabel("FWHM(nm)")
     ax2_2.legend(loc="lower right")
     #
     plt.savefig("{:s}_result.png".format(dataName), dpi=200, bbox_inches="tight")
     #
+
+
+def reload_plot(uuid):
+    # get uuid for remaining params based on MD5
+    kwargs = load_json(uuid)
+    dataName = getdataName(uuid)
+    #
+    transmission = np.loadtxt("{:s}_transmission.txt".format(dataName))
+    l, T = transmission[:, 0] * 1e-6, transmission[:, 1]
+    reflection = np.loadtxt("{:s}_reflection.txt".format(dataName))
+    l, R = reflection[:, 0] * 1e-6, reflection[:, 1]
+    FOMHist = np.loadtxt("{:s}_FOMHist.txt".format(dataName))
+    L = len(FOMHist)
+    try:
+        featureHist = np.loadtxt("{:s}_featureHist.txt".format(dataName))
+    except Exception as e:
+        featureHist = np.zeros(L)
+    try:
+        lambda0Hist = np.loadtxt("{:s}_lambda0Hist.txt".format(dataName))
+    except Exception as e:
+        lambda0Hist = np.zeros(L)
+    try:
+        FWHMHist = np.loadtxt("{:s}_FWHMHist.txt".format(dataName))
+    except Exception as e:
+        FWHMHist = np.zeros(L)
+
+    #
+    plot_result(
+        (l, T),
+        (l, R),
+        FOMHist,
+        featureHist,
+        lambda0Hist,
+        FWHMHist,
+        dataName,
+        simulation_typ=kwargs.get("simulation_typ", DEFAULT_PARA["simulation_typ"]),
+    )
 
 
 def load_work(uuid, logger):
@@ -958,3 +1018,7 @@ def load_work(uuid, logger):
     )
     #
     logger.info("Work done: {:s}".format(dataName))
+
+
+if __name__ == "__main__":
+    reload_plot("3723")

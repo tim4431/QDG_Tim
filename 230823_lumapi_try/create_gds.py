@@ -14,6 +14,7 @@ from lib.grating.subwavelength import (
     apodized_subw_grating,
     ordinary_grating,
     apodized_grating,
+    inverse_grating,
 )
 
 
@@ -72,6 +73,12 @@ def generate_grating(paras, **kwargs):
         ff_f = paras[3]
         #
         grating = apodized_grating(N, Lambda_i, Lambda_f, ff_i, ff_f)
+    elif grating_typ == "inverse_grating":  # [pitch_list, ff_list, fiberx]
+        pitch_list = paras[0:N]
+        ff_list = paras[N : 2 * N]
+        fiberx = paras[2 * N]
+        #
+        grating = inverse_grating(pitch_list, ff_list, fiberx)
     else:
         raise ValueError("Unknown grating_typ: {:s}".format(grating_typ))
     #
@@ -116,8 +123,8 @@ if __name__ == "__main__":
         "section_rect_tether_multisuspend_unbox",  # 11
         "section_rect_tether_hole_multisuspend_unbox",  # 12
     ]
-    uuid = "4e25"
-    idx_list = [0, 11]
+    uuid = "3723"
+    idx_list = [0]
     for idx in idx_list:
         tether_typ = tether_typ_avail_list[idx]
         gds_fileName = create_gds(uuid, tether_typ=tether_typ)

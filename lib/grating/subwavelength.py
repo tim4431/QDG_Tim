@@ -54,6 +54,15 @@ def subw_grating(N, Lambda, ff, ffL, ffH, NL, NH):
     return grating
 
 
+def inverse_grating(pitch_list, ff_list, fiberx):
+    grating = []
+    x0 = 0
+    for pitch, ff in zip(pitch_list, ff_list):
+        grating += _single_grating(x0, pitch, ff)
+        x0 += pitch
+    return grating
+
+
 def _linear_apodize_func(N, x_i, x_f):
     return lambda i: x_i + (x_f - x_i) * (i / (N - 1))
 

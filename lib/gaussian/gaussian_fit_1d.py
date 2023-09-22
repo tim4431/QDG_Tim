@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from typing import Union
 
 
 # Define the Gaussian function
@@ -22,7 +23,7 @@ def _data_wrapper(x_data, y_data, x_range):
     return x_data, y_data
 
 
-def _annote_wrapper(ax, amp, x0, xl, xr, label=True):
+def _annote_wrapper(ax, amp, x0, xl, xr):
     # center, FWMH
     # get current plot color
     if ax is None:
@@ -42,8 +43,6 @@ def _annote_wrapper(ax, amp, x0, xl, xr, label=True):
     # Add labels and legend
     ax.set_xlabel(r"$\lambda$ (nm)")
     ax.set_ylabel(r"$T(\lambda$)")
-    if label:
-        ax.legend(loc="upper right")
 
 
 def _fit_gaussian(x_data, y_data, p0):
@@ -84,7 +83,16 @@ def gaussian_fit_1d(ax, x_data, y_data, name, x_range=None):
     return amp, x0, FWMH
 
 
-def arb_fit_1d(ax, x_data, y_data, name, x_range=None, label=True):
+def arb_fit_1d(
+    ax,
+    x_data,
+    y_data,
+    name,
+    x_range=None,
+    label: Union[bool, str] = True,
+    annotation=True,
+    **kwargs
+):
     x_data, y_data = _data_wrapper(x_data, y_data, x_range)
     max_index = np.argmax(y_data)
     amp_coarse = y_data[max_index]
@@ -150,17 +158,24 @@ def arb_fit_1d(ax, x_data, y_data, name, x_range=None, label=True):
         # label="{:s}, data pts".format(name),
         marker="+",
         alpha=0.3,
+        **kwargs,
     )
+    if isinstance(label, str):
+        label_text = label
+    elif label == True:
+        label_text = "{:s}, {:.1f}_{:.1f}_{:.1f}dB".format(name, x0, FWMH, CE)
+    else:
+        label_text = None
     ax.plot(
         x_data,
         y_data,
-        label="{:s}, {:.1f}_{:.1f}_{:.1f}dB".format(name, x0, FWMH, CE)
-        if label
-        else None,
+        label=label_text,
         alpha=0.5,
+        **kwargs,
     )
     #
-    _annote_wrapper(ax, amp, x0, x_left, x_right, label=label)
+    if annotation:
+        _annote_wrapper(ax, amp, x0, x_left, x_right)
     #
     return amp, x0, FWMH, CE
 

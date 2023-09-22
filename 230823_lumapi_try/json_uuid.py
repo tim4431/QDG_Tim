@@ -70,6 +70,8 @@ def load_json(uuid):
             # if uuid != data["uuid"]:
             #     raise ValueError("uuid is not correct, file is modified")
             data.pop("uuid")
+        if "plot" in data:
+            data.pop("plot")
         # return _default_wrapper(data)
         return data
 
