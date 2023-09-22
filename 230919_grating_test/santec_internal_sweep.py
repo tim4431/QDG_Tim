@@ -8,7 +8,7 @@ import time
 
 
 def santec_internal_sweep(
-    Laser, power, scanRate=100000, start=1245, end=1375, sweeprate=10
+    Laser, power, scanRate=10000, start=1245, end=1375, sweeprate=10
 ):
     # seems to be following the code here: https://github.com/labjack/labjack-ljm-python/blob/master/Examples/More/Stream/stream_triggered.py
     handle = ljm.openS("T7", "ETHERNET", "192.168.0.125")
@@ -44,6 +44,7 @@ def santec_internal_sweep(
     i = 1
     ljmScanBacklog = 0
     aData = np.zeros(10)
+    datas=[]
     try:
         ljm.eWriteName(handle, "STREAM_TRIGGER_INDEX", 0)
         ljm.eWriteName(handle, "STREAM_CLOCK_SOURCE", 0)
@@ -68,6 +69,9 @@ def santec_internal_sweep(
             try:
                 ret = ljm.eStreamRead(handle)
                 aData = ret[0]
+                for j in range(numAddresses):
+                    aDataj=[aData[numAddresses*i+j] for i in range(scansPerRead)]
+                    datas.append(aDataj)
                 ljmScanBacklog = ret[2]
                 i += 1
             except ljm.LJMError as err:
@@ -89,7 +93,7 @@ def santec_internal_sweep(
     Laser.write_sweep_state("Off")
     Laser.write_laser_status("Off")
     return np.linspace(start, end, len(aData)), list(
-        np.array(aData[j]) for j in range(len(aData))
+        np.array(datas[j]) for j in range(numAddresses)
     )
 
 
@@ -101,11 +105,12 @@ if __name__ == "__main__":
 
     laser = init_laser()
     l, vs = santec_internal_sweep(
-        laser, power=5, scanRate=100000, start=1355, end=1365, sweeprate=10
+        laser, power=5, scanRate=10000, start=1355, end=1356, sweeprate=100
     )
+    print(len(l))
     v1, v2 = vs
     import matplotlib.pyplot as plt
 
-    plt.plot(l, v1)
-    plt.plot(l, v2)
+    plt.plot(v1)
+    plt.plot(v2)
     plt.show()
