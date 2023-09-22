@@ -631,7 +631,7 @@ def convert_paras_init(para, kwargs, kwargs_init):
             return paras
         elif grating_typ_init == "grating":
             fiberx = para[2]
-            N = kwargs_init.get("N", DEFAULT_PARA["N"])
+            N = kwargs.get("N", DEFAULT_PARA["N"])
             pitch = para[0]
             ff = para[1]
             pitch_list = np.array([pitch] * N)
@@ -706,7 +706,7 @@ def get_paras_bound(**kwargs):
             [1.7e-6, 1.7e-6, 0.32, 0.32, 0.95, 0.95, 0.7, 0.7, 20e-6], dtype=np.float_
         )
     elif grating_typ == "inverse_grating":  # [pitch_list, ff_list, fiberx]
-        paras_min = np.array([200e-9] * N + [0.05] * N + [10e-6], dtype=np.float_)
+        paras_min = np.array([100e-9] * N + [0.05] * N + [12e-6], dtype=np.float_)
         paras_max = np.array([1.1e-6] * N + [0.95] * N + [25e-6], dtype=np.float_)
     elif grating_typ == "grating":  # [Lambda, ff, fiberx]
         lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
