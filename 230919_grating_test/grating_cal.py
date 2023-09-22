@@ -5,6 +5,7 @@ sys.path.append("..")
 from lib.device.device import ljm_auto_range_read, init_labjack, init_laser
 from lib.device.data_recorder import data_recorder
 import datetime
+import time
 
 
 def _read_pd_power(handle, numAIN) -> float:
@@ -32,6 +33,19 @@ def getDataName(uuid, lambda_start, lambda_end, lambda_step):
         date_str, datetime_str, uuid, lambda_start, lambda_end, lambda_step
     )
     return fileName
+
+
+def set_mems_switch(handle, dir=0):
+    if dir == 0:
+        ljm.eWriteName(handle, "DAC0", 4.5)
+        ljm.eWriteName(handle, "DAC1", 0.0)
+    elif dir == 1:
+        ljm.eWriteName(handle, "DAC0", 0.0)
+        ljm.eWriteName(handle, "DAC1", 4.5)
+    time.sleep(0.05)
+    # return to 0
+    ljm.eWriteName(handle, "DAC0", 0.0)
+    ljm.eWriteName(handle, "DAC1", 0.0)
 
 
 def photodiode_lambda_sweep(
@@ -63,5 +77,8 @@ def photodiode_lambda_sweep(
 
 
 if __name__ == "__main__":
-    # handle = init_labjack()
-    print(getDataName("test", 1.0, 2.0, 0.1))
+    import labjack.ljm as ljm
+
+    handle = init_labjack()
+    # print(_read_pd_power(handle, 2))
+    set_mems_switch(handle, dir=0)
