@@ -103,6 +103,6 @@ if __name__ == "__main__":  # type: ignore
     work_grating_e86b_minback["grating_typ"] = "inverse_grating"
     work_grating_e86b_minback["paras_init"] = "e86b"
     #
-    works = [work_4e25_minback, work_grating_639a_minback, work_grating_e86b_minback]
+    works = [work_4e25_minback]
     #
     work_loader(works, "min_back,4e25,639a,e86b_test3")

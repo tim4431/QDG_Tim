@@ -157,15 +157,7 @@ def reload_work(
 if __name__ == "__main__":
     #
     reload_work(
-        "15a5",
-        dimension="2D",
-        reload_simulation_typ=1,
-        tether_typ=None,
-        pause=False,
-        advanced_monitor=False,
-    )
-    reload_work(
-        "4e25",
+        "e86b",
         dimension="2D",
         reload_simulation_typ=1,
         tether_typ=None,
