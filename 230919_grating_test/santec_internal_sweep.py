@@ -12,7 +12,9 @@ def santec_internal_sweep(
 ):
     # seems to be following the code here: https://github.com/labjack/labjack-ljm-python/blob/master/Examples/More/Stream/stream_triggered.py
     handle = ljm.openS("T7", "ETHERNET", "192.168.0.125")
-    aScanList = ljm.namesToAddresses(1, ["AIN2"])[0]
+    aScanListNames = ["AIN0", "AIN1"]
+    numAddresses = len(aScanListNames)
+    aScanList = ljm.namesToAddresses(numAddresses, aScanListNames)[0]
     TRIGGER_NAME = "DIO0"
     scansPerRead = int(scanRate * abs(start - end) / sweeprate)
 
@@ -47,16 +49,19 @@ def santec_internal_sweep(
         ljm.eWriteName(handle, "STREAM_CLOCK_SOURCE", 0)
         aNames = [
             "AIN_ALL_NEGATIVE_CH",
-            "AIN0_RANGE",
+            "AIN2_RANGE",
+            "AIN3_RANGE",
             "STREAM_SETTLING_US",
             "STREAM_RESOLUTION_INDEX",
         ]
-        aValues = [ljm.constants.GND, 10.0, 0, 0]
+        aValues = [ljm.constants.GND, 10.0, 10.0, 0, 0]
         numFrames = len(aNames)
         ljm.eWriteNames(handle, numFrames, aNames, aValues)
         configureDeviceForTriggeredStream(handle, TRIGGER_NAME)
         configureLJMForTriggeredStream()
-        scanRate = ljm.eStreamStart(handle, scansPerRead, 1, aScanList, scanRate)
+        scanRate = ljm.eStreamStart(
+            handle, scansPerRead, numAddresses, aScanList, scanRate
+        )
         print("\nStream started with a scan rate of %0.0f Hz." % scanRate)
         while i <= MAX_REQUESTS:
             ljm_stream_util.variableStreamSleep(scansPerRead, scanRate, ljmScanBacklog)
@@ -83,19 +88,24 @@ def santec_internal_sweep(
 
     Laser.write_sweep_state("Off")
     Laser.write_laser_status("Off")
-    return np.linspace(start, end, len(aData)), np.array(aData)
+    return np.linspace(start, end, len(aData)), list(
+        np.array(aData[j]) for j in range(len(aData))
+    )
 
 
 if __name__ == "__main__":
     import sys
 
-    sys.path.append("../")
+    sys.path.append("..")
     from lib.device.device import init_laser
 
     laser = init_laser()
-    l, v = santec_internal_sweep(
-        laser, power=5, scanRate=100000, start=1245, end=1375, sweeprate=10
+    l, vs = santec_internal_sweep(
+        laser, power=5, scanRate=100000, start=1355, end=1365, sweeprate=10
     )
+    v1, v2 = vs
     import matplotlib.pyplot as plt
 
-    plt.plot(l, v)
+    plt.plot(l, v1)
+    plt.plot(l, v2)
+    plt.show()
