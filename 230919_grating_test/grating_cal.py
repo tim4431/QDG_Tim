@@ -34,6 +34,15 @@ def getDataName(uuid, lambda_start, lambda_end, lambda_step):
     return fileName
 
 
+def set_mems_switch(handle, dir=0):
+    if dir == 0:
+        ljm.eWriteName(handle, "DAC0", 4.5)
+        ljm.eWriteName(handle, "DAC1", 0.0)
+    elif dir == 1:
+        ljm.eWriteName(handle, "DAC0", 0.0)
+        ljm.eWriteName(handle, "DAC1", 4.5)
+
+
 def photodiode_lambda_sweep(
     uuid: str, lambda_start: float, lambda_end: float, lambda_step: float, numAIN: int
 ):
@@ -63,5 +72,6 @@ def photodiode_lambda_sweep(
 
 
 if __name__ == "__main__":
-    # handle = init_labjack()
-    print(getDataName("test", 1.0, 2.0, 0.1))
+    handle = init_labjack()
+    # print(_read_pd_power(handle, 2))
+    set_mems_switch(handle, dir=0)
