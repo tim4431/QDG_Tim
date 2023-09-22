@@ -1,0 +1,10 @@
+[INFO] - Work loader start
+[INFO] - uuid: f6ba created
+[INFO] - work: {'lambda_0': 1.326e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 25, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'grating', 'start_radius': 1.2e-05, 'simulation_typ': 2, 'uuid': 'f6ba'}
+[INFO] - uuid: 7523 created
+[INFO] - work: {'lambda_0': 1.326e-06, 'FWHM': 4e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 9, 'NL': 2, 'NH': 2, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'start_radius': 1.2e-05, 'simulation_typ': 2, 'uuid': '7523'}
+[INFO] - uuid: f6ba finished
+[INFO] - uuid: 7523 finished
+[INFO] - 0 uuid: 	f6ba	 finished
+[INFO] - 1 uuid: 	7523	 finished
+[INFO] - Work loader end
