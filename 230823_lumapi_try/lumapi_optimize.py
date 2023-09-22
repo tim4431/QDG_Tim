@@ -728,6 +728,7 @@ def run_optimize(dataName, **kwargs):
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
     maxiter = kwargs.get("maxiter", DEFAULT_PARA["maxiter"])
+    logger = kwargs.get("logger", DEFAULT_PARA["logger"])
     # >>> parameter bounds <<< #
     paras_min, paras_max = get_paras_bound(**kwargs)
     # >>> paras_init <<< #
@@ -743,6 +744,7 @@ def run_optimize(dataName, **kwargs):
             raise ValueError(
                 "run_optimize: Invalid paras_init: {:s}".format(paras_init)
             )
+        logger.info("Load Initial paras: "+str(paras))
     else:  # no initialization
         # paras = np.random.uniform(paras_min, paras_max)
         paras = (paras_min + paras_max) / 2
@@ -801,7 +803,6 @@ def run_optimize(dataName, **kwargs):
             options={"disp": True, "maxiter": maxiter, "adaptive": True},
         )
     #
-    logger = kwargs.get("logger", DEFAULT_PARA["logger"])
     logger.info("Final Parameter: ")
     logger.info(paras.x)
     # >>> savedata, using try-catch to avoid error <<< #
