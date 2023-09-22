@@ -147,11 +147,11 @@ def set_params(fdtd, paras, **kwargs):
         fiberx = paras[8]
         #
     elif grating_typ == "inverse_grating":
-        pitch_list = paras[1 : 1 + N]
+        pitch_list = paras[0:N]
         fdtd.setnamed(grating_typ, "pitch_list", pitch_list)
-        ff_list = paras[1 + N : 1 + 2 * N]
+        ff_list = paras[N : 2 * N]
         fdtd.setnamed(grating_typ, "ff_list", ff_list)
-        fiberx = paras[0]
+        fiberx = paras[2 * N]
         #
     elif grating_typ == "grating":
         Lambda = paras[0]
@@ -237,8 +237,8 @@ def calc_min_feature(paras, **kwargs) -> float:
             _min_feature_size = min(_min_feature_size, min(min_L, min_H))
         return float(_min_feature_size)  # type: ignore
     elif grating_typ == "inverse_grating":
-        pitch_list = paras[1 : 1 + N]
-        ff_list = paras[1 + N : 1 + 2 * N]
+        pitch_list = paras[0:N]
+        ff_list = paras[N : 2 * N]
         _min_feature = 1
         for i in range(1, N):  # the first unit does not count
             feature_i = pitch_list[i] * min((1 - ff_list[i]), ff_list[i])
@@ -627,7 +627,16 @@ def convert_paras_init(para, kwargs, kwargs_init):
                 NH=NH,
             )
             pitch_list, ff_list = grating_to_pitch_ff(grating)
-            paras = np.hstack((fiberx, pitch_list, ff_list))
+            paras = np.hstack((pitch_list, ff_list, fiberx))
+            return paras
+        elif grating_typ_init == "grating":
+            fiberx = para[2]
+            N = kwargs_init.get("N", DEFAULT_PARA["N"])
+            pitch = para[0]
+            ff = para[1]
+            pitch_list = np.array([pitch] * N)
+            ff_list = np.array([ff] * N)
+            paras = np.hstack((pitch_list, ff_list, fiberx))
             return paras
         elif grating_typ_init == "inverse_grating":
             return para
@@ -696,9 +705,9 @@ def get_paras_bound(**kwargs):
         paras_max = np.array(
             [1.7e-6, 1.7e-6, 0.32, 0.32, 0.95, 0.95, 0.7, 0.7, 20e-6], dtype=np.float_
         )
-    elif grating_typ == "inverse_grating":  # [fiberx, pitch_list, ff_list]
-        paras_min = np.array([10e-6] + [200e-9] * N + [0.05] * N, dtype=np.float_)
-        paras_max = np.array([25e-6] + [1.1e-6] * N + [0.95] * N, dtype=np.float_)
+    elif grating_typ == "inverse_grating":  # [pitch_list, ff_list, fiberx]
+        paras_min = np.array([200e-9] * N + [0.05] * N + [10e-6], dtype=np.float_)
+        paras_max = np.array([1.1e-6] * N + [0.95] * N + [25e-6], dtype=np.float_)
     elif grating_typ == "grating":  # [Lambda, ff, fiberx]
         lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
         dLambda = 0.55e-6 * (lambda_0 - 1326e-9) / (1326e-9)
@@ -744,7 +753,7 @@ def run_optimize(dataName, **kwargs):
             raise ValueError(
                 "run_optimize: Invalid paras_init: {:s}".format(paras_init)
             )
-        logger.info("Load Initial paras: "+str(paras))
+        logger.info("Load Initial paras: " + str(paras))
     else:  # no initialization
         # paras = np.random.uniform(paras_min, paras_max)
         paras = (paras_min + paras_max) / 2
