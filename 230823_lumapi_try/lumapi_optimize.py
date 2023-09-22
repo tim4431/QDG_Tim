@@ -804,16 +804,17 @@ def run_optimize(dataName, **kwargs):
         setup_monitor(fdtd, monitor=False, movie=False)
         setup_grating_structuregroup(fdtd, **kwargs)
         #
-        paras = opt.minimize(
+        paras_optimized = opt.minimize(
             lambda para: optimize_wrapper(fdtd, para, plot=True, **kwargs1),
             paras,
             method="Nelder-Mead",
             bounds=paras_bounds,
             options={"disp": True, "maxiter": maxiter, "adaptive": True},
         )
+    paras = paras_optimized.x
     #
     logger.info("Final Parameter: ")
-    logger.info(paras.x)
+    logger.info(paras)
     # >>> savedata, using try-catch to avoid error <<< #
     try:
         l, T = transmissionHist[-1]
@@ -832,7 +833,7 @@ def run_optimize(dataName, **kwargs):
     except Exception as e:
         logger.error(e)
     try:
-        np.savetxt("{:s}_paras.txt".format(dataName), paras.x)
+        np.savetxt("{:s}_paras.txt".format(dataName), paras)
     except Exception as e:
         logger.error(e)
     try:
