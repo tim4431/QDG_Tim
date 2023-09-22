@@ -89,9 +89,13 @@ if __name__ == "__main__":  # type: ignore
     # 4e25_minback
     work_4e25_minback = work_4e25
     work_4e25_minback["simulation_typ"] = 2
+    work_4e25_minback["grating_typ"] = "inverse_grating"
+    work_4e25_minback["paras_init"] = "4e25"
     # 639a_minback
     work_grating_639a_minback = work_grating_639a
     work_grating_639a_minback["simulation_typ"] = 2
+    work_grating_639a_minback["grating_typ"] = "inverse_grating"
+    work_grating_639a_minback["paras_init"] = "639a"
     works = [work_grating_639a_minback, work_4e25_minback]
     #
-    work_loader(works, "min_back,4e25,639a_test")
+    work_loader(works, "min_back,4e25,639a_test2")
