@@ -275,7 +275,7 @@ def fdtd_iter(
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, float, float, float, float]:
     """
     - l, T, R, maxT, lambda_maxT, FWHM_fit, FOM = fdtd_iter(fdtd, paras, simulation_typ, reload_gds, **kwargs)
-    - simulation_typ (int): 0 - forward only, 1 - back reflection only, 2 - both
+    - reload_simulation_typ (int): 0 - forward only, 1 - back reflection only, 2 - both
     """
     #
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
