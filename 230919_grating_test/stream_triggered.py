@@ -1,108 +1,3 @@
-from labjack import ljm  # type: ignore
-import sys
-from typing import List, Tuple, Union, Any
-import numpy as np
-
-sys.path.append(r"\\QDG-LABBEAR\\Users\\QDG-LABBEAR-SERVER\\Desktop\\LANAS\\DataBear")
-
-
-def init_laser():
-    from RemoteDevice import RemoteDevice  # type: ignore
-
-    laser = RemoteDevice("SantecTSL570")
-    laser.write_laser_status("On")
-    laser.write_wavelength(1326.0)
-    laser.write_power(-15.0)
-    laser.write_coherence_control("Off")
-    return laser
-
-
-def init_picoharp():
-    from RemoteDevice import RemoteDevice  # type: ignore
-
-    return RemoteDevice("PicoHarp300")
-
-
-def init_labjack():
-    handle = ljm.openS("T7", "ETHERNET", "192.168.0.125")
-    info = ljm.getHandleInfo(handle)
-    print(info)
-    return handle
-
-
-def ljm_conf_range_resolution(
-    handle: Any, numAIN: int, rangeAIN: float, resolutionAIN: int
-):
-    numFrames = 2
-    aNames = ["AIN{:d}_RANGE".format(numAIN), "AIN{:d}_RESOLUTION_INDEX".format(numAIN)]
-    aValues = [rangeAIN, resolutionAIN]
-    ljm.eWriteNames(handle, numFrames, aNames, aValues)
-
-
-def ljm_read_range_resolution(handle: Any, numAIN: int):
-    numFrames = 2
-    aNames = ["AIN{:d}_RANGE".format(numAIN), "AIN{:d}_RESOLUTION_INDEX".format(numAIN)]
-    aValues = ljm.eReadNames(handle, numFrames, aNames)
-    return aValues
-
-
-def ljm_auto_range_resolution(handle, numAIN):
-    ljm_conf_range_resolution(handle, numAIN, 10.00, 1)
-    estimated_v = ljm.eReadName(handle, "AIN{:d}".format(numAIN))
-    if abs(estimated_v) < 0.8:
-        ljm_conf_range_resolution(handle, numAIN, 1.00, 8)
-    elif abs(estimated_v) < 20:
-        ljm_conf_range_resolution(handle, numAIN, 10.00, 8)
-
-
-def ljm_auto_range_read(handle, numAIN):
-    ljm_auto_range_resolution(handle, numAIN)
-    return ljm.eReadName(handle, "AIN{:d}".format(numAIN))
-
-
-"""
-Demonstrates triggered stream on DIO0 / FIO0.
-
-Relevant Documentation:
-
-LJM Library:
-    LJM Library Installer:
-        https://labjack.com/support/software/installers/ljm
-    LJM Users Guide:
-        https://labjack.com/support/software/api/ljm
-    Opening and Closing:
-        https://labjack.com/support/software/api/ljm/function-reference/opening-and-closing
-    NamesToAddresses:
-        https://labjack.com/support/software/api/ljm/function-reference/utility/ljmnamestoaddresses
-    Stream Functions (eStreamRead, eStreamStart, etc.):
-        https://labjack.com/support/software/api/ljm/function-reference/stream-functions
-    Single Value Functions (such as eReadName):
-        https://labjack.com/support/software/api/ljm/function-reference/single-value-functions
-    Library Configuration Functions:
-        https://labjack.com/support/software/api/ljm/function-reference/library-configuration-functions
-
-T-Series and I/O:
-    Modbus Map:
-        https://labjack.com/support/software/api/modbus/modbus-map
-    Stream Mode:
-        https://labjack.com/support/datasheets/t-series/communication/stream-mode
-    Stream Mode (triggered):
-        https://labjack.com/support/datasheets/t-series/communication/stream-mode#triggered
-    Analog Inputs:
-        https://labjack.com/support/datasheets/t-series/ain
-    Digital I/O:
-        https://labjack.com/support/datasheets/t-series/digital-io
-
-Note:
-    Our Python interfaces throw exceptions when there are any issues with
-    device communications that need addressed. Many of our examples will
-    terminate immediately when an exception is thrown. The onus is on the API
-    user to address the cause of any exceptions thrown, and add exception
-    handling when appropriate. We create our own exception classes that are
-    derived from the built-in Python Exception class and can be caught as such.
-    For more information, see the implementation in our source code and the
-    Python standard documentation.
-"""
 from datetime import datetime
 import sys
 
@@ -113,12 +8,10 @@ import ljm_stream_util
 
 MAX_REQUESTS = 10  # The number of eStreamRead calls that will be performed.
 
-# Open first found LabJack
-handle = ljm.openS("ANY", "ANY", "ANY")  # Any device, Any connection, Any identifier
-# handle = ljm.openS("T7", "ANY", "ANY")  # T7 device, Any connection, Any identifier
-# handle = ljm.openS("T4", "ANY", "ANY")  # T4 device, Any connection, Any identifier
-# handle = ljm.open(ljm.constants.dtANY, ljm.constants.ctANY, "ANY")  # Any device, Any connection, Any identifier
 
+handle = ljm.openS(
+    "T7", "ETHERNET", "192.168.0.125"
+)  # Any device, Any connection, Any identifier
 info = ljm.getHandleInfo(handle)
 print(
     "Opened a LabJack with Device type: %i, Connection type: %i,\n"
@@ -128,9 +21,6 @@ print(
 
 deviceType = info[0]
 
-if deviceType == ljm.constants.dtT4:
-    print("\nThe LabJack T4 does not support triggered stream.")
-    sys.exit()
 
 # Stream Configuration
 aScanListNames = ["AIN0", "AIN1"]  # Scan list names to stream
