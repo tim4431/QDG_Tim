@@ -42,7 +42,7 @@ def work_loader(workList, prefix, merge_data=False):
             loader_logger.info("KeyboardInterrupt, stop")
             break
         except Exception as e:
-            loader_logger.error("Error in uuid: " + uuid + " : " +str(e))
+            loader_logger.error("Error in uuid: " + uuid + " : " + str(e))
         finally:
             close_logger(logger)  # type: ignore
 
@@ -83,26 +83,13 @@ def work_para_sweeper(work_template, sweep_range, sweep_var_name):
 if __name__ == "__main__":  # type: ignore
     # print("sleeping")
     # time.sleep(3600 * 5)
-    from works.w_subw_4e25 import work_4e25
-    from works.w_grating_639a import work_grating_639a
 
-    # 4e25_minback
-    work_4e25_minback = work_4e25
-    work_4e25_minback["simulation_typ"] = 2
-    work_4e25_minback["grating_typ"] = "inverse_grating"
-    work_4e25_minback["N"] = 36
-    work_4e25_minback["paras_init"] = "4e25"
-    # 639a_minback
-    work_grating_639a_minback = work_grating_639a
-    work_grating_639a_minback["simulation_typ"] = 2
-    work_grating_639a_minback["grating_typ"] = "inverse_grating"
-    work_grating_639a_minback["paras_init"] = "639a"
-    # e86b_minback
-    work_grating_e86b_minback = load_json("e86b")
-    work_grating_e86b_minback["simulation_typ"] = 2
-    work_grating_e86b_minback["grating_typ"] = "inverse_grating"
-    work_grating_e86b_minback["paras_init"] = "e86b"
+    # 4e25_packaged
+    work_4e25_packaged = load_json("4e25")
+    work_4e25_packaged["SOURCE_typ"] = "gaussian_packaged"
+    # 639a_packaged
+    work_639a_packaged = load_json("639a")
+    work_639a_packaged["SOURCE_typ"] = "gaussian_packaged"
     #
-    works = [work_4e25_minback,work_grating_639a_minback,work_grating_e86b_minback]
-    #
-    work_loader(works, "min_back,4e25,639a,e86b_test3")
+    works = [work_4e25_packaged, work_639a_packaged]
+    work_loader(works, "4e25_639a_packaged")

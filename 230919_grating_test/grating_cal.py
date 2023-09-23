@@ -3,10 +3,13 @@ import numpy as np
 
 sys.path.append("..")
 from lib.device.device import ljm_auto_range_read, init_labjack, init_laser
+from lib.device.santec_internal_sweep import santec_internal_sweep
 from lib.device.data_recorder import data_recorder
+import labjack.ljm as ljm
 import datetime
 import time
 from typing import Union, List, Any
+import matplotlib.pyplot as plt
 
 
 def v_to_pd_power(v: Union[float, np.ndarray], numAIN: int) -> Union[float, np.ndarray]:
@@ -86,9 +89,25 @@ def photodiode_lambda_sweep(
     )
 
 
-if __name__ == "__main__":
-    import labjack.ljm as ljm
+def calibrate_grating():
+    laser = init_laser()
+    l, datas = santec_internal_sweep(
+        laser,
+        power=5,
+        aScanListNames=["AIN2", "AIN3"],
+        scanRate=10000,
+        start=1355,
+        end=1356,
+        sweeprate=10,
+    )
+    input_v, output_v = datas
+    input_p = v_to_pd_power(input_v, 2)
+    output_p = v_to_pd_power(output_v, 3)
+    plt.plot(l, input_p, label="input")
+    plt.plot(l, output_p, label="output")
 
+
+if __name__ == "__main__":
     handle = init_labjack()
     # print(_read_pd_power(handle, 2))
     set_mems_switch(handle, dir=0)
