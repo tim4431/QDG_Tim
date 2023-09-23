@@ -86,8 +86,13 @@ def reload_work(
                 reload_gds=False if (tether_typ == None) else True,
                 **kwargs,
             )
+            print("MaxT: ",maxT)
+            print("lambda_maxT: ", lambda_maxT)
+            print("FWHM: ",FWHM_fit)
+            print("FOM: ",FOM)
+            #
             # >>> save data <<< #
-            if reload_simulation_typ == 0:
+            if reload_simulation_typ in [0,2]:
                 try:
                     a = np.transpose(np.vstack((l * 1e6, T)))  # wavelength in um
                     np.savetxt(
@@ -98,7 +103,8 @@ def reload_work(
                     )
                 except Exception as e:
                     print("reload_res: save transmission Error: ", str(e))
-            elif reload_simulation_typ == 1:
+            #
+            if reload_simulation_typ in [1,2]:
                 try:
                     a = np.transpose(np.vstack((l * 1e6, R)))  # wavelength in um
                     np.savetxt(
@@ -110,7 +116,7 @@ def reload_work(
                 except Exception as e:
                     print("reload_res: save reflection Error: ", str(e))
             # >>> plot <<< #
-            if reload_simulation_typ == 0:
+            if reload_simulation_typ in [0,2]:
                 try:
                     plt.figure(figsize=(9, 6))
                     plt.plot(l * 1e9, T)
@@ -127,7 +133,7 @@ def reload_work(
                     plt.close()
                 except Exception as e:
                     print("reload_res: save transmission figure Error: ", str(e))
-            elif reload_simulation_typ == 1:
+            if reload_simulation_typ in [1,2]:
                 try:
                     plt.figure(figsize=(9, 6))
                     plt.plot(l * 1e9, R)
@@ -144,8 +150,6 @@ def reload_work(
                     plt.close()
                 except Exception as e:
                     print("reload_res: save reflection figure Error: ", str(e))
-            # >>> print result <<< #
-            print(maxT, lambda_maxT, FWHM_fit, FOM)
         except Exception as e:
             print("reload_res: Error: ", e)
         # >>> if pause, keeps the lumerical window open <<< #
@@ -157,9 +161,9 @@ def reload_work(
 if __name__ == "__main__":
     #
     reload_work(
-        "e86b",
+        "f82c",
         dimension="2D",
-        reload_simulation_typ=1,
+        reload_simulation_typ=2,
         tether_typ=None,
         pause=False,
         advanced_monitor=False,

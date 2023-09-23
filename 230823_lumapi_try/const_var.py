@@ -1,4 +1,5 @@
 DEFAULT_PARA = {
+    "plot":False,
     "lambda_0": 1.326e-6,
     "FWHM": 0.0833e-6,
     "alpha": 0.00,

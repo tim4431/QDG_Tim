@@ -1,0 +1,14 @@
+[INFO] - Work loader start
+[INFO] - uuid: 6902 created
+[INFO] - work: {'lambda_0': 1.326e-06, 'FWHM': 4e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 36, 'NL': 2, 'NH': 2, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'start_radius': 1.2e-05, 'simulation_typ': 2, 'grating_typ': 'inverse_grating', 'paras_init': '4e25', 'uuid': '6902'}
+[INFO] - uuid: 3723 created
+[INFO] - work: {'lambda_0': 1.326e-06, 'FWHM': 2e-08, 'alpha': 0.0, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'N': 25, 'maxiter': 100, 'MIN_FEATURE_SIZE': 4e-08, 'FOM_typ': 'square', 'SOURCE_typ': 'gaussian_released', 'grating_typ': 'inverse_grating', 'start_radius': 1.2e-05, 'simulation_typ': 2, 'paras_init': '639a', 'uuid': '3723'}
+[INFO] - uuid: f82c created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 2e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 25, 'NH': 3, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'grating_typ': 'inverse_grating', 'lambda_0': 1.28e-06, 'logger': None, 'maxiter': 100, 'paras_init': 'e86b', 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'start_radius': 1.2e-05, 'taper_angle': 24, 'simulation_typ': 2, 'uuid': 'f82c'}
+[INFO] - uuid: 6902 finished
+[INFO] - uuid: 3723 finished
+[INFO] - uuid: f82c finished
+[INFO] - 0 uuid: 	6902	 finished
+[INFO] - 1 uuid: 	3723	 finished
+[INFO] - 2 uuid: 	f82c	 finished
+[INFO] - Work loader end

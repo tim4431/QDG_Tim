@@ -89,7 +89,7 @@ def calculate_FOM_TR(l, T, R, **kwargs) -> Tuple[float, float, float, float]:
 
     # >>> FOM <<< #
     if FOM_typ == "square":
-        print(norm_T, norm_R)
+        # print(norm_T, norm_R)
         FOM = float((norm_T - norm_R / 5) * norm_cross_correlation)
     else:
         raise ValueError("Invalid FOM_typ: {:s}".format(FOM_typ))
