@@ -84,12 +84,10 @@ if __name__ == "__main__":  # type: ignore
     # print("sleeping")
     # time.sleep(3600 * 5)
 
-    # 4e25_packaged
-    work_4e25_packaged = load_json("4e25")
-    work_4e25_packaged["SOURCE_typ"] = "gaussian_packaged"
-    # 639a_packaged
-    work_639a_packaged = load_json("639a")
-    work_639a_packaged["SOURCE_typ"] = "gaussian_packaged"
+    # 4e25_BFGS
+    work_4e25_BFGS = load_json("4e25")
+    work_4e25_BFGS["source_angle"] = 14.8
+    work_4e25_BFGS["maxiter"] = 70
     #
-    works = [work_4e25_packaged, work_639a_packaged]
-    work_loader(works, "4e25_639a_packaged")
+    works = [work_4e25_BFGS]
+    work_loader(works, "4e25_BFGS")

@@ -804,12 +804,19 @@ def run_optimize(dataName, **kwargs):
         setup_monitor(fdtd, monitor=False, movie=False)
         setup_grating_structuregroup(fdtd, **kwargs)
         #
+        # paras_optimized = opt.minimize(
+        #     lambda para: optimize_wrapper(fdtd, para, plot=True, **kwargs1),
+        #     paras,
+        #     method="Nelder-Mead",
+        #     bounds=paras_bounds,
+        #     options={"disp": True, "maxiter": maxiter, "adaptive": True},
+        # )
         paras_optimized = opt.minimize(
             lambda para: optimize_wrapper(fdtd, para, plot=True, **kwargs1),
             paras,
-            method="Nelder-Mead",
+            method="L-BFGS-B",
             bounds=paras_bounds,
-            options={"disp": True, "maxiter": maxiter, "adaptive": True},
+            options={"disp": True, "maxiter": maxiter},
         )
     paras = paras_optimized.x
     #
