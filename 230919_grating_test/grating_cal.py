@@ -6,15 +6,22 @@ from lib.device.device import ljm_auto_range_read, init_labjack, init_laser
 from lib.device.data_recorder import data_recorder
 import datetime
 import time
+from typing import Union, List, Any
 
 
-def _read_pd_power(handle, numAIN) -> float:
-    v = ljm_auto_range_read(handle, numAIN)
-    # print(v)
+def v_to_pd_power(v: Union[float, np.ndarray], numAIN: int) -> Union[float, np.ndarray]:
     if numAIN == 2:
         p = 4.22701823 * v + 0.09182073
     elif numAIN == 3:
         p = 4.34946232 * v + 0.10039678
+    else:
+        raise ValueError("numAIN must be 2 or 3")
+    return p
+
+
+def _read_pd_power(handle: Any, numAIN: int) -> float:
+    v = ljm_auto_range_read(handle, numAIN)
+    p = v_to_pd_power(v, numAIN)
     return float(p)  # type: ignore
 
 
@@ -25,7 +32,7 @@ def efficiency_input_output(handle):
     return e, input_p, output_p
 
 
-def getDataName(uuid, lambda_start, lambda_end, lambda_step):
+def getDataName(uuid: str, lambda_start, lambda_end, lambda_step):
     now = datetime.datetime.now()
     date_str = now.strftime("%y%m%d")
     datetime_str = now.strftime("%y%m%d_%H%M%S")
@@ -36,6 +43,9 @@ def getDataName(uuid, lambda_start, lambda_end, lambda_step):
 
 
 def set_mems_switch(handle, dir=0):
+    """
+    - dir = 0, santec, dir = 1, broadband
+    """
     if dir == 0:
         ljm.eWriteName(handle, "DAC0", 4.5)
         ljm.eWriteName(handle, "DAC1", 0.0)
