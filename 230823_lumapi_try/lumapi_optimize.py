@@ -804,27 +804,41 @@ def run_optimize(dataName, **kwargs):
         setup_monitor(fdtd, monitor=False, movie=False)
         setup_grating_structuregroup(fdtd, **kwargs)
         #
-        # paras_optimized = opt.minimize(
-        #     lambda para: optimize_wrapper(fdtd, para, plot=True, **kwargs1),
-        #     paras,
-        #     method="Nelder-Mead",
-        #     bounds=paras_bounds,
-        #     options={"disp": True, "maxiter": maxiter, "adaptive": True},
-        # )
         paras_optimized = opt.minimize(
             lambda para: optimize_wrapper(fdtd, para, plot=True, **kwargs1),
             paras,
-            method="L-BFGS-B",
+            method="Nelder-Mead",
             bounds=paras_bounds,
-            options={"disp": True, "maxiter": maxiter,"ftol":1e-8,"gtol":1e-8},
+            options={"disp": True, "maxiter": maxiter, "adaptive": True},
         )
-    paras = paras_optimized.x
-    #
-    logger.info("Final Parameter: ")
-    logger.info(paras)
+        paras = paras_optimized.x
+        #
+        logger.info("Final Parameter: ")
+        logger.info(paras)
+        # >>> Simulate using the optimized paras <<< #
+        logger.info("Simulate using the optimized paras")
+        transmissionBst = []
+        reflectionBst = []
+        FOMBst = []
+        featureBst = []
+        lambda0Bst = []
+        FWHMBst = []
+        kwargs2 = {
+            **kwargs,
+            #
+            "transmissionHist": transmissionBst,
+            "reflectionHist": reflectionBst,
+            "parasHist": parasHist,
+            "FOMHist": FOMBst,
+            "featureHist": featureBst,
+            "lambda0Hist": lambda0Bst,
+            "FWHMHist": FWHMBst,
+        }
+        optimize_wrapper(fdtd, paras, plot=False, **kwargs2)
+
     # >>> savedata, using try-catch to avoid error <<< #
     try:
-        l, T = transmissionHist[-1]
+        l, T = transmissionBst
         a = np.transpose(np.vstack((l * 1e6, T)))  # wavelength in um
         np.savetxt(
             "{:s}_transmission.txt".format(dataName), a
@@ -832,7 +846,7 @@ def run_optimize(dataName, **kwargs):
     except Exception as e:
         logger.error(e)
     try:
-        l, R = reflectionHist[-1]
+        l, R = reflectionBst
         a = np.transpose(np.vstack((l * 1e6, R)))  # wavelength in um
         np.savetxt(
             "{:s}_reflection.txt".format(dataName), a
