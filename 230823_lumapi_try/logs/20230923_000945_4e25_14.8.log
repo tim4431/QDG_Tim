@@ -1,0 +1,10 @@
+[INFO] - Work loader start
+[INFO] - uuid: b0ea created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 4e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'start_radius': 1.2e-05, 'source_angle': 14.8, 'uuid': 'b0ea'}
+[INFO] - uuid: 3eae created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 4e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'start_radius': 1.2e-05, 'source_angle': 14.8, 'grating_typ': 'inverse_grating', 'uuid': '3eae'}
+[INFO] - uuid: b0ea finished
+[INFO] - uuid: 3eae finished
+[INFO] - 0 uuid: 	b0ea	 finished
+[INFO] - 1 uuid: 	3eae	 finished
+[INFO] - Work loader end
