@@ -838,7 +838,7 @@ def run_optimize(dataName, **kwargs):
 
     # >>> savedata, using try-catch to avoid error <<< #
     try:
-        l, T = transmissionBst
+        l, T = transmissionBst[0]
         a = np.transpose(np.vstack((l * 1e6, T)))  # wavelength in um
         np.savetxt(
             "{:s}_transmission.txt".format(dataName), a
@@ -846,7 +846,7 @@ def run_optimize(dataName, **kwargs):
     except Exception as e:
         logger.error(e)
     try:
-        l, R = reflectionBst
+        l, R = reflectionBst[0]
         a = np.transpose(np.vstack((l * 1e6, R)))  # wavelength in um
         np.savetxt(
             "{:s}_reflection.txt".format(dataName), a
