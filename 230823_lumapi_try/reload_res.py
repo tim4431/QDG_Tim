@@ -64,6 +64,7 @@ def reload_work(
             # >>> setup grating <<< #
             if tether_typ is not None:  # import gds
                 gds_fileName = generate_gds_fileName(uuid, tether_typ=tether_typ)
+                print("Loading gds: ", gds_fileName)
                 fdtd.gdsimport(
                     gds_fileName,
                     "grating_gds",
