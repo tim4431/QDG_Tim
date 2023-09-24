@@ -16,6 +16,7 @@ from create_gds import generate_gds_fileName
 import time
 
 sys.path.append("..")
+from lib.gaussian.gaussian_fit_1d import arb_fit_1d
 
 
 def reload_work(
@@ -120,10 +121,9 @@ def reload_work(
             # >>> plot <<< #
             if reload_simulation_typ in [0, 2]:
                 try:
-                    plt.figure(figsize=(9, 6))
-                    plt.plot(l * 1e9, T)
-                    plt.xlabel("Wavelength (nm)")
-                    plt.ylabel("Transmission")
+                    fig, ax = plt.subplots(figsize=(9, 6))
+                    arb_fit_1d(ax, l * 1e9, T, r"$T(\lambda)$", label=True)
+                    ax.legend(loc="upper right")
                     plt.title("Transmission vs wavelength")
                     plt.savefig(
                         "{:s}_{:s}_{:s}_simulated_transmission.png".format(
@@ -137,10 +137,9 @@ def reload_work(
                     print("reload_res: save transmission figure Error: ", str(e))
             if reload_simulation_typ in [1, 2]:
                 try:
-                    plt.figure(figsize=(9, 6))
-                    plt.plot(l * 1e9, R)
-                    plt.xlabel("Wavelength (nm)")
-                    plt.ylabel("Reflection")
+                    fig, ax = plt.subplots(figsize=(9, 6))
+                    arb_fit_1d(ax, l * 1e9, R, r"$R(\lambda)$", label=True)
+                    ax.legend(loc="upper right")
                     plt.title("Reflection vs wavelength")
                     plt.savefig(
                         "{:s}_{:s}_{:s}_simulated_reflection.png".format(
