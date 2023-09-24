@@ -816,7 +816,7 @@ def run_optimize(dataName, **kwargs):
             paras,
             method="L-BFGS-B",
             bounds=paras_bounds,
-            options={"disp": True, "maxiter": maxiter},
+            options={"disp": True, "maxiter": maxiter,"ftol":1e-8,"gtol":1e-8},
         )
     paras = paras_optimized.x
     #
