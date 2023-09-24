@@ -688,12 +688,13 @@ def get_paras_bound(**kwargs):
             "gaussian_packaged",
             "gaussian_airclad",
         ]:
-            if NL == 2:
-                paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3, 12e-6], dtype=np.float_)
-                paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7, 20e-6], dtype=np.float_)
-            else:
-                paras_min = np.array([0.4e-6, 0.00, 0.3, 0.2, 10e-6], dtype=np.float_)
-                paras_max = np.array([1.3e-6, 0.5, 0.95, 0.8, 22e-6], dtype=np.float_)
+            start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
+            paras_min = np.array(
+                [1.1e-6, 0.00, 0.5, 0.3, start_radius], dtype=np.float_
+            )
+            paras_max = np.array(
+                [1.7e-6, 0.32, 0.95, 0.7, start_radius + 10e-6], dtype=np.float_
+            )
         else:
             raise ValueError(
                 "get_paras_bound: Invalid SOURCE_typ: {:s}".format(SOURCE_typ)
