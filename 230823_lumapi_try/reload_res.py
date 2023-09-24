@@ -84,6 +84,7 @@ def reload_work(
                 paras,
                 reload_simulation_typ=reload_simulation_typ,
                 reload_gds=False if (tether_typ == None) else True,
+                dimension=dimension,
                 **kwargs,
             )
             print("MaxT: ", maxT)
@@ -165,6 +166,14 @@ if __name__ == "__main__":
         dimension="3D",
         reload_simulation_typ=0,
         tether_typ="empty",
+        pause=False,
+        advanced_monitor=False,
+    )
+    reload_work(
+        "f93f",
+        dimension="3D",
+        reload_simulation_typ=0,
+        tether_typ="multisuspend",
         pause=False,
         advanced_monitor=False,
     )
