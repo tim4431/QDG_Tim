@@ -84,29 +84,26 @@ if __name__ == "__main__":  # type: ignore
     # print("sleeping")
     # time.sleep(3600 * 5)
 
-    # f93f_NL,NH_sweep
-    work_f93f = load_json("f93f")
-    work_f93f["max_iter"] = 70
-    #
-    work_f93f_1_1 = deepcopy(work_f93f)
-    work_f93f_1_1["NL"] = 1
-    work_f93f_1_1["NH"] = 1
-    #
-    work_f93f_1_2 = deepcopy(work_f93f)
-    work_f93f_1_2["NL"] = 1
-    work_f93f_1_2["NH"] = 2
-    #
-    work_f93f_2_1 = deepcopy(work_f93f)
-    work_f93f_2_1["NL"] = 2
-    work_f93f_2_1["NH"] = 1
-    #
-    work_f93f_2_3 = deepcopy(work_f93f)
-    work_f93f_2_3["NL"] = 2
-    work_f93f_2_3["NH"] = 3
-    #
-    work_f93f_3_2 = deepcopy(work_f93f)
-    work_f93f_3_2["NL"] = 3
-    work_f93f_3_2["NH"] = 2
-    #
-    works = [work_f93f_1_1, work_f93f_1_2, work_f93f_2_1, work_f93f_2_3, work_f93f_3_2]
-    work_loader(works, "f93f_NL,NH_sweep", merge_data=True)
+    # 639a_bst
+    work_grating_639a = {
+        "lambda_0": 1.326e-6,
+        "FWHM": 20e-9,
+        "alpha": 0.00,
+        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
+        "N": 25,
+        "maxiter": 100,
+        "MIN_FEATURE_SIZE": 40e-9,
+        "FOM_typ": "square",
+        "SOURCE_typ": "gaussian_released",
+        "grating_typ": "grating",
+        "start_radius": 12e-6,
+        "simulation_typ": 0,
+    }
+    work_grating_639a_bst = work_grating_639a
+    work_grating_639a_bst["grating_typ"] = "grating"
+    work_grating_639a_bst["simulation_typ"] = 2
+    work_grating_639a_bst["source_angle"] = 14.8
+    work_grating_639a_bst["N"] = 30
+    work_grating_639a_bst["penalty"] = [[0.02, 10e-9], [0.02, 100e-9]]
+    works = [work_grating_639a_bst]
+    work_loader(works, "639a_bst")
