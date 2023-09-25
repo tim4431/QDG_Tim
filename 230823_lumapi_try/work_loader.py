@@ -96,7 +96,7 @@ if __name__ == "__main__":  # type: ignore
     work_f93f_1_2["NL"] = 1
     work_f93f_1_2["NH"] = 2
     #
-    work_f93f_2_1 = deepcopy(work_f93f)
+    work_f93f_2_1 = deepcopy(work_f93f)                                                                         
     work_f93f_2_1["NL"] = 2
     work_f93f_2_1["NH"] = 1
     #
