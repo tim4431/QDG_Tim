@@ -5,7 +5,7 @@ sys.path.append("..")
 from lib.device.device import ljm_auto_range_read, init_labjack, init_laser
 from lib.device.data_recorder import data_recorder
 from lib.process_data.calibration import calibrate_photodiode
-from lib.process_data.load_csv_data import load_csv_data
+from lib.process_data.csv_data import load_csv_data
 import matplotlib.pyplot as plt
 
 

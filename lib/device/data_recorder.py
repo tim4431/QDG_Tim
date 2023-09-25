@@ -1,21 +1,7 @@
 import numpy as np
 import time
-
-from typing import Callable, Union, List
-
-
-def init_csv(dataName: str, xname: str, yname: List[str]):
-    with open(dataName, "w") as f:
-        # xname, yname[0], yname[1], ...
-        f.write("{:s},\t{:s}\n".format(xname, ",\t".join(yname)))
-
-
-def appenddata(dataName: str, x: float, y: List[float]):
-    with open(dataName, "a") as f:
-        # x, y[0], y[1], ...
-        f.write(
-            "{:.4f},\t{:s}\n".format(x, ",\t".join(["{:.8f}".format(yi) for yi in y]))
-        )
+from lib.process_data.csv_data import init_csv, appenddata
+from typing import Union, List, Callable, Any, Tuple
 
 
 def nop(x):

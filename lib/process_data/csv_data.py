@@ -1,7 +1,37 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from typing import Callable, Union
+from typing import Callable, Union, List
+
+
+def init_csv(dataName: str, xname: str, yname: List[str]):
+    with open(dataName, "w") as f:
+        # xname, yname[0], yname[1], ...
+        f.write("{:s},\t{:s}\n".format(xname, ",\t".join(yname)))
+
+
+def appenddata(dataName: str, x: float, y: Union[List[float], np.ndarray]):
+    with open(dataName, "a") as f:
+        # x, y[0], y[1], ...
+        f.write(
+            "{:.4f},\t{:s}\n".format(x, ",\t".join(["{:.8f}".format(yi) for yi in y]))
+        )
+
+
+def appenddatas(
+    dataName: str,
+    x: Union[List[float], np.ndarray],
+    y: List[Union[List[float], np.ndarray]],
+):
+    with open(dataName, "a") as f:
+        # x[0], y[0][0], y[1][0] ...
+        # x[1], y[0][1], y[1][1] ...
+        for i in range(len(x)):
+            f.write(
+                "{:.4f},\t{:s}\n".format(
+                    x[i], ",\t".join(["{:.8f}".format(yi[i]) for yi in y])
+                )
+            )
 
 
 def _simple_load_csv_data(fileName: str, key_x: str, key_y: str):
