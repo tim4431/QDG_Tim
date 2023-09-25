@@ -17,9 +17,7 @@ if __name__ == "__main__":
     data = np.loadtxt(fileName)
     arb_fit_1d(ax, data[:, 0] * 1e3, data[:, 1], "2D")
     # >>> 3D <<< #
-    tether_typ_list = [
-        "empty",
-    ]
+    tether_typ_list = ["empty", "section_rect_tether_multisuspend"]
     for tether_typ in tether_typ_list:
         fileName = "{:s}_{:s}_3D_simulated_transmission.txt".format(
             dataName, tether_typ
