@@ -1,0 +1,37 @@
+[INFO] - Work loader start
+[INFO] - uuid: fad9 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 9.999999999999999e-06, 'max_iter': 70, 'uuid': 'fad9'}
+[INFO] - uuid: aece created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.05e-05, 'max_iter': 70, 'uuid': 'aece'}
+[INFO] - uuid: df7d created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.1e-05, 'max_iter': 70, 'uuid': 'df7d'}
+[INFO] - uuid: 359e created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.15e-05, 'max_iter': 70, 'uuid': '359e'}
+[INFO] - uuid: 5b91 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.2e-05, 'max_iter': 70, 'uuid': '5b91'}
+[INFO] - uuid: bdae created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.2499999999999999e-05, 'max_iter': 70, 'uuid': 'bdae'}
+[INFO] - uuid: 84a0 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.3e-05, 'max_iter': 70, 'uuid': '84a0'}
+[INFO] - uuid: aee7 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.35e-05, 'max_iter': 70, 'uuid': 'aee7'}
+[INFO] - uuid: f832 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.4e-05, 'max_iter': 70, 'uuid': 'f832'}
+[INFO] - uuid: 07d4 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.45e-05, 'max_iter': 70, 'uuid': '07d4'}
+[INFO] - uuid: f4d7 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.4999999999999999e-05, 'max_iter': 70, 'uuid': 'f4d7'}
+[INFO] - uuid: 5f32 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.55e-05, 'max_iter': 70, 'uuid': '5f32'}
+[INFO] - uuid: 7318 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.6e-05, 'max_iter': 70, 'uuid': '7318'}
+[INFO] - uuid: fad9 finished
+[INFO] - uuid: aece finished
+[INFO] - uuid: df7d finished
+[INFO] - uuid: 359e finished
+[INFO] - uuid: 5b91 finished
+[INFO] - uuid: bdae finished
+[INFO] - uuid: 84a0 finished
+[INFO] - uuid: aee7 finished
+[INFO] - uuid: f832 finished
+[INFO] - uuid: 07d4 finished
