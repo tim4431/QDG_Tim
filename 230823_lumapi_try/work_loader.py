@@ -84,11 +84,12 @@ if __name__ == "__main__":  # type: ignore
     # print("sleeping")
     # time.sleep(3600 * 5)
 
-    # f93f_inv
+    # f93f_start_radius_sweep
     work_f93f = load_json("f93f")
-    work_f93f_inv = work_f93f
-    work_f93f_inv["grating_typ"]="inverse_grating"
-    work_f93f_inv["N"]=36
-    work_f93f_inv["paras_init"]="f93f"
-    works = [work_f93f_inv]
-    work_loader(works, "f93f_inv")
+    work_f93f["max_iter"] = 70
+    work_f93f_start_radius_sweep = work_para_sweeper(
+        work_f93f, np.arange(10.0, 16.5, 0.5) * 1e-6, "start_radius"
+    )
+    work_loader(
+        work_f93f_start_radius_sweep, "f93f_start_radius_sweep", merge_data=True
+    )
