@@ -1,0 +1,22 @@
+[INFO] - Work loader start
+[INFO] - uuid: b155 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 1, 'NL': 1, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.2e-05, 'max_iter': 70, 'uuid': 'b155'}
+[INFO] - uuid: 705e created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 1, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.2e-05, 'max_iter': 70, 'uuid': '705e'}
+[INFO] - uuid: 2bd0 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 1, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.2e-05, 'max_iter': 70, 'uuid': '2bd0'}
+[INFO] - uuid: 2245 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 3, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.2e-05, 'max_iter': 70, 'uuid': '2245'}
+[INFO] - uuid: a474 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 3, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 100, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.2e-05, 'max_iter': 70, 'uuid': 'a474'}
+[INFO] - uuid: b155 finished
+[INFO] - uuid: 705e finished
+[INFO] - uuid: 2bd0 finished
+[INFO] - uuid: 2245 finished
+[INFO] - uuid: a474 finished
+[INFO] - 0 uuid: 	b155	 finished
+[INFO] - 1 uuid: 	705e	 finished
+[INFO] - 2 uuid: 	2bd0	 finished
+[INFO] - 3 uuid: 	2245	 finished
+[INFO] - 4 uuid: 	a474	 finished
+[INFO] - Work loader end
