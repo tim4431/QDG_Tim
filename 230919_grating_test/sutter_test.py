@@ -20,4 +20,5 @@ import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 
 sutter= init_sutter()
+sutter.set_x_position(1)
 print(sutter.getPosition())

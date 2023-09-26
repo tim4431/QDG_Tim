@@ -6,7 +6,7 @@ from labjack import ljm
 from . import ljm_stream_util
 import time
 from typing import List, Tuple, Union, Any
-from device import ljm_conf_range_resolution
+from .device import ljm_conf_range_resolution
 
 
 def santec_internal_sweep(
