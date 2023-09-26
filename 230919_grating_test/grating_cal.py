@@ -190,7 +190,9 @@ def plot_ion_transmission(callback_func: Callable, HIST_LENGTH: int = 50):
         plt.ioff()
 
 
-def plot_ion_postion_transmission(callback_func: Callable, HIST_LENGTH: int = 50):
+def plot_ion_position_transmission(
+    callback_func: Callable, HIST_LENGTH: int = 50, automatic=False
+):
     datas = []  # [(x1,y1,T1), (x2,y2,T2), ...)]
     # >>> plot data <<<
     plt.ion()
@@ -224,25 +226,29 @@ def plot_ion_postion_transmission(callback_func: Callable, HIST_LENGTH: int = 50
         #
         fig.canvas.flush_events()
         #
-        a = input()
-        #
         return -T
 
     #
     try:
-        minimize(
-            lambda para: _optimize_wrapper(datas, callback_func, para),
-            x0=[0, 0],
-            method="L-BFGS-B",
-            bounds=[(-10, 10), (-10, 10)],
-        )
+        if automatic:
+            minimize(
+                lambda paras: _optimize_wrapper(datas, callback_func, paras),
+                x0=[0, 0],
+                method="L-BFGS-B",
+                bounds=[(-10, 10), (-10, 10)],
+            )
+        else:
+            while True:
+                _optimize_wrapper(datas, callback_func, paras=[0, 0])
+                time.sleep(0.2)
+
     except KeyboardInterrupt:
         print("KeyboardInterrupt, stop")
     finally:
         plt.ioff()
 
 
-def align_grating_manual(handle, power: float = 9.0, source: Union[None, int] = None):
+def align_grating_1D(handle, power: float = 9.0, source: Union[None, int] = None):
     if source == None:
         pass
     elif source == 0:
@@ -255,27 +261,22 @@ def align_grating_manual(handle, power: float = 9.0, source: Union[None, int] = 
     time.sleep(0.5)
 
     #
-    sutter = init_sutter()
-
-    def sutter_pos(sutter):
-        # e, input_p, output_p = transmission_input_output(handle)
-
-        # print(
-        #     "input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
-        #         input_p, output_p, e
-        #     )
-        # )
-        x = sutter.get_x_position()
-        print("x: {:.4f}(um)".format(x))
-        return 0.01 * (x**2)
+    def transmission_manual():
+        e, input_p, output_p = transmission_input_output(handle)
+        print(
+            "input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
+                input_p, output_p, e
+            )
+        )
+        return e
 
     #
-    callback_func = lambda: sutter_pos(sutter)
+    callback_func = transmission_manual
     plot_ion_transmission(callback_func)
 
 
-def align_grating_automatic(
-    handle, power: float = 9.0, source: Union[None, int] = None
+def align_grating_2D(
+    handle, power: float = 9.0, source: Union[None, int] = None, typ: str = "manual"
 ):
     if source == None:
         pass
@@ -289,12 +290,26 @@ def align_grating_automatic(
     time.sleep(0.5)
 
     #
-    sutter = init_sutter()
+    def transmission_manual(sutter, paras):
+        # e, input_p, output_p = transmission_input_output(handle)
+        # print(
+        #     "input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
+        #         input_p, output_p, e
+        #     )
+        # )
+        # return e
+        x = sutter.get_x_position()
+        y = sutter.get_y_position()
+        e = 0.1 * x**2 + 0.5 * y**2
+        return (x, y, e)
 
     def sutter_step(sutter, paras):
-        # paras: (x,y)
-        x, y = paras
-        sutter_move(sutter, x, y)
+        x = paras[0]
+        y = paras[1]
+        # sutter_move(sutter, x, y)
+        time.sleep(0.1)
+        x = sutter.get_x_position()
+        y = sutter.get_y_position()
         T, input_p, output_p = transmission_input_output(handle)
         print(
             "x: {:.4f}(um), y:{:.4f}(um), input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
@@ -304,8 +319,15 @@ def align_grating_automatic(
         return (x, y, T)
 
     #
-    callback_func = lambda datas: sutter_step(sutter, datas)
-    plot_ion_postion_transmission(callback_func)
+    sutter = init_sutter()
+    if typ == "manual":
+        callback_func = lambda paras: transmission_manual(sutter, paras)
+        plot_ion_position_transmission(callback_func)
+    elif typ == "automatic":
+        callback_func = lambda paras: sutter_step(sutter, paras)
+        plot_ion_position_transmission(callback_func)
+    else:
+        raise ValueError("typ must be manual or automatic")
 
 
 if __name__ == "__main__":
@@ -315,7 +337,8 @@ if __name__ == "__main__":
         # print(_read_pd_power(handle, 2))
         # print(_read_pd_power(handle, 3))
         # set_mems_switch(handle, source=0)
-        align_grating_manual(handle=handle, source=None)
+        align_grating_1D(handle=handle, source=None)
         # calibrate_grating("xxxx",1260,1300, 1)
+        align_grating_2D(handle=handle, source=None, typ="manual")
     finally:
         ljm.close(handle)
