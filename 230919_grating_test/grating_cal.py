@@ -242,8 +242,10 @@ def plot_ion_postion_transmission(callback_func: Callable, HIST_LENGTH: int = 50
         plt.ioff()
 
 
-def align_grating_manual(handle, power: float, source: int = 0):
-    if source == 0:
+def align_grating_manual(handle, power: float = 9.0, source: Union[None, int] = None):
+    if source == None:
+        pass
+    elif source == 0:
         laser = init_laser(wavelength=1326.0, power=power)
         set_mems_switch(handle, source=0)
     elif source == 1:
@@ -253,21 +255,31 @@ def align_grating_manual(handle, power: float, source: int = 0):
     time.sleep(0.5)
 
     #
-    def callback_func():
-        e, input_p, output_p = transmission_input_output(handle)
-        print(
-            "input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
-                input_p, output_p, e
-            )
-        )
-        return e
+    sutter = init_sutter()
+
+    def sutter_pos(sutter):
+        # e, input_p, output_p = transmission_input_output(handle)
+
+        # print(
+        #     "input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
+        #         input_p, output_p, e
+        #     )
+        # )
+        x = sutter.get_x_position()
+        print("x: {:.4f}(um)".format(x))
+        return 0.01 * (x**2)
 
     #
+    callback_func = lambda x: sutter_pos(sutter)
     plot_ion_transmission(callback_func)
 
 
-def align_grating_automatic(handle, power: float, source: int = 0):
-    if source == 0:
+def align_grating_automatic(
+    handle, power: float = 9.0, source: Union[None, int] = None
+):
+    if source == None:
+        pass
+    elif source == 0:
         laser = init_laser(wavelength=1326.0, power=power)
         set_mems_switch(handle, source=0)
     elif source == 1:
@@ -297,12 +309,13 @@ def align_grating_automatic(handle, power: float, source: int = 0):
 
 
 if __name__ == "__main__":
-    handle = init_labjack()
+    # handle = init_labjack()
+    handle = None
     try:
-        print(_read_pd_power(handle, 2))
-        print(_read_pd_power(handle, 3))
+        # print(_read_pd_power(handle, 2))
+        # print(_read_pd_power(handle, 3))
         # set_mems_switch(handle, source=0)
-        align_grating_manual(handle=handle, power=9.0, source=0)
+        align_grating_automatic(handle=handle, source=None)
         # calibrate_grating("xxxx",1260,1300, 1)
     finally:
         ljm.close(handle)
