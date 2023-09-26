@@ -5,11 +5,11 @@ sys.path.append("..")
 from lib.device.device import ljm_auto_range_read, init_labjack, init_laser
 from lib.device.santec_internal_sweep import santec_internal_sweep
 from lib.device.data_recorder import data_recorder
-from lib.process_data.csv_data import appenddatas
+from lib.process_data.csv_data import appenddatas, init_csv_heads
 import labjack.ljm as ljm
 import datetime
 import time
-from typing import Union, List, Any, Tuple
+from typing import Union, List, Any, Tuple, Callable
 import matplotlib.pyplot as plt
 
 
@@ -19,10 +19,11 @@ def v_to_pd_power(v: Union[float, np.ndarray], numAIN: int) -> Union[float, np.n
     - numAIN: 2 or 3, pin number
     - return p: power (uW)
     """
+    # fill in your calibration coeffs here
     if numAIN == 2:
-        p = 4.22701823 * v + 0.09182073
+        p = 3.97730538 * v + 4.20229793e-04
     elif numAIN == 3:
-        p = 4.34946232 * v + 0.10039678
+        p = 3.71470995 * v - 4.70855634e-04
     else:
         raise ValueError("numAIN must be 2 or 3")
     return p
@@ -34,18 +35,22 @@ def _read_pd_power(handle: Any, numAIN: int) -> float:
     return float(p)  # type: ignore
 
 
-def _calc_efficiency(
+def _calc_transmission(
     input_p: Union[float, np.ndarray], output_p: Union[float, np.ndarray]
-) -> Union[float, np.ndarray]:
-    input_portion = 0.01
-    output_portion = 1.0
-    return (output_p / output_portion) / (input_p / input_portion)
+) -> np.ndarray:
+    input_portion = 15.28
+    output_portion = 1234
+    att_ratio = (np.asarray(output_p) / output_portion) / (
+        np.asarray(input_p) / input_portion
+    )
+    att_ratio[att_ratio <= 0] = 0
+    return np.sqrt(att_ratio)
 
 
-def efficiency_input_output(handle) -> Tuple[float, float, float]:
-    input_p = _read_pd_power(handle, 3)
-    output_p = _read_pd_power(handle, 4)
-    e = _calc_efficiency(input_p, output_p)
+def transmission_input_output(handle) -> Tuple[float, float, float]:
+    input_p = _read_pd_power(handle, 2)
+    output_p = _read_pd_power(handle, 3)
+    e = float(_calc_transmission(input_p, output_p))
     return e, input_p, output_p
 
 
@@ -61,14 +66,14 @@ def getDataName(
     return fileName
 
 
-def set_mems_switch(handle, dir=0):
+def set_mems_switch(handle, source=0):
     """
-    - dir = 0, santec, dir = 1, broadband
+    - source = 0, santec, source = 1, broadband
     """
-    if dir == 0:
+    if source == 0:
         ljm.eWriteName(handle, "DAC0", 4.5)
         ljm.eWriteName(handle, "DAC1", 0.0)
-    elif dir == 1:
+    elif source == 1:
         ljm.eWriteName(handle, "DAC0", 0.0)
         ljm.eWriteName(handle, "DAC1", 4.5)
     time.sleep(0.05)
@@ -106,78 +111,133 @@ def photodiode_lambda_sweep(
 
 
 def calibrate_grating(
-    uuid: str, lambda_start: float, lambda_end: float, lambda_step: float
+    uuid: str,
+    handle: Any,
+    lambda_start: float,
+    lambda_end: float,
+    lambda_step: float,
+    power: float = 9.0,
 ):
     laser = init_laser()
+    set_mems_switch(handle, source=0)  # should be santec
+    # >>> sweep <<<
     l, datas = santec_internal_sweep(
+        handle,
         laser,
-        power=5,
+        power=power,
         aScanListNames=["AIN2", "AIN3"],
-        scanRate=10000,
+        scanRate=1000,
         start=lambda_start,
         end=lambda_end,
-        sweeprate=10,
+        sweeprate=50,
     )
     input_v, output_v = datas
     input_p = v_to_pd_power(input_v, 2)
     output_p = v_to_pd_power(output_v, 3)
-    efficiency = _calc_efficiency(input_p, output_p)
-    #
+    transmission = _calc_transmission(input_p, output_p)
+    # >>> extract data <<<
     x = l
-    y = [input_p, output_p, efficiency]
+    y = [input_p, output_p, transmission]
     # >>> save data <<<
     dataName = getDataName(
         uuid, lambda_start=lambda_start, lambda_end=lambda_end, lambda_step=lambda_step
     )
     print(dataName)
+    init_csv_heads(
+        dataName, xname="l", yname=["input_p(uW)", "output_p(uW)", "transmission"]
+    )
     appenddatas(dataName, x, y)  # type: ignore
     # >>> plot data <<<
-    # plt.plot(l, input_p, label="input")
-    # plt.plot(l, output_p, label="output")
-    plt.plot(l, efficiency, label="efficiency")
+    plt.plot(l, transmission, label="Transmission")
     plt.legend()
-    plt.xlabel("wavelength")
-    plt.ylabel("efficiency")
+    plt.xlabel(r"Wavelength $\lambda$(nm)")
+    plt.ylabel(r"Transmission $T(\lamnbda)$")
     plt.savefig(dataName.replace(".csv", ".png"), dpi=200, bbox_inches="tight")
+    plt.show()
 
 
-def align_grating(dir: int = 0):
-    laser = init_laser()
-    handle = init_labjack()
-    laser.write_power(13)
-    laser.write_wavelength(1326)
-    set_mems_switch(handle, dir=dir)
-    print("Start Calibration")
-    time.sleep(1)
-    #
-    efficiency_List = []
-    DATA_LENGTH = 50  # keep 50 data points in efficiency_List
-    # matplotlib constantly update
+def plot_ion(callback_func: Callable, xlabel: str, ylabel: str, HIST_LENGTH: int = 50):
+    datas = []
+    # >>> plot data <<<
     plt.ion()
     fig, ax = plt.subplots()
-    ax.set_xlabel("time")
-    ax.set_ylabel("efficiency")
-    ax.set_ylim(0, 1)
-    (line,) = ax.plot([], [], label="efficiency")
-    ax.legend()
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    # ax.set_ylim(0, 1)
+    (line,) = ax.plot([], [])
+    # >>> update data <<<
+    try:
+        while True:
+            e = callback_func()
+            datas.append(e)
+            while (len(datas)) > HIST_LENGTH:
+                datas.pop(0)
+            line.set_data(range(len(datas)), datas)
+            ax.relim()
+            ax.autoscale_view()
+            fig.canvas.flush_events()
+            time.sleep(0.05)
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt, stop")
+    finally:
+        plt.ioff()
+
+
+def align_grating_manual(handle, power: float, source: int = 0):
+    if source == 0:
+        laser = init_laser(wavelength=1326.0, power=power)
+        set_mems_switch(handle, source=0)
+    elif source == 1:
+        set_mems_switch(handle, source=1)
     #
-    while True:
-        e, input_p, output_p = efficiency_input_output(handle)
+    print("Start Calibration")
+    time.sleep(0.5)
+
+    #
+    def callback_func():
+        e, input_p, output_p = transmission_input_output(handle)
         print(
-            "input: {:.4f}(uW), output: {:.4f}(uW), efficiency: {:.4f}".format(
+            "input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
                 input_p, output_p, e
             )
         )
-        efficiency_List.append(e)
-        while (len(efficiency_List)) > DATA_LENGTH:
-            efficiency_List.pop(0)
-        line.set_data(range(len(efficiency_List)), efficiency_List)
-        fig.canvas.draw()
-        fig.canvas.flush_events()
-        time.sleep(0.05)
+        return e
+
+    #
+    plot_ion(callback_func, xlabel="time", ylabel="transmission")
+
+
+def align_grating_automatic(handle, power: float, source: int = 0):
+    if source == 0:
+        laser = init_laser(wavelength=1326.0, power=power)
+        set_mems_switch(handle, source=0)
+    elif source == 1:
+        set_mems_switch(handle, source=1)
+    #
+    print("Start Calibration")
+    time.sleep(0.5)
+
+    #
+    def callback_func():
+        e, input_p, output_p = transmission_input_output(handle)
+        print(
+            "input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
+                input_p, output_p, e
+            )
+        )
+        return e
+
+    #
+    plot_ion(callback_func, xlabel="time", ylabel="transmission")
 
 
 if __name__ == "__main__":
     handle = init_labjack()
-    # print(_read_pd_power(handle, 2))
-    set_mems_switch(handle, dir=0)
+    try:
+        print(_read_pd_power(handle, 2))
+        print(_read_pd_power(handle, 3))
+        # set_mems_switch(handle, source=0)
+        align_grating_manual(handle=handle, power=9.0, source=0)
+        # calibrate_grating("xxxx",1260,1300, 1)
+    finally:
+        ljm.close(handle)

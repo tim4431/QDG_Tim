@@ -4,18 +4,16 @@ import numpy as np
 from typing import Callable, Union, List
 
 
-def init_csv(dataName: str, xname: str, yname: List[str]):
+def init_csv_heads(dataName: str, xname: str, yname: List[str]):
     with open(dataName, "w") as f:
         # xname, yname[0], yname[1], ...
-        f.write("{:s},\t{:s}\n".format(xname, ",\t".join(yname)))
+        f.write("{:s},{:s}\n".format(xname, ",".join(yname)))
 
 
 def appenddata(dataName: str, x: float, y: Union[List[float], np.ndarray]):
     with open(dataName, "a") as f:
         # x, y[0], y[1], ...
-        f.write(
-            "{:.4f},\t{:s}\n".format(x, ",\t".join(["{:.8f}".format(yi) for yi in y]))
-        )
+        f.write("{:.4f},{:s}\n".format(x, ",".join(["{:.8f}".format(yi) for yi in y])))
 
 
 def appenddatas(
@@ -41,7 +39,9 @@ def _simple_load_csv_data(fileName: str, key_x: str, key_y: str):
     return datax, datay
 
 
-def load_csv_data(fileName: str, select_func: [Callable, None], key_x: str, key_y: str):
+def load_csv_data(
+    fileName: str, select_func: Union[Callable, None], key_x: str, key_y: str
+):
     datax, datay = _simple_load_csv_data(fileName, key_x, key_y)
     #
     if select_func is not None:

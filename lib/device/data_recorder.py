@@ -1,6 +1,6 @@
 import numpy as np
 import time
-from lib.process_data.csv_data import init_csv, appenddata
+from lib.process_data.csv_data import init_csv_heads, appenddata
 from typing import Union, List, Callable, Any, Tuple
 
 
@@ -30,7 +30,7 @@ def data_recorder(
         y_func = [y_func]
     assert len(yname) == len(y_func), "yname and y_func should have same length"
     # init csv file
-    init_csv(dataName, xname, yname)
+    init_csv_heads(dataName, xname, yname)
     # Measure
     # using tqdm
     from tqdm import tqdm
