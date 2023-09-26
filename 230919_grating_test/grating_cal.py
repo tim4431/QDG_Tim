@@ -270,7 +270,7 @@ def align_grating_manual(handle, power: float = 9.0, source: Union[None, int] = 
         return 0.01 * (x**2)
 
     #
-    callback_func = lambda x: sutter_pos(sutter)
+    callback_func = lambda: sutter_pos(sutter)
     plot_ion_transmission(callback_func)
 
 
@@ -305,7 +305,7 @@ def align_grating_automatic(
 
     #
     callback_func = lambda datas: sutter_step(sutter, datas)
-    plot_ion_transmission(callback_func)
+    plot_ion_postion_transmission(callback_func)
 
 
 if __name__ == "__main__":
@@ -315,7 +315,7 @@ if __name__ == "__main__":
         # print(_read_pd_power(handle, 2))
         # print(_read_pd_power(handle, 3))
         # set_mems_switch(handle, source=0)
-        align_grating_automatic(handle=handle, source=None)
+        align_grating_manual(handle=handle, source=None)
         # calibrate_grating("xxxx",1260,1300, 1)
     finally:
         ljm.close(handle)
