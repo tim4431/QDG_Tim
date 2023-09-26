@@ -2,7 +2,13 @@ import sys
 import numpy as np
 
 sys.path.append("..")
-from lib.device.device import ljm_auto_range_read, init_labjack, init_laser
+from lib.device.device import (
+    ljm_auto_range_read,
+    init_labjack,
+    init_laser,
+    init_sutter,
+    sutter_move,
+)
 from lib.device.santec_internal_sweep import santec_internal_sweep
 from lib.device.data_recorder import data_recorder
 from lib.process_data.csv_data import appenddatas, init_csv_heads
@@ -11,6 +17,7 @@ import datetime
 import time
 from typing import Union, List, Any, Tuple, Callable
 import matplotlib.pyplot as plt
+from scipy.optimize import minimize
 
 
 def v_to_pd_power(v: Union[float, np.ndarray], numAIN: int) -> Union[float, np.ndarray]:
@@ -156,13 +163,13 @@ def calibrate_grating(
     plt.show()
 
 
-def plot_ion(callback_func: Callable, xlabel: str, ylabel: str, HIST_LENGTH: int = 50):
+def plot_ion_transmission(callback_func: Callable, HIST_LENGTH: int = 50):
     datas = []
     # >>> plot data <<<
     plt.ion()
     fig, ax = plt.subplots()
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
+    ax.set_xlabel("time")
+    ax.set_ylabel("transmission")
     # ax.set_ylim(0, 1)
     (line,) = ax.plot([], [])
     # >>> update data <<<
@@ -177,6 +184,58 @@ def plot_ion(callback_func: Callable, xlabel: str, ylabel: str, HIST_LENGTH: int
             ax.autoscale_view()
             fig.canvas.flush_events()
             time.sleep(0.05)
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt, stop")
+    finally:
+        plt.ioff()
+
+
+def plot_ion_postion_transmission(callback_func: Callable, HIST_LENGTH: int = 50):
+    datas = []  # [(x1,y1,T1), (x2,y2,T2), ...)]
+    # >>> plot data <<<
+    plt.ion()
+    fig, axs = plt.subplots(nrows=1, ncols=2)
+    axs[0, 0].set_xlabel("x(um)")
+    axs[0, 0].set_ylabel("y(um)")
+    axs[0, 1].set_xlabel("time")
+    axs[0, 1].set_ylabel("transmission")
+    # ax.set_ylim(0, 1)
+    (fig_position,) = axs[0, 0].plot([], [])
+    (fig_transmission,) = axs[0, 1].plot([], [])
+    # >>> update data <<<
+
+    def _optimize_wrapper(datas, callback_func, paras):
+        x, y, T = callback_func(paras)
+        datas.append((x, y, T))
+        while (len(datas)) > HIST_LENGTH:
+            datas.pop(0)
+        #
+        xs, ys, es = zip(*datas)
+        fig_position.set_data(xs, ys, c=es)
+        fig_position.set_alpha(np.linspace(0.1, 1, len(xs)))  # alpha increase with time
+        fig_position.set_cmap("jet")
+        fig_position.set_clim(0, 1)
+        axs[0, 0].relim()
+        axs[0, 0].autoscale_view()
+        #
+        fig_transmission.set_data(range(len(es)), es)
+        axs[0, 1].relim()
+        axs[0, 1].autoscale_view()
+        #
+        fig.canvas.flush_events()
+        #
+        a = input()
+        #
+        return -T
+
+    #
+    try:
+        minimize(
+            lambda para: _optimize_wrapper(datas, callback_func, para),
+            x0=[0, 0],
+            method="L-BFGS-B",
+            bounds=[(-10, 10), (-10, 10)],
+        )
     except KeyboardInterrupt:
         print("KeyboardInterrupt, stop")
     finally:
@@ -204,7 +263,7 @@ def align_grating_manual(handle, power: float, source: int = 0):
         return e
 
     #
-    plot_ion(callback_func, xlabel="time", ylabel="transmission")
+    plot_ion_transmission(callback_func)
 
 
 def align_grating_automatic(handle, power: float, source: int = 0):
@@ -218,17 +277,23 @@ def align_grating_automatic(handle, power: float, source: int = 0):
     time.sleep(0.5)
 
     #
-    def callback_func():
-        e, input_p, output_p = transmission_input_output(handle)
+    sutter = init_sutter()
+
+    def sutter_step(sutter, paras):
+        # paras: (x,y)
+        x, y = paras
+        sutter_move(sutter, x, y)
+        T, input_p, output_p = transmission_input_output(handle)
         print(
-            "input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
-                input_p, output_p, e
+            "x: {:.4f}(um), y:{:.4f}(um), input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
+                x, y, input_p, output_p, T
             )
         )
-        return e
+        return (x, y, T)
 
     #
-    plot_ion(callback_func, xlabel="time", ylabel="transmission")
+    callback_func = lambda datas: sutter_step(sutter, datas)
+    plot_ion_transmission(callback_func)
 
 
 if __name__ == "__main__":

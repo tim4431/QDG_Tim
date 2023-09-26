@@ -30,6 +30,28 @@ def init_labjack():
     return handle
 
 
+def init_sutter():
+    from RemoteDevice import RemoteDevice  # type: ignore
+
+    sutter = RemoteDevice("SutterMP285_3")
+    sutter.setOrigin()
+    sutter.updatePanel()
+    return sutter
+
+
+def sutter_move(sutter: Any, x: float, y: float):
+    sutter_x = sutter.get_x_position()
+    sutter_y = sutter.get_y_position()
+    distance = np.sqrt((x - sutter_x) ** 2 + (y - sutter_y) ** 2)
+    if distance < 2:
+        sutter.set_x_position(x)
+        sutter.set_y_position(y)
+    else:
+        raise ValueError("distance too large")
+    #
+    sutter.updatePanel()
+
+
 def ljm_conf_range_resolution(
     handle: Any, numAIN: int, rangeAIN: float, resolutionAIN: int
 ):
