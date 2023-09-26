@@ -197,13 +197,13 @@ def plot_ion_position_transmission(
     # >>> plot data <<<
     plt.ion()
     fig, axs = plt.subplots(nrows=1, ncols=2)
-    axs[0, 0].set_xlabel("x(um)")
-    axs[0, 0].set_ylabel("y(um)")
-    axs[0, 1].set_xlabel("time")
-    axs[0, 1].set_ylabel("transmission")
+    axs[0].set_xlabel("x(um)")
+    axs[0].set_ylabel("y(um)")
+    axs[1].set_xlabel("time")
+    axs[1].set_ylabel("transmission")
     # ax.set_ylim(0, 1)
-    (fig_position,) = axs[0, 0].plot([], [])
-    (fig_transmission,) = axs[0, 1].plot([], [])
+    (fig_position,) = axs[0].plot([], [])
+    (fig_transmission,) = axs[1].plot([], [])
     # >>> update data <<<
 
     def _optimize_wrapper(datas, callback_func, paras):
@@ -213,16 +213,16 @@ def plot_ion_position_transmission(
             datas.pop(0)
         #
         xs, ys, es = zip(*datas)
-        fig_position.set_data(xs, ys, c=es)
-        fig_position.set_alpha(np.linspace(0.1, 1, len(xs)))  # alpha increase with time
-        fig_position.set_cmap("jet")
-        fig_position.set_clim(0, 1)
-        axs[0, 0].relim()
-        axs[0, 0].autoscale_view()
+        fig_position.set_data(xs, ys)
+        # fig_position.set_alpha(np.linspace(0.1, 1, len(xs)))  # alpha increase with time
+        # fig_position.set_cmap("jet")
+        # fig_position.set_clim(0, 1)
+        axs[0].relim()
+        axs[0].autoscale_view()
         #
         fig_transmission.set_data(range(len(es)), es)
-        axs[0, 1].relim()
-        axs[0, 1].autoscale_view()
+        axs[1].relim()
+        axs[1].autoscale_view()
         #
         fig.canvas.flush_events()
         #
@@ -276,7 +276,7 @@ def align_grating_1D(handle, power: float = 9.0, source: Union[None, int] = None
 
 
 def align_grating_2D(
-    handle, power: float = 9.0, source: Union[None, int] = None, typ: str = "manual"
+    handle, power: float = 9.0, source: Union[None, int] = None, automatic=False
 ):
     if source == None:
         pass
@@ -320,14 +320,12 @@ def align_grating_2D(
 
     #
     sutter = init_sutter()
-    if typ == "manual":
+    if not automatic:
         callback_func = lambda paras: transmission_manual(sutter, paras)
-        plot_ion_position_transmission(callback_func)
-    elif typ == "automatic":
-        callback_func = lambda paras: sutter_step(sutter, paras)
-        plot_ion_position_transmission(callback_func)
+        plot_ion_position_transmission(callback_func, automatic=False)
     else:
-        raise ValueError("typ must be manual or automatic")
+        callback_func = lambda paras: sutter_step(sutter, paras)
+        plot_ion_position_transmission(callback_func, automatic=True)
 
 
 if __name__ == "__main__":
@@ -337,8 +335,8 @@ if __name__ == "__main__":
         # print(_read_pd_power(handle, 2))
         # print(_read_pd_power(handle, 3))
         # set_mems_switch(handle, source=0)
-        align_grating_1D(handle=handle, source=None)
+        # align_grating_1D(handle=handle, source=None)
         # calibrate_grating("xxxx",1260,1300, 1)
-        align_grating_2D(handle=handle, source=None, typ="manual")
+        align_grating_2D(handle=handle, source=None, automatic=False)
     finally:
         ljm.close(handle)
