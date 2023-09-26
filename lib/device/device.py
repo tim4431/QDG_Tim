@@ -33,7 +33,7 @@ def init_labjack():
 def init_sutter():
     from RemoteDevice import RemoteDevice  # type: ignore
 
-    sutter = RemoteDevice("SutterMP285_3")
+    sutter = RemoteDevice("SutterMP285_2")
     sutter.setOrigin()
     sutter.updatePanel()
     return sutter
