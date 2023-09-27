@@ -102,7 +102,7 @@ def set_params(fdtd, paras, **kwargs):
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
     #
-    if grating_typ == "subw_grating":
+    if grating_typ in ["subw_grating","subw_grating_partialetch"]:
         #
         Lambda = paras[0]
         fdtd.setnamed(grating_typ, "Lambda", Lambda)
@@ -847,6 +847,8 @@ def run_optimize(dataName, **kwargs):
         setup_geometry(fdtd, dimension="2D", **kwargs)
         setup_monitor(fdtd, monitor=False, movie=False)
         setup_grating_structuregroup(fdtd, **kwargs)
+        while(1):
+            pass
         #
         paras_optimized = opt.minimize(
             lambda para: optimize_wrapper(fdtd, para, plot=True, **kwargs1),

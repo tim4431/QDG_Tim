@@ -15,7 +15,7 @@ x_H=period_H* ffH;
 
 # rotaion
 set("first axis","x");
-set("rotation 1",90);
+set("rotation 1",-90);
 
 # add input waveguide
 addrect;
@@ -34,8 +34,8 @@ set("name","input_bottom");
 set("material","Si (Silicon) - Palik");
 set("x min",-10e-6);
 set("x max",1e-6);
-set("y min",-250e-9);
-set("y max",250e-9);
+set("y min",-350e-9);
+set("y max",350e-9);
 set("z min",-wg_h/2);
 set("z max",wg_h/2-etch_depth);
 
@@ -56,14 +56,14 @@ bias_x=1e-6;
 outer_radius=start_radius+Lambda*N+2*bias_x;
 addring;
 set("name","taper_bottom");
-set("material","Si (Silicon) - Palik");
+# set("material","Si (Silicon) - Palik");
 set("inner radius",0);
 set("outer radius",outer_radius);
 set("z min",-wg_h/2);
 set("z max",wg_h/2-etch_depth);
-set("x min",-bias_x);
 set("theta start",-taper_angle);
 set("theta stop",taper_angle);
+set("x",-bias_x);
 
 # add grating
 for(j=1:N){
