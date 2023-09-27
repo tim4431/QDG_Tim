@@ -266,9 +266,10 @@ def plot_ion_position_transmission(
                 bounds=[(-10, 10), (-10, 10)],
                 options={"disp": True, "maxiter": 80, "ftol": 1e-9},
             )
+            paras = paras.x
         else:  # 2D scanning
-            X = np.linspace(-5, 5, 11)
-            Y = np.linspace(-5, 5, 11)
+            X = np.linspace(-5, 5, 5)
+            Y = np.linspace(-5, 5, 5)
             # snake scan
             for i in range(len(X)):
                 x = X[i]
@@ -283,6 +284,7 @@ def plot_ion_position_transmission(
         fig, ax = plt.subplots()
         xs, ys, es = zip(*datas)
         ax.scatter(xs, ys, c=es, cmap="jet", vmin=0, vmax=1)
+        plt.colorbar()
         ax.set(xlim=(-10, 10), ylim=(-10, 10), xlabel="y(um)", ylabel="x(um)")
         plt.show()
 
@@ -290,11 +292,8 @@ def plot_ion_position_transmission(
         print(e)
     finally:
         plt.ioff()
-        paras_final = paras.x  # type: ignore
         res = input(
-            "Accept the Final Position x={:.4f}(um), y={:.4f}(um) (y/n)?".format(
-                *paras_final
-            )
+            "Accept the Final Position x={:.4f}(um), y={:.4f}(um) (y/n)?".format(*paras)  # type: ignore
         ).strip()
         if res == "n":
             callback_func([0, 0])
