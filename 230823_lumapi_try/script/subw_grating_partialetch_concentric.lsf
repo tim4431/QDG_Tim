@@ -23,8 +23,8 @@ set("name","input");
 set("material","Si (Silicon) - Palik");
 set("x min",-10e-6);
 set("x max",1e-6);
-set("y min",-175e-9);
-set("y max",175e-9);
+set("y min",-200e-9);
+set("y max",200e-9);
 set("z min",-wg_h/2);
 set("z max",wg_h/2);
 
@@ -34,8 +34,8 @@ set("name","input_bottom");
 set("material","Si (Silicon) - Palik");
 set("x min",-10e-6);
 set("x max",1e-6);
-set("y min",-350e-9);
-set("y max",350e-9);
+set("y min",-1000e-9);
+set("y max",1000e-9);
 set("z min",-wg_h/2);
 set("z max",wg_h/2-etch_depth);
 

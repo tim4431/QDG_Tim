@@ -92,4 +92,7 @@ if __name__ == "__main__":  # type: ignore
     work_f93f_partialetch["BOX"] = "SiO2"
     work_f93f_partialetch_nominback = deepcopy(work_f93f_partialetch)
     work_f93f_partialetch_nominback["simulation_typ"] = 0
-    work_loader([work_f93f_partialetch], "f93f_partialetch_minback")
+    work_loader(
+        [work_f93f_partialetch_nominback, work_f93f_partialetch],
+        "f93f_partialetch",
+    )
