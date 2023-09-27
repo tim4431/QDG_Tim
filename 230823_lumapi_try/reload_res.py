@@ -163,27 +163,19 @@ def reload_work(
 
 if __name__ == "__main__":
     #
-    # reload_work(
-    #     "f93f",
-    #     dimension="3D",
-    #     reload_simulation_typ=0,
-    #     tether_typ="empty",
-    #     pause=False,
-    #     advanced_monitor=False,
-    # )
     reload_work(
-        "f93f",
-        dimension="3D",
-        reload_simulation_typ=0,
-        tether_typ="section_rect_tether_multisuspend",
+        "f3b5",
+        dimension="2D",
+        reload_simulation_typ=2,
+        tether_typ=None,
         pause=False,
         advanced_monitor=False,
     )
     reload_work(
-        "e251",
+        "f3b5",
         dimension="3D",
         reload_simulation_typ=0,
-        tether_typ="empty",
+        tether_typ=None,
         pause=False,
         advanced_monitor=False,
     )
