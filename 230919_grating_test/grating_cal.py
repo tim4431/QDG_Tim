@@ -402,7 +402,7 @@ def align_grating_2D(
         sutter = init_sutter()
         time.sleep(0.5)
         if not optimize:
-            callback_func = lambda paras: transmission_manual(sutter, paras)
+            callback_func = lambda paras: sutter_step(sutter, paras)
             plot_ion_position_transmission(callback_func, optimize=False)
         else:
             callback_func = lambda paras: sutter_step(sutter, paras)
@@ -415,8 +415,8 @@ def align_grating_2D(
 
 
 if __name__ == "__main__":
-    handle = init_labjack()
-    # handle = None
+    # handle = init_labjack()
+    handle = None
     try:
         # print(_read_pd_power(handle, 2))
         # print(_read_pd_power(handle, 3))
