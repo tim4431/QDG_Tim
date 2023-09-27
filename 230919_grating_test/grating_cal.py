@@ -191,15 +191,15 @@ def plot_ion_transmission(callback_func: Callable, HIST_LENGTH: int = 50):
 
 
 def plot_ion_position_transmission(
-    callback_func: Callable, HIST_LENGTH: int = 50, automatic=False
+    callback_func: Callable, HIST_LENGTH: int = 100, automatic=False
 ):
     datas = []  # [(x1,y1,T1), (x2,y2,T2), ...)]
     # >>> plot data <<<
     plt.ion()
     fig, axs = plt.subplots(nrows=1, ncols=2)
-    axs[0].set_xlabel("x(um)")
-    axs[0].set_ylabel("y(um)")
-    axs[0].set(xlim=(-1000, 1000), ylim=(-1000, 1000))
+    # axs[0].set_xlabel("x(um)")
+    # axs[0].set_ylabel("y(um)")
+    axs[0].set(xlim=(-1000, 1000), ylim=(-1000, 1000), xlabel="y(um)", ylabel="x(um)")
     axs[1].set_xlabel("time")
     axs[1].set_ylabel("transmission")
     # ax.set_ylim(0, 1)
@@ -214,9 +214,11 @@ def plot_ion_position_transmission(
             datas.pop(0)
         #
         xs, ys, es = zip(*datas)
-        fig_position.set_offsets(np.column_stack((xs, ys)))
+        fig_position.set_offsets(np.column_stack((ys, xs)))
         fig_position.set_array(es)
-        # fig_position.set_alpha(np.linspace(0.1, 1, len(xs)))  # alpha increase with time
+        fig_position.set_alphas(
+            np.linspace(0.1, 1, len(xs))
+        )  # alpha increase with time
         # fig_position.set_cmap("jet")
         # axs[0].relim()
         # axs[0].autoscale_view()
@@ -241,7 +243,7 @@ def plot_ion_position_transmission(
         else:
             while True:
                 _optimize_wrapper(datas, callback_func, paras=[0, 0])
-                time.sleep(0.2)
+                # time.sleep(0.2)
 
     except KeyboardInterrupt:
         print("KeyboardInterrupt, stop")
