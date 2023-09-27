@@ -216,9 +216,9 @@ def plot_ion_position_transmission(
         xs, ys, es = zip(*datas)
         fig_position.set_offsets(np.column_stack((ys, xs)))
         fig_position.set_array(es)
-        fig_position.set_alphas(
-            np.linspace(0.1, 1, len(xs))
-        )  # alpha increase with time
+        # fig_position.set_alphas(
+        #     np.linspace(0.1, 1, len(xs))
+        # )  # alpha increase with time
         # fig_position.set_cmap("jet")
         # axs[0].relim()
         # axs[0].autoscale_view()
@@ -247,6 +247,8 @@ def plot_ion_position_transmission(
 
     except KeyboardInterrupt:
         print("KeyboardInterrupt, stop")
+    except Exception as e:
+        print(e)
     finally:
         plt.ioff()
         return
