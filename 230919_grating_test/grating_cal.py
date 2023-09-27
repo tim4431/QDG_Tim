@@ -298,22 +298,30 @@ def plot_ion_position_transmission(
             paras = bstPara
             callback_func(paras)
         #
+        plt.ioff()
         # >>> plot datas <<<
-        fig, ax = plt.subplots()
+        plt.figure()
         xs, ys, es = zip(*datas)
-        ax.scatter(xs, ys, c=es, cmap="jet", vmin=0, vmax=np.max(es))
+        plt.scatter(
+            ys, xs, c=es, cmap="jet", vmin=0, vmax=np.max(es), label="Scan on 2D grid"
+        )
         xbst, ybst = paras
-        ax.scatter(xbst, ybst, marker="x", c="black", s=50)
-        ax.set(xlim=(-10, 10), ylim=(-10, 10), xlabel="y(um)", ylabel="x(um)")
-        cbar = plt.colorbar(ax)
+        plt.scatter(ybst, xbst, marker="x", c="black", s=50, label="Bst point")  # type: ignore
+        plt.xlim(-10, 10)
+        plt.ylim(-10, 10)
+        plt.xlabel("y(um)")
+        plt.ylabel("x(um)")
+        plt.legend()
+        plt.colorbar()
         dataName = getDataName(uuid)
-        plt.savefig(dataName + "_2D_align.png", dpi=200, bbox_inches="tight")
+        fileName = dataName + "_2D_align.png"
+        print(fileName)
+        plt.savefig(fileName, dpi=200, bbox_inches="tight")
         plt.show()
 
     except Exception as e:
         print(e)
     finally:
-        plt.ioff()
         res = input(
             "Accept the Final Position x={:.4f}(um), y={:.4f}(um) (y/n)?".format(*paras)  # type: ignore
         ).strip()
