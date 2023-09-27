@@ -47,10 +47,13 @@ def _calc_transmission(
 ) -> np.ndarray:
     input_portion = 15.28
     output_portion = 1234
-    att_ratio = (np.asarray(output_p) / output_portion) / (
-        np.asarray(input_p) / input_portion
+    att_ratio = (np.array(output_p) / output_portion) / (
+        np.array(input_p) / input_portion
     )
-    att_ratio[att_ratio <= 0] = 0
+    if isinstance(att_ratio, float):
+        att_ratio = max(att_ratio, 0)
+    else:
+        att_ratio[att_ratio <= 0] = 0
     return np.sqrt(att_ratio)
 
 
@@ -158,7 +161,7 @@ def calibrate_grating(
     plt.plot(l, transmission, label="Transmission")
     plt.legend()
     plt.xlabel(r"Wavelength $\lambda$(nm)")
-    plt.ylabel(r"Transmission $T(\lamnbda)$")
+    plt.ylabel(r"Transmission $T(\lambda)$")
     plt.savefig(dataName.replace(".csv", ".png"), dpi=200, bbox_inches="tight")
     plt.show()
 
@@ -191,7 +194,7 @@ def plot_ion_transmission(callback_func: Callable, HIST_LENGTH: int = 50):
 
 
 def plot_ion_position_transmission(
-    callback_func: Callable, HIST_LENGTH: int = 100, automatic=False
+    callback_func: Callable, HIST_LENGTH: int = 30, automatic=False
 ):
     datas = []  # [(x1,y1,T1), (x2,y2,T2), ...)]
     # >>> plot data <<<
@@ -210,14 +213,18 @@ def plot_ion_position_transmission(
     # >>> update data <<<
 
     def _optimize_wrapper(datas, callback_func, paras):
-        xs, ys, es = zip(*datas)
         # >>> update plot <<<
-        if len(xs) > 0:
+        if len(datas) > 0:
+            xs, ys, es = zip(*datas)
             fig_position.set_offsets(np.column_stack((ys, xs)))
             fig_position.set_array(es)
             fig_position.set_alpha(
                 np.linspace(0.2, 0.4, len(xs))
             )  # alpha increase with time
+            #
+            fig_transmission.set_data(range(len(es)), es)
+            axs[1].relim()
+            axs[1].autoscale_view()
         # highlight the new point
         fig_new_pt.set_offsets(np.column_stack((paras[1], paras[0])))
         x, y, T = callback_func(paras)
@@ -225,10 +232,6 @@ def plot_ion_position_transmission(
         datas.append((x, y, T))
         while (len(datas)) > HIST_LENGTH:
             datas.pop(0)
-        #
-        fig_transmission.set_data(range(len(es)), es)
-        axs[1].relim()
-        axs[1].autoscale_view()
         #
         fig.canvas.flush_events()
         #
@@ -239,9 +242,12 @@ def plot_ion_position_transmission(
         if automatic:
             minimize(
                 lambda paras: _optimize_wrapper(datas, callback_func, paras),
-                x0=[5, 4],
-                method="Nelder-Mead",
+                x0=[0, 0],
+                # method="Nelder-Mead",
+                method="Powell",
+                # method="L-BFGS-B",
                 bounds=[(-10, 10), (-10, 10)],
+                options={"disp": True, "maxiter": 80, "ftol": 1e-9},
             )
         else:
             while True:
@@ -321,7 +327,7 @@ def align_grating_2D(
 
         distance = np.sqrt((x - sutter_x) ** 2 + (y - sutter_y) ** 2)
 
-        if distance > 2:
+        if distance > 10:
             a = input(
                 "Distance = {:.2f} um, Confirm moving (y/n)?".format(distance)
             ).strip()
@@ -332,7 +338,7 @@ def align_grating_2D(
         else:
             sutter_move(sutter, x, y)
         #
-        time.sleep(0.1)
+        time.sleep(0.01 + 0.01 * distance)
         x_act = sutter.get_x_position()
         y_act = sutter.get_y_position()
         deviation = np.sqrt((x - x_act) ** 2 + (y - y_act) ** 2)
@@ -341,15 +347,20 @@ def align_grating_2D(
                 x_act, y_act, deviation
             )
         )
-        if deviation > 0.2:
-            a = input("Deviation too large")
-        # T, input_p, output_p = transmission_input_output(handle)
-        # print(
-        #     "x: {:.4f}(um), y:{:.4f}(um), input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
-        #         x, y, input_p, output_p, T
-        #     )
-        # )
-        T = 1 / (1 + abs(x / 10) + abs(y / 10))
+        if deviation > 0.8:
+            a = input("Deviation too large (y/n)?").strip()
+        T_List = []
+        for i in range(5):
+            T, input_p, output_p = transmission_input_output(handle)
+            T_List.append(T)
+            time.sleep(0.001)
+        T = np.mean(T_List)
+        print(
+            "x: {:.4f}(um), y:{:.4f}(um), input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
+                x, y, input_p, output_p, T
+            )
+        )
+        # T = 1 / (1 + abs(x / 10) + abs(y / 10))
         return (x, y, T)
 
     #
@@ -371,15 +382,15 @@ def align_grating_2D(
 
 
 if __name__ == "__main__":
-    # handle = init_labjack()
-    handle = None
+    handle = init_labjack()
+    # handle = None
     try:
         # print(_read_pd_power(handle, 2))
         # print(_read_pd_power(handle, 3))
         # set_mems_switch(handle, source=0)
-        # align_grating_1D(handle=handle, source=None)
-        # calibrate_grating("xxxx",1260,1300, 1)
-        align_grating_2D(handle=handle, source=None, automatic=True)
+        align_grating_1D(handle=handle, source=0)
+        # calibrate_grating("top3", handle, 1260, 1400, 1, power=9.0)
+        # align_grating_2D(handle=handle, source=0, automatic=True)
     finally:
         if handle is not None:
             ljm.close(handle)
