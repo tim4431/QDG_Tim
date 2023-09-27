@@ -204,7 +204,7 @@ def plot_ion_position_transmission(
     axs[1].set_ylabel("transmission")
     # ax.set_ylim(0, 1)
     fig_position = axs[0].scatter([], [])
-    fig_transmission = axs[1].plot([], [])
+    (fig_transmission,) = axs[1].plot([], [])
     # >>> update data <<<
 
     def _optimize_wrapper(datas, callback_func, paras):
@@ -214,7 +214,7 @@ def plot_ion_position_transmission(
             datas.pop(0)
         #
         xs, ys, es = zip(*datas)
-        fig_position.set_data(xs, ys)
+        fig_position.set_offsets(np.column_stack((xs, ys)))
         fig_position.set_array(es)
         # fig_position.set_alpha(np.linspace(0.1, 1, len(xs)))  # alpha increase with time
         # fig_position.set_cmap("jet")
@@ -302,6 +302,7 @@ def align_grating_2D(
         x = sutter.get_x_position()
         y = sutter.get_y_position()
         e = 0.1 * x**2 + 0.5 * y**2
+        print("x: {:.4f}(um), y:{:.4f}(um)".format(x, y))
         return (x, y, e)
 
     def sutter_step(sutter, paras):
@@ -340,4 +341,5 @@ if __name__ == "__main__":
         # calibrate_grating("xxxx",1260,1300, 1)
         align_grating_2D(handle=handle, source=None, automatic=False)
     finally:
-        ljm.close(handle)
+        if handle is not None:
+            ljm.close(handle)
