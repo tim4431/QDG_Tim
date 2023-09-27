@@ -715,7 +715,7 @@ def get_paras_bound(**kwargs):
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
     #
-    if grating_typ == "subw_grating":  # [Lambda, ffL, ffH, ff, fiberx]
+    if grating_typ in ["subw_grating","subw_grating_partialetch"]:  # [Lambda, ffL, ffH, ff, fiberx]
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
         if SOURCE_typ in ["gaussian_airclad"]:
             paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
