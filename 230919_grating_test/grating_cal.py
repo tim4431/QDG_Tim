@@ -212,7 +212,7 @@ def plot_ion_transmission(callback_func: Callable, HIST_LENGTH: int = 50):
 
 
 def plot_ion_position_transmission(
-    callback_func: Callable, HIST_LENGTH: int = 1000, automatic=False
+    callback_func: Callable, HIST_LENGTH: int = 1000, optimize=False
 ):
     datas = deque(maxlen=HIST_LENGTH)  # [(x1,y1,T1), (x2,y2,T2), ...)]
     # >>> plot data <<<
@@ -255,7 +255,7 @@ def plot_ion_position_transmission(
 
     #
     try:
-        if automatic:
+        if optimize:  # using scipy.optimize.minimize
             paras = minimize(
                 lambda paras: _optimize_wrapper(datas, callback_func, paras),
                 x0=[0, 0],
@@ -326,7 +326,7 @@ def align_grating_1D(handle, power: float = 9.0, source: Union[None, int] = None
 
 
 def align_grating_2D(
-    handle, power: float = 9.0, source: Union[None, int] = None, automatic=False
+    handle, power: float = 9.0, source: Union[None, int] = None, optimize=False
 ):
     if source == None:
         pass
@@ -401,12 +401,12 @@ def align_grating_2D(
     try:
         sutter = init_sutter()
         time.sleep(0.5)
-        if not automatic:
+        if not optimize:
             callback_func = lambda paras: transmission_manual(sutter, paras)
-            plot_ion_position_transmission(callback_func, automatic=False)
+            plot_ion_position_transmission(callback_func, optimize=False)
         else:
             callback_func = lambda paras: sutter_step(sutter, paras)
-            plot_ion_position_transmission(callback_func, automatic=True)
+            plot_ion_position_transmission(callback_func, optimize=True)
     except Exception as e:
         print(e)
     finally:
@@ -421,9 +421,9 @@ if __name__ == "__main__":
         # print(_read_pd_power(handle, 2))
         # print(_read_pd_power(handle, 3))
         # set_mems_switch(handle, source=0)
-        align_grating_1D(handle=handle, source=0)
+        # align_grating_1D(handle=handle, source=0)
         # calibrate_grating("top3", handle, 1260, 1400, 1, power=9.0)
-        # align_grating_2D(handle=handle, source=0, automatic=True)
+        align_grating_2D(handle=handle, source=None, optimize=False)
     finally:
         if handle is not None:
             ljm.close(handle)
