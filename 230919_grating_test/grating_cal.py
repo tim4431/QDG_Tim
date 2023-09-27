@@ -277,26 +277,33 @@ def plot_ion_position_transmission(
                 method="Powell",
                 # method="L-BFGS-B",
                 bounds=[(-10, 10), (-10, 10)],
-                options={"disp": True, "maxiter": 80, "ftol": 1e-9},
+                options={"disp": True, "maxiter": 80, "ftol": 1e-10},
             )
             paras = paras.x
         else:  # 2D scanning
-            X = np.linspace(-5, 5, 5)
-            Y = np.linspace(-5, 5, 5)
+            X = np.linspace(-5, 5, 11)
+            Y = np.linspace(-5, 5, 11)
             # snake scan
+            max_T = 0
+            bstPara = [0, 0]
             for i in range(len(X)):
                 x = X[i]
                 Yx = Y if i % 2 == 0 else Y[::-1]
                 for y in Yx:
                     paras = [x, y]
-                    _optimize_wrapper(datas, callback_func, paras)
-            paras = [0, 0]
+                    minus_T = _optimize_wrapper(datas, callback_func, paras)
+                    if minus_T < max_T:
+                        max_T = minus_T
+                        bstPara = paras
+            paras = bstPara
             callback_func(paras)
         #
         # >>> plot datas <<<
         fig, ax = plt.subplots()
         xs, ys, es = zip(*datas)
-        ax.scatter(xs, ys, c=es, cmap="jet", vmin=0, vmax=1)
+        ax.scatter(xs, ys, c=es, cmap="jet", vmin=0, vmax=np.max(es))
+        xbst, ybst = paras
+        ax.scatter(xbst, ybst, marker="x", c="black", s=50)
         ax.set(xlim=(-10, 10), ylim=(-10, 10), xlabel="y(um)", ylabel="x(um)")
         cbar = plt.colorbar(ax)
         dataName = getDataName(uuid)
@@ -413,13 +420,13 @@ def align_grating_2D(
                 "Deviation = {:.4f}um, too large (y/n)?".format(deviation)
             ).strip()
         # measure transmission
-        # T, input_p, output_p = mean_transmission_input_output(handle, meanNum=5)
-        # print(
-        #     "x: {:.4f}(um), y:{:.4f}(um), input: {:.2f}(uW), output: {:.4f}(uW), T: {:.4f}".format(
-        #         x, y, input_p, output_p, T
-        #     )
-        # )
-        T = 1 / (1 + abs(x / 10) + abs(y / 10))
+        T, input_p, output_p = mean_transmission_input_output(handle, meanNum=5)
+        print(
+            "x: {:.4f}(um), y:{:.4f}(um), input: {:.2f}(uW), output: {:.4f}(uW), T: {:.4f}".format(
+                x, y, input_p, output_p, T
+            )
+        )
+        # T = 1 / (1 + abs(x / 10) + abs(y / 10))
         return (x, y, T)
 
     #
@@ -436,15 +443,15 @@ def align_grating_2D(
 
 
 if __name__ == "__main__":
-    # handle = init_labjack()
-    handle = None
+    handle = init_labjack()
+    # handle = None
     try:
         # print(_read_pd_power(handle, 2))
         # print(_read_pd_power(handle, 3))
         # set_mems_switch(handle, source=0)
-        # align_grating_1D(handle=handle, source=0)
+        align_grating_1D(handle=handle, source=0)
         # calibrate_grating("top3", handle, 1260, 1400, 1, power=9.0)
-        align_grating_2D("test", handle=handle, source=None, optimize=False)
+        # align_grating_2D("top3", handle=handle, source=0, optimize=False)
     finally:
         if handle is not None:
             ljm.close(handle)
