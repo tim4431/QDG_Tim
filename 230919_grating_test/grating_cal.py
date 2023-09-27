@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+from collections import deque
 
 sys.path.append("..")
 from lib.device.device import (
@@ -44,17 +45,16 @@ def _read_pd_power(handle: Any, numAIN: int) -> float:
 
 def _calc_transmission(
     input_p: Union[float, np.ndarray], output_p: Union[float, np.ndarray]
-) -> np.ndarray:
+) -> Union[float, np.ndarray]:
     input_portion = 15.28
     output_portion = 1234
-    att_ratio = (np.array(output_p) / output_portion) / (
-        np.array(input_p) / input_portion
-    )
+    att_ratio = (output_p / output_portion) / (input_p / input_portion)
     if isinstance(att_ratio, float):
         att_ratio = max(att_ratio, 0)
+        return float(np.sqrt(att_ratio))
     else:
         att_ratio[att_ratio <= 0] = 0
-    return np.sqrt(att_ratio)
+        return np.sqrt(att_ratio)
 
 
 def transmission_input_output(handle) -> Tuple[float, float, float]:
@@ -62,6 +62,24 @@ def transmission_input_output(handle) -> Tuple[float, float, float]:
     output_p = _read_pd_power(handle, 3)
     e = float(_calc_transmission(input_p, output_p))
     return e, input_p, output_p
+
+
+def mean_transmission_input_output(
+    handle, meanNum: int = 1
+) -> Tuple[float, float, float]:
+    T_List = []
+    input_p_List = []
+    output_p_List = []
+    for i in range(meanNum):
+        T, input_p, output_p = transmission_input_output(handle)
+        T_List.append(T)
+        input_p_List.append(input_p)
+        output_p_List.append(output_p)
+        time.sleep(0.0005)
+    T = np.mean(T_List)
+    input_p = np.mean(input_p_List)
+    output_p = np.mean(output_p_List)
+    return float(T), float(input_p), float(output_p)
 
 
 def getDataName(
@@ -194,9 +212,9 @@ def plot_ion_transmission(callback_func: Callable, HIST_LENGTH: int = 50):
 
 
 def plot_ion_position_transmission(
-    callback_func: Callable, HIST_LENGTH: int = 30, automatic=False
+    callback_func: Callable, HIST_LENGTH: int = 1000, automatic=False
 ):
-    datas = []  # [(x1,y1,T1), (x2,y2,T2), ...)]
+    datas = deque(maxlen=HIST_LENGTH)  # [(x1,y1,T1), (x2,y2,T2), ...)]
     # >>> plot data <<<
     plt.ion()
     fig, axs = plt.subplots(nrows=1, ncols=2)
@@ -230,8 +248,6 @@ def plot_ion_position_transmission(
         x, y, T = callback_func(paras)
         # >>> update data <<<
         datas.append((x, y, T))
-        while (len(datas)) > HIST_LENGTH:
-            datas.pop(0)
         #
         fig.canvas.flush_events()
         #
@@ -240,7 +256,7 @@ def plot_ion_position_transmission(
     #
     try:
         if automatic:
-            minimize(
+            paras = minimize(
                 lambda paras: _optimize_wrapper(datas, callback_func, paras),
                 x0=[0, 0],
                 # method="Nelder-Mead",
@@ -249,10 +265,30 @@ def plot_ion_position_transmission(
                 bounds=[(-10, 10), (-10, 10)],
                 options={"disp": True, "maxiter": 80, "ftol": 1e-9},
             )
-        else:
-            while True:
-                _optimize_wrapper(datas, callback_func, paras=[0, 0])
-                # time.sleep(0.2)
+            paras_final = paras.x
+            res = input(
+                "Accept the Final Position x={:.4f}(um), y={:.4f}(um) (y/n)?".format(
+                    *paras_final
+                )
+            ).strip()
+            if res == "n":
+                callback_func([0, 0])
+            else:
+                pass
+        else:  # 2D scanning
+            X = np.linspace(-10, 10, 21)
+            Y = np.linspace(-10, 10, 21)
+            for x in X:
+                for y in Y:
+                    _optimize_wrapper(datas, callback_func, [x, y])
+            callback_func([0, 0])
+        #
+        # >>> plot datas <<<
+        fig, ax = plt.subplots()
+        xs, ys, es = zip(*datas)
+        ax.scatter(xs, ys, c=es, cmap="jet", vmin=0, vmax=1)
+        ax.set(xlim=(-10, 10), ylim=(-10, 10), xlabel="y(um)", ylabel="x(um)")
+        plt.show()
 
     except Exception as e:
         print(e)
@@ -275,13 +311,14 @@ def align_grating_1D(handle, power: float = 9.0, source: Union[None, int] = None
 
     #
     def transmission_manual():
-        e, input_p, output_p = transmission_input_output(handle)
+        # e, input_p, output_p = transmission_input_output(handle)
+        T, input_p, output_p = mean_transmission_input_output(handle, meanNum=5)
         print(
-            "input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
-                input_p, output_p, e
+            "input: {:.4f}(uW), output: {:.4f}(uW), T: {:.4f}".format(
+                input_p, output_p, T
             )
         )
-        return e
+        return T
 
     #
     callback_func = transmission_manual
@@ -321,24 +358,23 @@ def align_grating_2D(
         x = paras[0]
         y = paras[1]
         print("x: {:.4f}(um), y:{:.4f}(um)".format(x, y))
-
+        # check distance
         sutter_x = sutter.get_x_position()
         sutter_y = sutter.get_y_position()
-
         distance = np.sqrt((x - sutter_x) ** 2 + (y - sutter_y) ** 2)
-
         if distance > 10:
             a = input(
                 "Distance = {:.2f} um, Confirm moving (y/n)?".format(distance)
             ).strip()
-            if a == "y":
+            if a in ["y", ""]:
                 sutter_move(sutter, x, y)
             else:
                 print("Cancel moving")
         else:
             sutter_move(sutter, x, y)
-        #
-        time.sleep(0.01 + 0.01 * distance)
+        # wait for sutter to move
+        # time.sleep(0.01 + 0.01 * distance)
+        # check deviation
         x_act = sutter.get_x_position()
         y_act = sutter.get_y_position()
         deviation = np.sqrt((x - x_act) ** 2 + (y - y_act) ** 2)
@@ -348,26 +384,23 @@ def align_grating_2D(
             )
         )
         if deviation > 0.8:
-            a = input("Deviation too large (y/n)?").strip()
-        T_List = []
-        for i in range(5):
-            T, input_p, output_p = transmission_input_output(handle)
-            T_List.append(T)
-            time.sleep(0.001)
-        T = np.mean(T_List)
-        print(
-            "x: {:.4f}(um), y:{:.4f}(um), input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
-                x, y, input_p, output_p, T
-            )
-        )
-        # T = 1 / (1 + abs(x / 10) + abs(y / 10))
+            a = input(
+                "Deviation = {:.4f}um, too large (y/n)?".format(deviation)
+            ).strip()
+        # measure transmission
+        # T, input_p, output_p = mean_transmission_input_output(handle, meanNum=5)
+        # print(
+        #     "x: {:.4f}(um), y:{:.4f}(um), input: {:.2f}(uW), output: {:.4f}(uW), T: {:.4f}".format(
+        #         x, y, input_p, output_p, T
+        #     )
+        # )
+        T = 1 / (1 + abs(x / 10) + abs(y / 10))
         return (x, y, T)
 
     #
     try:
         sutter = init_sutter()
         time.sleep(0.5)
-        # print(sutter.getPosition())
         if not automatic:
             callback_func = lambda paras: transmission_manual(sutter, paras)
             plot_ion_position_transmission(callback_func, automatic=False)
