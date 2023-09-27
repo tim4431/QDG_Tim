@@ -199,7 +199,7 @@ def plot_ion_position_transmission(
     fig, axs = plt.subplots(nrows=1, ncols=2)
     axs[0].set_xlabel("x(um)")
     axs[0].set_ylabel("y(um)")
-    axs[0].set(xlim=(-10, 10), ylim=(-10, 10))
+    axs[0].set(xlim=(-1000, 1000), ylim=(-1000, 1000))
     axs[1].set_xlabel("time")
     axs[1].set_ylabel("transmission")
     # ax.set_ylim(0, 1)
@@ -247,6 +247,7 @@ def plot_ion_position_transmission(
         print("KeyboardInterrupt, stop")
     finally:
         plt.ioff()
+        return
 
 
 def align_grating_1D(handle, power: float = 9.0, source: Union[None, int] = None):
@@ -321,13 +322,20 @@ def align_grating_2D(
         return (x, y, T)
 
     #
-    sutter = init_sutter()
-    if not automatic:
-        callback_func = lambda paras: transmission_manual(sutter, paras)
-        plot_ion_position_transmission(callback_func, automatic=False)
-    else:
-        callback_func = lambda paras: sutter_step(sutter, paras)
-        plot_ion_position_transmission(callback_func, automatic=True)
+    try:
+        sutter = init_sutter()
+        # sutter.sendReset()
+        time.sleep(0.5)
+        print(sutter.getPosition())
+        if not automatic:
+            callback_func = lambda paras: transmission_manual(sutter, paras)
+            plot_ion_position_transmission(callback_func, automatic=False)
+        else:
+            callback_func = lambda paras: sutter_step(sutter, paras)
+            plot_ion_position_transmission(callback_func, automatic=True)
+    finally:
+        print("Close Sutter")
+        del sutter  # type: ignore
 
 
 if __name__ == "__main__":
