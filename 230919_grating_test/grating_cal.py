@@ -203,15 +203,15 @@ def plot_ion_position_transmission(
     axs[1].set_xlabel("time")
     axs[1].set_ylabel("transmission")
     # ax.set_ylim(0, 1)
-    fig_position = axs[0].scatter([], [], c=np.array([]), cmap="reds", vmin=0, vmax=1)
-    (fig_new_pt,) = axs[0].scatter([], [], "x", c="black")
+    # (fig_new_pt,) = axs[0].scatter([], [], marker="x", c="black")
+    fig_position = axs[0].scatter([], [], c=np.array([]), cmap="hot", vmin=0, vmax=1)
     (fig_transmission,) = axs[1].plot([], [])
+    # print(aaa)
     # >>> update data <<<
 
     def _optimize_wrapper(datas, callback_func, paras):
         # highlight the new point
-        fig_new_pt.set_data(paras[1], paras[0])
-        a = input("confirm?")
+        # fig_new_pt.set_data(paras[1], paras[0])
         x, y, T = callback_func(paras)
         # >>> update data <<<
         datas.append((x, y, T))
@@ -239,7 +239,7 @@ def plot_ion_position_transmission(
             minimize(
                 lambda paras: _optimize_wrapper(datas, callback_func, paras),
                 x0=[5, 4],
-                method="L-BFGS-B",
+                method="Nelder-Mead",
                 bounds=[(-10, 10), (-10, 10)],
             )
         else:
@@ -313,6 +313,8 @@ def align_grating_2D(
     def sutter_step(sutter, paras):
         x = paras[0]
         y = paras[1]
+        print("x: {:.4f}(um), y:{:.4f}(um)".format(x, y))
+        a = input("confirm?")
         # sutter_move(sutter, x, y)
         time.sleep(0.1)
         # x = sutter.get_x_position()
@@ -354,7 +356,7 @@ if __name__ == "__main__":
         # set_mems_switch(handle, source=0)
         # align_grating_1D(handle=handle, source=None)
         # calibrate_grating("xxxx",1260,1300, 1)
-        align_grating_2D(handle=handle, source=None, automatic=False)
+        align_grating_2D(handle=handle, source=None, automatic=True)
     finally:
         if handle is not None:
             ljm.close(handle)
