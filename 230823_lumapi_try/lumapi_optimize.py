@@ -288,19 +288,19 @@ def fdtd_iter(
     if reload_simulation_typ is not None:
         simulation_typ = reload_simulation_typ
     #
-    # >>> run simulation, forward, 1 <<< #
+    # >>> run simulation, forward, dir=0 <<< #
     if simulation_typ in [0, 2]:
         fdtd.switchtolayout()
-        setup_source(fdtd, dimension=dimension, simulation_dir=0, **kwargs)
+        setup_simulation_dir(fdtd, simulation_dir=0)
         if not reload_gds:
             set_params(fdtd, paras, **kwargs)
         fdtd.run()
         lT, T = process_data(fdtd, SOURCE_typ)
     #
-    # >>> run simulation, backward, 2 <<< #
+    # >>> run simulation, backward, dir=1 <<< #
     if simulation_typ in [1, 2]:
         fdtd.switchtolayout()
-        setup_source(fdtd, dimension=dimension, simulation_dir=1, **kwargs)
+        setup_simulation_dir(fdtd, simulation_dir=1)
         if not reload_gds:
             set_params(fdtd, paras, **kwargs)
         fdtd.run()
@@ -411,10 +411,7 @@ def optimize_wrapper(fdtd, paras, plot=False, **kwargs):
     )  # take care of the minus and plus sign!
 
 
-def setup_source(fdtd, dimension="2D", simulation_dir: int = 0, **kwargs):
-    """
-    - simulation_dir: 0 - forward, 1 - backward
-    """
+def setup_geometry(fdtd, dimension: str = "2D", **kwargs):
     lambda_0 = kwargs.get("lambda_0", DEFAULT_PARA["lambda_0"])
     FWHM = kwargs.get("FWHM", DEFAULT_PARA["FWHM"])
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
@@ -429,7 +426,7 @@ def setup_source(fdtd, dimension="2D", simulation_dir: int = 0, **kwargs):
         fdtd.setnamed("output_TE", "wavelength center", lambda_0)
         fdtd.setnamed("output_TE", "wavelength span", max(400e-9, FWHM * 3))
     else:
-        raise ValueError("setup_source: Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
+        raise ValueError("setup_geometry: Invalid SOURCE_typ: {:s}".format(SOURCE_typ))
     # >>> set gaussian source angle <<< #
     if dimension == "2D":
         fdtd.setnamed("FDTD", "dimension", dimension)
@@ -442,7 +439,33 @@ def setup_source(fdtd, dimension="2D", simulation_dir: int = 0, **kwargs):
         fdtd.setnamed("source", "angle phi", -90)
         fdtd.setnamed("source", "polarization angle", 90)  # TE mode
         # because the definition of 2D source is different from 3D ver.
-    # >>> set source type <<< #
+    # >>> set BOX and TOX material <<< #
+    BOX = kwargs.get("BOX", DEFAULT_PARA["BOX"])
+    TOX = kwargs.get("TOX", DEFAULT_PARA["TOX"])
+    if BOX == "Air":
+        fdtd.setnamed("BOX", "enabled", 0)
+    elif BOX == "SiO2":
+        fdtd.setnamed("BOX", "enabled", 1)
+        fdtd.setnamed("BOX", "material", "SiO2 (Glass) - Palik")
+    else:
+        raise ValueError("setup_geometry: Invalid BOX: {:s}".format(BOX))
+    if TOX == "Air":
+        fdtd.setnamed("TOX", "enabled", 0)
+    elif TOX == "SiO2":
+        fdtd.setnamed("TOX", "enabled", 1)
+        fdtd.setnamed("TOX", "material", "SiO2 (Glass) - Palik")
+    else:
+        raise ValueError("setup_geometry: Invalid TOX: {:s}".format(TOX))
+    # >>> set monitor <<< #
+    fdtd.setglobalmonitor(
+        "frequency points", 300
+    )  # setting the global frequency resolution
+
+
+def setup_simulation_dir(fdtd, simulation_dir: int = 0):
+    """
+    - simulation_dir: 0 - forward, 1 - backward
+    """
     if simulation_dir == 0:  # forward
         fdtd.setnamed("source", "enabled", 1)
         fdtd.setnamed("source_wg", "enabled", 0)
@@ -451,12 +474,8 @@ def setup_source(fdtd, dimension="2D", simulation_dir: int = 0, **kwargs):
         fdtd.setnamed("source_wg", "enabled", 1)
     else:
         raise ValueError(
-            "setup_source: Invalid simulation_dir: {:d}".format(simulation_dir)
+            "setup_geometry: Invalid simulation_dir: {:d}".format(simulation_dir)
         )
-    # >>> set monitor <<< #
-    fdtd.setglobalmonitor(
-        "frequency points", 300
-    )  # setting the global frequency resolution
 
 
 def setup_monitor(fdtd, monitor=False, movie=False, advanced_monitor=False):
@@ -514,6 +533,24 @@ def setup_grating_structuregroup(fdtd, **kwargs):
             grating_typ,
             "script",
             load_script("subw_grating_concentric.lsf"),
+        )
+    elif grating_typ == "subw_grating_partialetch":
+        NL = kwargs.get("NL", DEFAULT_PARA["NL"])
+        NH = kwargs.get("NH", DEFAULT_PARA["NH"])
+        #
+        fdtd.adduserprop("Lambda", 2, 1.1e-6)
+        fdtd.adduserprop("etch_depth", 2, 60e-9)
+        fdtd.adduserprop("ff", 0, 0.5)
+        fdtd.adduserprop("ffL", 0, 0.2)
+        fdtd.adduserprop("ffH", 0, 0.8)
+        fdtd.adduserprop("NL", 0, NL)
+        fdtd.adduserprop("NH", 0, NH)
+        fdtd.adduserprop("N", 0, N)
+        #
+        fdtd.setnamed(
+            grating_typ,
+            "script",
+            load_script("subw_grating_partialetch_concentric.lsf"),
         )
     elif grating_typ == "apodized_subw_grating":
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
@@ -807,6 +844,7 @@ def run_optimize(dataName, **kwargs):
             #
         }
         # >>> setting up simulation <<< #
+        setup_geometry(fdtd, dimension="2D", **kwargs)
         setup_monitor(fdtd, monitor=False, movie=False)
         setup_grating_structuregroup(fdtd, **kwargs)
         #
@@ -995,10 +1033,10 @@ def reload_plot(uuid):
     plot_result(
         (l, T),
         (l, R),
-        FOMHist,
-        featureHist,
-        lambda0Hist,
-        FWHMHist,
+        FOMHist,  # type: ignore
+        featureHist,  # type: ignore
+        lambda0Hist,  # type: ignore
+        FWHMHist,  # type: ignore
         dataName,
         simulation_typ=kwargs.get("simulation_typ", DEFAULT_PARA["simulation_typ"]),
     )

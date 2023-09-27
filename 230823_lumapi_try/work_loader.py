@@ -66,6 +66,7 @@ def work_loader(workList, prefix, merge_data=False):
         # create dir named by prefix
         os.mkdir(prefix)
         merge_data_transmission(uuid_List, merge_dst=prefix)
+        loader_logger.info("Data merged to {:s}".format(prefix))
 
     # >>> end <<<
     loader_logger.info("Work loader end")
@@ -84,26 +85,13 @@ if __name__ == "__main__":  # type: ignore
     # print("sleeping")
     # time.sleep(3600 * 5)
 
-    # 639a_bst
-    work_grating_639a = {
-        "lambda_0": 1.326e-6,
-        "FWHM": 20e-9,
-        "alpha": 0.00,
-        "penalty": [[0.01, 10e-9], [0.02, 100e-9]],
-        "N": 25,
-        "maxiter": 100,
-        "MIN_FEATURE_SIZE": 40e-9,
-        "FOM_typ": "square",
-        "SOURCE_typ": "gaussian_released",
-        "grating_typ": "grating",
-        "start_radius": 12e-6,
-        "simulation_typ": 0,
-    }
-    work_grating_639a_bst = work_grating_639a
-    work_grating_639a_bst["grating_typ"] = "grating"
-    work_grating_639a_bst["simulation_typ"] = 2
-    work_grating_639a_bst["source_angle"] = 14.8
-    work_grating_639a_bst["N"] = 30
-    work_grating_639a_bst["penalty"] = [[0.02, 10e-9], [0.02, 100e-9]]
-    works = [work_grating_639a_bst]
-    work_loader(works, "639a_bst")
+    # f93f_partialetch
+    work_f93f = load_json("f93f")
+    work_f93f_partialetch = deepcopy(work_f93f)
+    work_f93f_partialetch["grating_typ"] = "subw_grating_partialetch"
+    work_f93f_partialetch["BOX"] = "SiO2"
+    work_f93f_partialetch_nominback = deepcopy(work_f93f_partialetch)
+    work_f93f_partialetch_nominback["simulation_typ"] = 0
+    work_loader(
+        [work_f93f_partialetch_nominback, work_f93f_partialetch], "f93f_partialetch"
+    )

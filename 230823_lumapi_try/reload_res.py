@@ -1,6 +1,7 @@
 from lumapi_optimize import (
     getdataName,
-    setup_source,
+    setup_geometry,
+    setup_simulation_dir,
     setup_monitor,
     setup_grating_structuregroup,
     fdtd_iter,
@@ -56,6 +57,7 @@ def reload_work(
     ) as fdtd:
         try:
             # >>> setup monitor <<< #
+            setup_geometry(fdtd, dimension=dimension, **kwargs)
             setup_monitor(
                 fdtd,
                 monitor=monitor,
