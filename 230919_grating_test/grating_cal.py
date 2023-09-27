@@ -210,6 +210,14 @@ def plot_ion_position_transmission(
     # >>> update data <<<
 
     def _optimize_wrapper(datas, callback_func, paras):
+        xs, ys, es = zip(*datas)
+        # >>> update plot <<<
+        if len(xs) > 0:
+            fig_position.set_offsets(np.column_stack((ys, xs)))
+            fig_position.set_array(es)
+            fig_position.set_alpha(
+                np.linspace(0.2, 0.4, len(xs))
+            )  # alpha increase with time
         # highlight the new point
         fig_new_pt.set_offsets(np.column_stack((paras[1], paras[0])))
         x, y, T = callback_func(paras)
@@ -217,13 +225,6 @@ def plot_ion_position_transmission(
         datas.append((x, y, T))
         while (len(datas)) > HIST_LENGTH:
             datas.pop(0)
-        xs, ys, es = zip(*datas)
-        # >>> update plot <<<
-        fig_position.set_offsets(np.column_stack((ys, xs)))
-        fig_position.set_array(es)
-        fig_position.set_alpha(
-            np.linspace(0.2, 0.6, len(xs))
-        )  # alpha increase with time
         #
         fig_transmission.set_data(range(len(es)), es)
         axs[1].relim()
@@ -314,11 +315,34 @@ def align_grating_2D(
         x = paras[0]
         y = paras[1]
         print("x: {:.4f}(um), y:{:.4f}(um)".format(x, y))
-        a = input("confirm?")
-        # sutter_move(sutter, x, y)
+
+        sutter_x = sutter.get_x_position()
+        sutter_y = sutter.get_y_position()
+
+        distance = np.sqrt((x - sutter_x) ** 2 + (y - sutter_y) ** 2)
+
+        if distance > 2:
+            a = input(
+                "Distance = {:.2f} um, Confirm moving (y/n)?".format(distance)
+            ).strip()
+            if a == "y":
+                sutter_move(sutter, x, y)
+            else:
+                print("Cancel moving")
+        else:
+            sutter_move(sutter, x, y)
+        #
         time.sleep(0.1)
-        # x = sutter.get_x_position()
-        # y = sutter.get_y_position()
+        x_act = sutter.get_x_position()
+        y_act = sutter.get_y_position()
+        deviation = np.sqrt((x - x_act) ** 2 + (y - y_act) ** 2)
+        print(
+            "x_act: {:.4f}(um), y_act:{:.4f}(um), deviation: {:.4f} um".format(
+                x_act, y_act, deviation
+            )
+        )
+        if deviation > 0.2:
+            a = input("Deviation too large")
         # T, input_p, output_p = transmission_input_output(handle)
         # print(
         #     "x: {:.4f}(um), y:{:.4f}(um), input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
@@ -331,9 +355,8 @@ def align_grating_2D(
     #
     try:
         sutter = init_sutter()
-        # sutter.sendReset()
         time.sleep(0.5)
-        print(sutter.getPosition())
+        # print(sutter.getPosition())
         if not automatic:
             callback_func = lambda paras: transmission_manual(sutter, paras)
             plot_ion_position_transmission(callback_func, automatic=False)
