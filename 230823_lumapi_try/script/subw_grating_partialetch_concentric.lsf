@@ -56,7 +56,7 @@ bias_x=1e-6;
 outer_radius=start_radius+Lambda*N+2*bias_x;
 addring;
 set("name","taper_bottom");
-# set("material","Si (Silicon) - Palik");
+set("material","Si (Silicon) - Palik");
 set("inner radius",0);
 set("outer radius",outer_radius);
 set("z min",-wg_h/2);

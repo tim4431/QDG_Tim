@@ -9,7 +9,7 @@ set("z",0);
 
 # rotaion
 set("first axis","x");
-set("rotation 1",90);
+set("rotation 1",-90);
 
 # add input waveguide
 addrect;
