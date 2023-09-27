@@ -203,15 +203,15 @@ def plot_ion_position_transmission(
     axs[1].set_xlabel("time")
     axs[1].set_ylabel("transmission")
     # ax.set_ylim(0, 1)
-    # (fig_new_pt,) = axs[0].scatter([], [], marker="x", c="black")
-    fig_position = axs[0].scatter([], [], c=np.array([]), cmap="hot", vmin=0, vmax=1)
+    fig_new_pt = axs[0].scatter([], [], marker="x", c="black", s=50)
+    fig_position = axs[0].scatter([], [], c=np.array([]), cmap="jet", vmin=0, vmax=1)
     (fig_transmission,) = axs[1].plot([], [])
     # print(aaa)
     # >>> update data <<<
 
     def _optimize_wrapper(datas, callback_func, paras):
         # highlight the new point
-        # fig_new_pt.set_data(paras[1], paras[0])
+        fig_new_pt.set_offsets(np.column_stack((paras[1], paras[0])))
         x, y, T = callback_func(paras)
         # >>> update data <<<
         datas.append((x, y, T))
