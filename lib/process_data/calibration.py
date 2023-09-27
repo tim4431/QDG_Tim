@@ -1,5 +1,5 @@
 from scipy.optimize import curve_fit
-from .load_csv_data import load_csv_data
+from .csv_data import load_csv_data
 import numpy as np
 
 

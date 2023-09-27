@@ -3,16 +3,18 @@ import sys
 import numpy as np
 from matplotlib import pyplot as plt
 from labjack import ljm
-import ljm_stream_util
+from . import ljm_stream_util
 import time
 from typing import List, Tuple, Union, Any
 
 
 def santec_internal_sweep(
+    handle: Any,
     laser: Any,
     power: float = 5,
     aScanListNames: List[str] = ["AIN0", "AIN1"],
-    scanRate: float = 10000,
+    aRangeList: List[float] = [10.0, 10.0],
+    scanRate: float = 1000,
     start: float = 1245,
     end: float = 1375,
     sweeprate: float = 10,
@@ -26,7 +28,7 @@ def santec_internal_sweep(
     - sweeprate: sweep rate, in nm/s
     """
     # seems to be following the code here: https://github.com/labjack/labjack-ljm-python/blob/master/Examples/More/Stream/stream_triggered.py
-    handle = ljm.openS("T7", "ETHERNET", "192.168.0.125")
+    # handle = ljm.openS("T7", "ETHERNET", "192.168.0.125")
     # aScanListNames = ["AIN0", "AIN1"]
     numAddresses = len(aScanListNames)
     aScanList = ljm.namesToAddresses(numAddresses, aScanListNames)[0]
@@ -71,10 +73,11 @@ def santec_internal_sweep(
             "STREAM_SETTLING_US",
             "STREAM_RESOLUTION_INDEX",
         ]
-        aValues = [ljm.constants.GND, 0, 5]
-        for aName in aScanListNames:
-            aNames.append(aName + "_RANGE")
-            aValues.append(10.0)
+        #
+        aValues = [ljm.constants.GND, 0, 4]
+        for i in range(numAddresses):
+            aNames.append("{:s}_RANGE".format(aScanListNames[i]))
+            aValues.append(aRangeList[i])
         #
         numFrames = len(aNames)
         ljm.eWriteNames(handle, numFrames, aNames, aValues)
@@ -84,7 +87,14 @@ def santec_internal_sweep(
         scanRate = ljm.eStreamStart(
             handle, scansPerRead, numAddresses, aScanList, scanRate
         )
+        #
         print("\nStream started with a scan rate of %0.0f Hz." % scanRate)
+        print(
+            "\nEstimated aquisition time: %0.3f seconds."
+            % (float(abs(start - end) / sweeprate))
+        )
+        print("Wavelength resolution: %0.3f nm." % (float(sweeprate / scanRate)))
+        #
         while i <= MAX_REQUESTS:
             ljm_stream_util.variableStreamSleep(scansPerRead, scanRate, ljmScanBacklog)
             try:
@@ -109,7 +119,7 @@ def santec_internal_sweep(
         e = sys.exc_info()[1]
         print(e)
     finally:
-        ljm.close(handle)
+        # ljm.close(handle)
 
         laser.write_sweep_state("Off")
         laser.write_laser_status("Off")
@@ -127,7 +137,8 @@ if __name__ == "__main__":
 
     laser = init_laser()
     l, vs = santec_internal_sweep(
-        laser,
+        handle=None,
+        laser=laser,
         power=5,
         aScanListNames=["AIN2", "AIN3"],
         scanRate=10000,

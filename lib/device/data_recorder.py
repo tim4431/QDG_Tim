@@ -1,21 +1,7 @@
 import numpy as np
 import time
-
-from typing import Callable, Union, List
-
-
-def init_csv(dataName: str, xname: str, yname: List[str]):
-    with open(dataName, "w") as f:
-        # xname, yname[0], yname[1], ...
-        f.write("{:s},\t{:s}\n".format(xname, ",\t".join(yname)))
-
-
-def appenddata(dataName: str, x: float, y: List[float]):
-    with open(dataName, "a") as f:
-        # x, y[0], y[1], ...
-        f.write(
-            "{:.4f},\t{:s}\n".format(x, ",\t".join(["{:.8f}".format(yi) for yi in y]))
-        )
+from lib.process_data.csv_data import init_csv_heads, appenddata
+from typing import Union, List, Callable, Any, Tuple
 
 
 def nop(x):
@@ -44,7 +30,7 @@ def data_recorder(
         y_func = [y_func]
     assert len(yname) == len(y_func), "yname and y_func should have same length"
     # init csv file
-    init_csv(dataName, xname, yname)
+    init_csv_heads(dataName, xname, yname)
     # Measure
     # using tqdm
     from tqdm import tqdm
