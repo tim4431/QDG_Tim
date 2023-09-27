@@ -6,7 +6,6 @@ from labjack import ljm
 from . import ljm_stream_util
 import time
 from typing import List, Tuple, Union, Any
-from .device import ljm_conf_range_resolution
 
 
 def santec_internal_sweep(
@@ -138,7 +137,8 @@ if __name__ == "__main__":
 
     laser = init_laser()
     l, vs = santec_internal_sweep(
-        laser,
+        handle=None,
+        laser=laser,
         power=5,
         aScanListNames=["AIN2", "AIN3"],
         scanRate=10000,

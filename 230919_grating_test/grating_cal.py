@@ -82,14 +82,27 @@ def mean_transmission_input_output(
     return float(T), float(input_p), float(output_p)
 
 
-def getDataName(
-    uuid: str, lambda_start: float, lambda_end: float, lambda_step: float
-) -> str:
+def getDataName(uuid: str) -> str:
     now = datetime.datetime.now()
     date_str = now.strftime("%y%m%d")
     datetime_str = now.strftime("%y%m%d_%H%M%S")
-    fileName = "./data_{:s}/{:s}_{:s}_{:.1f}_{:.1f}_{:.2f}.csv".format(
-        date_str, datetime_str, uuid, lambda_start, lambda_end, lambda_step
+    # if not have data folder, create one
+    import os
+
+    if not os.path.exists("./data_{:s}".format(date_str)):
+        os.makedirs("./data_{:s}".format(date_str))
+    #
+    dataName = "./data_{:s}/{:s}_{:s}".format(date_str, datetime_str, uuid)
+    return dataName
+
+
+def getDataSweepName(
+    uuid: str, lambda_start: float, lambda_end: float, lambda_step: float
+) -> str:
+    dataName = getDataName(uuid)
+    # create file name
+    fileName = dataName + "_{:.1f}_{:.1f}_{:.2f}.csv".format(
+        lambda_start, lambda_end, lambda_step
     )
     return fileName
 
@@ -123,7 +136,7 @@ def photodiode_lambda_sweep(
     x_func = lambda l: laser.write_wavelength(l)
     y_func = lambda: _read_pd_power(handle, numAIN)
     #
-    dataName = getDataName(uuid, lambda_start, lambda_end, lambda_step)
+    dataName = getDataSweepName(uuid, lambda_start, lambda_end, lambda_step)
     print(dataName)
     #
     data_recorder(
@@ -167,7 +180,7 @@ def calibrate_grating(
     x = l
     y = [input_p, output_p, transmission]
     # >>> save data <<<
-    dataName = getDataName(
+    dataName = getDataSweepName(
         uuid, lambda_start=lambda_start, lambda_end=lambda_end, lambda_step=lambda_step
     )
     print(dataName)
@@ -212,12 +225,12 @@ def plot_ion_transmission(callback_func: Callable, HIST_LENGTH: int = 50):
 
 
 def plot_ion_position_transmission(
-    callback_func: Callable, HIST_LENGTH: int = 1000, optimize=False
+    uuid: str, callback_func: Callable, HIST_LENGTH: int = 1000, optimize=False
 ):
     datas = deque(maxlen=HIST_LENGTH)  # [(x1,y1,T1), (x2,y2,T2), ...)]
     # >>> plot data <<<
     plt.ion()
-    fig, axs = plt.subplots(nrows=1, ncols=2)
+    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
     # axs[0].set_xlabel("x(um)")
     # axs[0].set_ylabel("y(um)")
     axs[0].set(xlim=(-10, 10), ylim=(-10, 10), xlabel="y(um)", ylabel="x(um)")
@@ -284,8 +297,10 @@ def plot_ion_position_transmission(
         fig, ax = plt.subplots()
         xs, ys, es = zip(*datas)
         ax.scatter(xs, ys, c=es, cmap="jet", vmin=0, vmax=1)
-        plt.colorbar()
         ax.set(xlim=(-10, 10), ylim=(-10, 10), xlabel="y(um)", ylabel="x(um)")
+        cbar = plt.colorbar(ax)
+        dataName = getDataName(uuid)
+        plt.savefig(dataName + "_2D_align.png", dpi=200, bbox_inches="tight")
         plt.show()
 
     except Exception as e:
@@ -332,7 +347,11 @@ def align_grating_1D(handle, power: float = 9.0, source: Union[None, int] = None
 
 
 def align_grating_2D(
-    handle, power: float = 9.0, source: Union[None, int] = None, optimize=False
+    uuid: str,
+    handle: Any,
+    power: float = 9.0,
+    source: Union[None, int] = None,
+    optimize=False,
 ):
     if source == None:
         pass
@@ -408,7 +427,7 @@ def align_grating_2D(
         sutter = init_sutter()
         time.sleep(0.5)
         callback_func = lambda paras: sutter_step(sutter, paras)
-        plot_ion_position_transmission(callback_func, optimize=optimize)
+        plot_ion_position_transmission(uuid, callback_func, optimize=optimize)
     except Exception as e:
         print(e)
     finally:
@@ -425,7 +444,7 @@ if __name__ == "__main__":
         # set_mems_switch(handle, source=0)
         # align_grating_1D(handle=handle, source=0)
         # calibrate_grating("top3", handle, 1260, 1400, 1, power=9.0)
-        align_grating_2D(handle=handle, source=None, optimize=False)
+        align_grating_2D("test", handle=handle, source=None, optimize=False)
     finally:
         if handle is not None:
             ljm.close(handle)
