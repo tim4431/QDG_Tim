@@ -256,32 +256,28 @@ def plot_ion_position_transmission(
     #
     try:
         if optimize:  # using scipy.optimize.minimize
+            paras = [0, 0]
             paras = minimize(
-                lambda paras: _optimize_wrapper(datas, callback_func, paras),
-                x0=[0, 0],
+                lambda para: _optimize_wrapper(datas, callback_func, para),
+                x0=paras,
                 # method="Nelder-Mead",
                 method="Powell",
                 # method="L-BFGS-B",
                 bounds=[(-10, 10), (-10, 10)],
                 options={"disp": True, "maxiter": 80, "ftol": 1e-9},
             )
-            paras_final = paras.x
-            res = input(
-                "Accept the Final Position x={:.4f}(um), y={:.4f}(um) (y/n)?".format(
-                    *paras_final
-                )
-            ).strip()
-            if res == "n":
-                callback_func([0, 0])
-            else:
-                pass
         else:  # 2D scanning
-            X = np.linspace(-10, 10, 21)
-            Y = np.linspace(-10, 10, 21)
-            for x in X:
-                for y in Y:
-                    _optimize_wrapper(datas, callback_func, [x, y])
-            callback_func([0, 0])
+            X = np.linspace(-5, 5, 11)
+            Y = np.linspace(-5, 5, 11)
+            # snake scan
+            for i in range(len(X)):
+                x = X[i]
+                Yx = Y if i % 2 == 0 else Y[::-1]
+                for y in Yx:
+                    paras = [x, y]
+                    _optimize_wrapper(datas, callback_func, paras)
+            paras = [0, 0]
+            callback_func(paras)
         #
         # >>> plot datas <<<
         fig, ax = plt.subplots()
@@ -294,6 +290,17 @@ def plot_ion_position_transmission(
         print(e)
     finally:
         plt.ioff()
+        paras_final = paras.x  # type: ignore
+        res = input(
+            "Accept the Final Position x={:.4f}(um), y={:.4f}(um) (y/n)?".format(
+                *paras_final
+            )
+        ).strip()
+        if res == "n":
+            callback_func([0, 0])
+        else:
+            pass
+        #
         return
 
 
@@ -401,12 +408,8 @@ def align_grating_2D(
     try:
         sutter = init_sutter()
         time.sleep(0.5)
-        if not optimize:
-            callback_func = lambda paras: sutter_step(sutter, paras)
-            plot_ion_position_transmission(callback_func, optimize=False)
-        else:
-            callback_func = lambda paras: sutter_step(sutter, paras)
-            plot_ion_position_transmission(callback_func, optimize=True)
+        callback_func = lambda paras: sutter_step(sutter, paras)
+        plot_ion_position_transmission(callback_func, optimize=optimize)
     except Exception as e:
         print(e)
     finally:
