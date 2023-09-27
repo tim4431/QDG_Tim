@@ -184,8 +184,8 @@ def plot_ion_transmission(callback_func: Callable, HIST_LENGTH: int = 50):
             ax.autoscale_view()
             fig.canvas.flush_events()
             time.sleep(0.05)
-    except KeyboardInterrupt:
-        print("KeyboardInterrupt, stop")
+    except Exception as e:
+        print(e)
     finally:
         plt.ioff()
 
@@ -199,29 +199,31 @@ def plot_ion_position_transmission(
     fig, axs = plt.subplots(nrows=1, ncols=2)
     # axs[0].set_xlabel("x(um)")
     # axs[0].set_ylabel("y(um)")
-    axs[0].set(xlim=(-1000, 1000), ylim=(-1000, 1000), xlabel="y(um)", ylabel="x(um)")
+    axs[0].set(xlim=(-10, 10), ylim=(-10, 10), xlabel="y(um)", ylabel="x(um)")
     axs[1].set_xlabel("time")
     axs[1].set_ylabel("transmission")
     # ax.set_ylim(0, 1)
-    fig_position = axs[0].scatter([], [])
+    fig_position = axs[0].scatter([], [], c=np.array([]), cmap="reds", vmin=0, vmax=1)
+    (fig_new_pt,) = axs[0].scatter([], [], "x", c="black")
     (fig_transmission,) = axs[1].plot([], [])
     # >>> update data <<<
 
     def _optimize_wrapper(datas, callback_func, paras):
+        # highlight the new point
+        fig_new_pt.set_data(paras[1], paras[0])
+        a = input("confirm?")
         x, y, T = callback_func(paras)
+        # >>> update data <<<
         datas.append((x, y, T))
         while (len(datas)) > HIST_LENGTH:
             datas.pop(0)
-        #
         xs, ys, es = zip(*datas)
+        # >>> update plot <<<
         fig_position.set_offsets(np.column_stack((ys, xs)))
         fig_position.set_array(es)
-        # fig_position.set_alphas(
-        #     np.linspace(0.1, 1, len(xs))
-        # )  # alpha increase with time
-        # fig_position.set_cmap("jet")
-        # axs[0].relim()
-        # axs[0].autoscale_view()
+        fig_position.set_alpha(
+            np.linspace(0.2, 0.6, len(xs))
+        )  # alpha increase with time
         #
         fig_transmission.set_data(range(len(es)), es)
         axs[1].relim()
@@ -236,7 +238,7 @@ def plot_ion_position_transmission(
         if automatic:
             minimize(
                 lambda paras: _optimize_wrapper(datas, callback_func, paras),
-                x0=[0, 0],
+                x0=[5, 4],
                 method="L-BFGS-B",
                 bounds=[(-10, 10), (-10, 10)],
             )
@@ -245,8 +247,6 @@ def plot_ion_position_transmission(
                 _optimize_wrapper(datas, callback_func, paras=[0, 0])
                 # time.sleep(0.2)
 
-    except KeyboardInterrupt:
-        print("KeyboardInterrupt, stop")
     except Exception as e:
         print(e)
     finally:
@@ -315,14 +315,15 @@ def align_grating_2D(
         y = paras[1]
         # sutter_move(sutter, x, y)
         time.sleep(0.1)
-        x = sutter.get_x_position()
-        y = sutter.get_y_position()
-        T, input_p, output_p = transmission_input_output(handle)
-        print(
-            "x: {:.4f}(um), y:{:.4f}(um), input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
-                x, y, input_p, output_p, T
-            )
-        )
+        # x = sutter.get_x_position()
+        # y = sutter.get_y_position()
+        # T, input_p, output_p = transmission_input_output(handle)
+        # print(
+        #     "x: {:.4f}(um), y:{:.4f}(um), input: {:.4f}(uW), output: {:.4f}(uW), transmission: {:.4f}".format(
+        #         x, y, input_p, output_p, T
+        #     )
+        # )
+        T = 1 / (1 + abs(x / 10) + abs(y / 10))
         return (x, y, T)
 
     #
@@ -337,6 +338,8 @@ def align_grating_2D(
         else:
             callback_func = lambda paras: sutter_step(sutter, paras)
             plot_ion_position_transmission(callback_func, automatic=True)
+    except Exception as e:
+        print(e)
     finally:
         print("Close Sutter")
         del sutter  # type: ignore
