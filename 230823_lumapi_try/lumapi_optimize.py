@@ -102,7 +102,7 @@ def set_params(fdtd, paras, **kwargs):
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
     #
-    if grating_typ in ["subw_grating","subw_grating_partialetch"]:
+    if grating_typ in ["subw_grating", "subw_grating_partialetch"]:
         #
         Lambda = paras[0]
         fdtd.setnamed(grating_typ, "Lambda", Lambda)
@@ -188,7 +188,11 @@ def calc_min_feature(paras, **kwargs) -> float:
     grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
     #
-    if grating_typ in ["subw_grating", "subw_grating_sourcefixed","subw_grating_partialetch"]:
+    if grating_typ in [
+        "subw_grating",
+        "subw_grating_sourcefixed",
+        "subw_grating_partialetch",
+    ]:
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
         NH = kwargs.get("NH", DEFAULT_PARA["NH"])
         #
@@ -715,11 +719,8 @@ def get_paras_bound(**kwargs):
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
     #
-    if grating_typ in ["subw_grating","subw_grating_partialetch"]:  # [Lambda, ffL, ffH, ff, fiberx]
-        if SOURCE_typ in ["gaussian_airclad"]:
-            paras_min = np.array([0.7e-6, 0.05, 0.4, 0.3, 10e-6], dtype=np.float_)
-            paras_max = np.array([1.1e-6, 0.4, 0.95, 0.7, 18e-6], dtype=np.float_)
-        elif SOURCE_typ in [
+    if grating_typ in ["subw_grating"]:  # [Lambda, ffL, ffH, ff, fiberx]
+        if SOURCE_typ in [
             "gaussian_released",
             "gaussian_packaged",
             "gaussian_airclad",
@@ -735,6 +736,12 @@ def get_paras_bound(**kwargs):
             raise ValueError(
                 "get_paras_bound: Invalid SOURCE_typ: {:s}".format(SOURCE_typ)
             )
+    elif grating_typ == "subw_grating_partialetch":
+        start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
+        paras_min = np.array([1.3e-6, 0.00, 0.3, 0.3, start_radius], dtype=np.float_)
+        paras_max = np.array(
+            [1.9e-6, 0.32, 0.90, 0.8, start_radius + 10e-6], dtype=np.float_
+        )
     elif grating_typ == "subw_grating_sourcefixed":  # [Lambda, ffL, ffH, ff]
         paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3], dtype=np.float_)
         paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7], dtype=np.float_)
