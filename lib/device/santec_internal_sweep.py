@@ -3,7 +3,9 @@ import sys
 import numpy as np
 from matplotlib import pyplot as plt
 from labjack import ljm
-from . import ljm_stream_util
+
+# from . import ljm_stream_util
+import ljm_stream_util
 import time
 from typing import List, Tuple, Union, Any
 
@@ -131,17 +133,16 @@ def santec_internal_sweep(
 if __name__ == "__main__":
     import sys
     import matplotlib.pyplot as plt
-
-    sys.path.append("..")
-    from lib.device.device import init_laser
+    from device import init_laser, init_labjack
 
     laser = init_laser()
+    handle = init_labjack()
     l, vs = santec_internal_sweep(
-        handle=None,
+        handle=handle,
         laser=laser,
         power=5,
         aScanListNames=["AIN2", "AIN3"],
-        scanRate=10000,
+        scanRate=1000,
         start=1355,
         end=1356,
         sweeprate=10,
