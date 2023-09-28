@@ -3,7 +3,9 @@ import sys
 import numpy as np
 from matplotlib import pyplot as plt
 from labjack import ljm
-from . import ljm_stream_util
+
+# from . import ljm_stream_util
+import ljm_stream_util
 import time
 from typing import List, Tuple, Union, Any
 
@@ -59,7 +61,7 @@ def santec_internal_sweep(
     laser.write_sweep_state("On")
     #
     MAX_REQUESTS = 1
-    i = 1
+    i = 0
     ljmScanBacklog = 0
     aData = np.zeros(10)
     datas = []  # [data0, data1, ...]
@@ -75,7 +77,7 @@ def santec_internal_sweep(
         ]
         #
         aValues = [ljm.constants.GND, 0, 4]
-        for i in range(numAddresses):
+        for j in range(numAddresses):
             aNames.append("{:s}_RANGE".format(aScanListNames[i]))
             aValues.append(aRangeList[i])
         #
@@ -95,17 +97,20 @@ def santec_internal_sweep(
         )
         print("Wavelength resolution: %0.3f nm." % (float(sweeprate / scanRate)))
         #
-        while i <= MAX_REQUESTS:
+        while i < MAX_REQUESTS:
             ljm_stream_util.variableStreamSleep(scansPerRead, scanRate, ljmScanBacklog)
+            print("Fl")
             try:
                 ret = ljm.eStreamRead(handle)
                 aData = ret[0]
+                print(len(aData))
                 for j in range(numAddresses):
                     aDataj = [aData[numAddresses * i + j] for i in range(scansPerRead)]
                     datas.append(aDataj)
                 ljmScanBacklog = ret[2]
                 i += 1
             except ljm.LJMError as err:
+                print("ee")
                 if err.errorCode == ljm.errorcodes.NO_SCANS_RETURNED:
                     sys.stdout.write(".")
                     sys.stdout.flush()
@@ -119,7 +124,8 @@ def santec_internal_sweep(
         e = sys.exc_info()[1]
         print(e)
     finally:
-        # ljm.close(handle)
+        print("Finally")
+        ljm.close(handle)
 
         laser.write_sweep_state("Off")
         laser.write_laser_status("Off")
@@ -131,23 +137,23 @@ def santec_internal_sweep(
 if __name__ == "__main__":
     import sys
     import matplotlib.pyplot as plt
-
-    sys.path.append("..")
-    from lib.device.device import init_laser
+    from device import init_laser, init_labjack
 
     laser = init_laser()
+    handle = init_labjack()
     l, vs = santec_internal_sweep(
-        handle=None,
+        handle=handle,
         laser=laser,
-        power=5,
+        power=-15,
         aScanListNames=["AIN2", "AIN3"],
-        scanRate=10000,
+        scanRate=1000,
         start=1355,
-        end=1356,
-        sweeprate=10,
+        end=1365,
+        sweeprate=50,
     )
     v1, v2 = vs
 
     plt.plot(l, v1, label="AIN2")
     plt.plot(l, v2, label="AIN3")
     plt.show()
+    ljm.close(handle)
