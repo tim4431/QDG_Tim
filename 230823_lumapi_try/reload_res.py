@@ -165,10 +165,10 @@ if __name__ == "__main__":
     #
     reload_work(
         "7f82",
-        dimension="2D",
+        dimension="3D",
         reload_simulation_typ=0,
         tether_typ=None,
         pause=False,
         advanced_monitor=True,
-        movie=True,
+        # movie=True,
     )
