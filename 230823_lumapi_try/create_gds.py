@@ -41,7 +41,7 @@ def generate_grating(paras, **kwargs):
     NL = kwargs.get("NL", DEFAULT_PARA["NL"])
     NH = kwargs.get("NH", DEFAULT_PARA["NH"])
     #
-    if grating_typ in ["subw_grating", "subw_grating_partialetch"]:
+    if grating_typ in ["subw_grating"]:
         Lambda = paras[0]
         ffL = paras[1]
         ffH = paras[2]

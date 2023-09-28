@@ -102,7 +102,7 @@ def set_params(fdtd, paras, **kwargs):
     SOURCE_typ = kwargs.get("SOURCE_typ", DEFAULT_PARA["SOURCE_typ"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
     #
-    if grating_typ in ["subw_grating", "subw_grating_partialetch"]:
+    if grating_typ in ["subw_grating"]:
         #
         Lambda = paras[0]
         fdtd.setnamed(grating_typ, "Lambda", Lambda)
@@ -188,11 +188,7 @@ def calc_min_feature(paras, **kwargs) -> float:
     grating_typ = kwargs.get("grating_typ", DEFAULT_PARA["grating_typ"])
     N = kwargs.get("N", DEFAULT_PARA["N"])
     #
-    if grating_typ in [
-        "subw_grating",
-        "subw_grating_sourcefixed",
-        "subw_grating_partialetch",
-    ]:
+    if grating_typ in ["subw_grating", "subw_grating_sourcefixed"]:
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
         NH = kwargs.get("NH", DEFAULT_PARA["NH"])
         #
@@ -538,24 +534,6 @@ def setup_grating_structuregroup(fdtd, **kwargs):
             "script",
             load_script("subw_grating_concentric.lsf"),
         )
-    elif grating_typ == "subw_grating_partialetch":
-        NL = kwargs.get("NL", DEFAULT_PARA["NL"])
-        NH = kwargs.get("NH", DEFAULT_PARA["NH"])
-        #
-        fdtd.adduserprop("Lambda", 2, 1.1e-6)
-        fdtd.adduserprop("etch_depth", 2, 60e-9)
-        fdtd.adduserprop("ff", 0, 0.5)
-        fdtd.adduserprop("ffL", 0, 0.2)
-        fdtd.adduserprop("ffH", 0, 0.8)
-        fdtd.adduserprop("NL", 0, NL)
-        fdtd.adduserprop("NH", 0, NH)
-        fdtd.adduserprop("N", 0, N)
-        #
-        fdtd.setnamed(
-            grating_typ,
-            "script",
-            load_script("subw_grating_partialetch_concentric.lsf"),
-        )
     elif grating_typ == "apodized_subw_grating":
         NL = kwargs.get("NL", DEFAULT_PARA["NL"])
         NH = kwargs.get("NH", DEFAULT_PARA["NH"])
@@ -725,23 +703,30 @@ def get_paras_bound(**kwargs):
             "gaussian_packaged",
             "gaussian_airclad",
         ]:
+            etch_typ = kwargs.get("etch_typ", DEFAULT_PARA["etch_typ"])
             start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
-            paras_min = np.array(
-                [1.1e-6, 0.00, 0.5, 0.3, start_radius], dtype=np.float_
-            )
-            paras_max = np.array(
-                [1.7e-6, 0.32, 0.95, 0.7, start_radius + 10e-6], dtype=np.float_
-            )
+            if etch_typ == "full":
+                paras_min = np.array(
+                    [1.1e-6, 0.00, 0.5, 0.3, start_radius], dtype=np.float_
+                )
+                paras_max = np.array(
+                    [1.7e-6, 0.32, 0.95, 0.7, start_radius + 10e-6], dtype=np.float_
+                )
+            elif etch_typ == "partial":
+                paras_min = np.array(
+                    [1.3e-6, 0.00, 0.3, 0.3, start_radius], dtype=np.float_
+                )
+                paras_max = np.array(
+                    [1.9e-6, 0.32, 0.90, 0.8, start_radius + 10e-6], dtype=np.float_
+                )
+            else:
+                raise ValueError(
+                    "get_paras_bound: Invalid etch_typ: {:s}".format(etch_typ)
+                )
         else:
             raise ValueError(
                 "get_paras_bound: Invalid SOURCE_typ: {:s}".format(SOURCE_typ)
             )
-    elif grating_typ == "subw_grating_partialetch":
-        start_radius = kwargs.get("start_radius", DEFAULT_PARA["start_radius"])
-        paras_min = np.array([1.3e-6, 0.00, 0.3, 0.3, start_radius], dtype=np.float_)
-        paras_max = np.array(
-            [1.9e-6, 0.32, 0.90, 0.8, start_radius + 10e-6], dtype=np.float_
-        )
     elif grating_typ == "subw_grating_sourcefixed":  # [Lambda, ffL, ffH, ff]
         paras_min = np.array([1.1e-6, 0.00, 0.5, 0.3], dtype=np.float_)
         paras_max = np.array([1.7e-6, 0.32, 0.95, 0.7], dtype=np.float_)
