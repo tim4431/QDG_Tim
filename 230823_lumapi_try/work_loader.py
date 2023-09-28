@@ -85,15 +85,9 @@ if __name__ == "__main__":  # type: ignore
     # print("sleeping")
     # time.sleep(3600 * 5)
 
-    # f93f_partialetch
-    work_f93f = load_json("f93f")
-    work_f93f_partialetch = deepcopy(work_f93f)
-    work_f93f_partialetch["maxiter"]=70
-    work_f93f_partialetch["grating_typ"] = "subw_grating_partialetch"
-    work_f93f_partialetch["BOX"] = "SiO2"
-    work_f93f_partialetch_nominback = deepcopy(work_f93f_partialetch)
-    work_f93f_partialetch_nominback["simulation_typ"] = 0
-    work_loader(
-        [work_f93f_partialetch_nominback, work_f93f_partialetch],
-        "f93f_partialetch",
+    # 7f82_sweepangle
+    work_7f82 = load_json("7f82")
+    work_7f82_anglesweep = work_para_sweeper(
+        work_7f82, np.arange(10, 30, 5), "source_angle"
     )
+    work_loader(work_7f82_anglesweep, "7f82_anglesweep", merge_data=True)
