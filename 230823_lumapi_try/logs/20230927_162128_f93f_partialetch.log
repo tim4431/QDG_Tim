@@ -1,0 +1,6 @@
+[INFO] - Work loader start
+[INFO] - uuid: 7f82 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 70, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 0, 'source_angle': 14.8, 'start_radius': 1.2e-05, 'grating_typ': 'subw_grating_partialetch', 'BOX': 'SiO2', 'uuid': '7f82'}
+[INFO] - uuid: bd7d created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 70, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 14.8, 'start_radius': 1.2e-05, 'grating_typ': 'subw_grating_partialetch', 'BOX': 'SiO2', 'uuid': 'bd7d'}
+[INFO] - uuid: 7f82 finished

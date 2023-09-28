@@ -88,6 +88,7 @@ if __name__ == "__main__":  # type: ignore
     # f93f_partialetch
     work_f93f = load_json("f93f")
     work_f93f_partialetch = deepcopy(work_f93f)
+    work_f93f_partialetch["maxiter"]=70
     work_f93f_partialetch["grating_typ"] = "subw_grating_partialetch"
     work_f93f_partialetch["BOX"] = "SiO2"
     work_f93f_partialetch_nominback = deepcopy(work_f93f_partialetch)
