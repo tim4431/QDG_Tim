@@ -41,7 +41,7 @@ def generate_grating(paras, **kwargs):
     NL = kwargs.get("NL", DEFAULT_PARA["NL"])
     NH = kwargs.get("NH", DEFAULT_PARA["NH"])
     #
-    if grating_typ == "subw_grating":
+    if grating_typ in ["subw_grating", "subw_grating_partialetch"]:
         Lambda = paras[0]
         ffL = paras[1]
         ffH = paras[2]
@@ -123,8 +123,8 @@ if __name__ == "__main__":
         "section_rect_tether_multisuspend_unbox",  # 11
         "section_rect_tether_hole_multisuspend_unbox",  # 12
     ]
-    uuid = "e251"
-    idx_list = [0, 11]
+    uuid = "f3b5"
+    idx_list = [0]
     for idx in idx_list:
         tether_typ = tether_typ_avail_list[idx]
         gds_fileName = create_gds(uuid, tether_typ=tether_typ)

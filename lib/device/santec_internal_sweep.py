@@ -102,6 +102,7 @@ def santec_internal_sweep(
             try:
                 ret = ljm.eStreamRead(handle)
                 aData = ret[0]
+                print(len(aData))
                 for j in range(numAddresses):
                     aDataj = [aData[numAddresses * i + j] for i in range(scansPerRead)]
                     datas.append(aDataj)
