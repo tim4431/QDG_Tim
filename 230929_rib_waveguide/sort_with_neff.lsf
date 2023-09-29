@@ -1,0 +1,62 @@
+clear; cleardcard;
+waveguide_width = linspace(1e-6,0.2e-6,11);
+
+nTE0 = matrix(length(waveguide_width));
+nTE1 = matrix(length(waveguide_width));
+nTM0 = matrix(length(waveguide_width));
+nTM1 = matrix(length(waveguide_width));
+areaTE0 = matrix(length(waveguide_width));
+areaTE1 = matrix(length(waveguide_width));
+areaTM0 = matrix(length(waveguide_width));
+areaTM1 = matrix(length(waveguide_width));
+
+nTE_slab = 2.7554;
+nTM_slab = 1.8489;
+
+for (i=1:length(waveguide_width)){
+    # set geometry
+    switchtolayout;
+    setnamed('rib','x span',waveguide_width(i));
+    nModes = findmodes;
+
+    numTE=0;
+    numTM=0;
+
+    for (j=1:nModes){
+        modeName = "mode" + num2str(j);
+        neff = real(getdata(modeName,'neff'));
+        TE_pol = getdata(modeName,'TE polarization fraction');
+        mode_area = getdata(modeName,'mode effective area');
+        if (TE_pol>0.8){
+            if (numTE==0){
+                nTE0(i) = neff - nTE_slab;
+                areaTE0(i) = mode_area;
+            } else if (numTE==1){
+                nTE1(i) = neff - nTE_slab;
+                if (neff - nTE_slab>0){
+                    areaTE1(i) = mode_area;
+                }
+            }
+            numTE = numTE + 1;
+        }
+        if (TE_pol<0.4){
+            if (numTM==0){
+                nTM0(i) = neff - nTM_slab;
+                areaTM0(i) = mode_area;
+            } else if (numTM==1){
+                nTM1(i) = neff - nTM_slab;
+                if (neff - nTM_slab>0){
+                    areaTM1(i) = mode_area;
+                }
+            }
+            numTM = numTM + 1;
+        }
+    }
+}
+
+# plot in normalized units
+plot(waveguide_width*1e6,nTE0,nTE1,nTM0,nTM1,'waveguide width (um)','delta_neff');
+legend('TE0','TE1','TM0','TM1');
+plot(waveguide_width*1e6,areaTE0,areaTE1,areaTM0,areaTM1,'waveguide width (um)','effective area (um^2)');
+legend('TE0','TE1','TM0','TM1');
+# setplot('y min',0); setplot('y max',max(neff1));
