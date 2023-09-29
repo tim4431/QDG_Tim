@@ -456,6 +456,13 @@ def setup_geometry(fdtd, dimension: str = "2D", **kwargs):
         fdtd.setnamed("TOX", "material", "SiO2 (Glass) - Palik")
     else:
         raise ValueError("setup_geometry: Invalid TOX: {:s}".format(TOX))
+    # >>> set slab for partial etching <<< #
+    etch_typ = kwargs.get("etch_typ", DEFAULT_PARA["etch_typ"])
+    if etch_typ == "partial":
+        fdtd.setnamed("slab", "enabled", 1)
+        fdtd.setnamed("slab", "material", "Si (Silicon) - Palik")
+    elif etch_typ == "full":
+        fdtd.setnamed("slab", "enabled", 0)
     # >>> set monitor <<< #
     fdtd.setglobalmonitor(
         "frequency points", 300
