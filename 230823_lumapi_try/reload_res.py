@@ -170,5 +170,5 @@ if __name__ == "__main__":
         tether_typ=None,
         pause=False,
         advanced_monitor=True,
-        movie=True,
+        # movie=True,
     )
