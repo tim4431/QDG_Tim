@@ -21,4 +21,5 @@ DEFAULT_PARA = {
     "simulation_typ": 0,  # 0: forward, 1: backward, 2: forward and backward
     "BOX": "Air",  # ["Air", "SiO2"]
     "TOX": "Air",  # ["Air", "SiO2"]
+    "etch_typ": "full",  # ["full", "partial"]
 }

@@ -1,0 +1,38 @@
+clear; cleardcard;
+waveguide_width = linspace(1e-6,0.2e-6,11);
+
+nTE0 = matrix(length(waveguide_width));
+nTE1 = matrix(length(waveguide_width));
+nTM0 = matrix(length(waveguide_width));
+nTM1 = matrix(length(waveguide_width));
+
+for (i=1:length(waveguide_width)){
+    # set geometry
+    switchtolayout;
+    setnamed('rib','x span',waveguide_width(i));
+    findmodes;
+
+    # store top 5 modes for largest waveguide width
+    # since the mode order may change for different width
+    if (i==1){
+        copydcard('mode1','TE0');
+        copydcard('mode2','TE1');
+        copydcard('mode11','TM0');
+        copydcard('mode13','TM1');
+    }
+
+    # store neff for modes at other waveguide width
+    TE0 = bestoverlap('TE0');
+    nTE0(i) = real(getdata(TE0,'neff'));
+    TE1 = bestoverlap('TE1');
+    nTE1(i) = real(getdata(TE1,'neff'));
+    TM0 = bestoverlap('TM0');
+    nTM0(i) = real(getdata(TM0,'neff'));
+    TM1 = bestoverlap('TM1');
+    nTM1(i) = real(getdata(TM1,'neff'));
+}
+
+# plot in normalized units
+plot(waveguide_width*1e6,nTE0,nTE1,nTM0,nTM1,'waveguide width (um)','delta_neff');
+# setplot('y min',0); setplot('y max',max(neff1));
+legend('TE0','TE1','TM0','TM1');

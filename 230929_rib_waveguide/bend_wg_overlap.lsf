@@ -1,0 +1,21 @@
+clear; cleardcard;
+waveguide_width = linspace(0.3e-6,0.4e-6,11);
+
+overlap_list = matrix(length(waveguide_width));
+
+for (i=1:length(waveguide_width)){
+    # set geometry
+    switchtolayout;
+    setnamed('rib','x span',waveguide_width(i));
+    setanalysis("bent waveguide",0);
+    nModes = findmodes;
+    copydcard('mode1','TE0');
+
+    setanalysis("bent waveguide",1);
+    nModes = findmodes;
+    ?o=overlap('TE0','mode1');
+    overlap_list(i)=o(1);
+}
+
+plot(waveguide_width*1e6,overlap_list,'waveguide width (um)','overlap of TE0 mode');
+legend('overlap');

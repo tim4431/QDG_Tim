@@ -86,8 +86,31 @@ if __name__ == "__main__":  # type: ignore
     # time.sleep(3600 * 5)
 
     # 7f82_sweepangle
+<<<<<<< HEAD
     work_7f82 = load_json("7f82")
     work_7f82_anglesweep = work_para_sweeper(
         work_7f82, np.arange(10.0, 30.0, 5), "source_angle"
     )
     work_loader(work_7f82_anglesweep, "7f82_anglesweep", merge_data=True)
+=======
+    work_subw_partialetch = {
+        "BOX": "SiO2",
+        "FOM_typ": "square",
+        "FWHM": 5e-08,
+        "MIN_FEATURE_SIZE": 4e-08,
+        "N": 9,
+        "NH": 2,
+        "NL": 2,
+        "SOURCE_typ": "gaussian_released",
+        "alpha": 0.0,
+        "grating_typ": "subw_grating",
+        "lambda_0": 1.326e-06,
+        "maxiter": 100,
+        "penalty": [[0.01, 1e-08], [0.02, 1e-07]],
+        "simulation_typ": 0,
+        "source_angle": 14.8,
+        "start_radius": 1.2e-05,
+        "etch_typ": "partial",
+    }
+    work_loader([work_subw_partialetch], "subw_partialetch")
+>>>>>>> b21066e1583f93d28e01c32c90a5227565ad6cce
