@@ -88,6 +88,6 @@ if __name__ == "__main__":  # type: ignore
     # 7f82_sweepangle
     work_7f82 = load_json("7f82")
     work_7f82_anglesweep = work_para_sweeper(
-        work_7f82, np.arange(10, 30, 5), "source_angle"
+        work_7f82, np.arange(10.0, 30.0, 5), "source_angle"
     )
     work_loader(work_7f82_anglesweep, "7f82_anglesweep", merge_data=True)
