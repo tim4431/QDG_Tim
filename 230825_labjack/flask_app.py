@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, render_template
+from flask import Flask, render_template, send_file
 from load_data import schedule_report_plot
 import datetime
 
@@ -13,6 +13,11 @@ def index():
     return render_template(
         "index.html", img_filename=img_filename, current_time=current_time
     )
+
+
+@app.route("/image/<filename>")
+def get_image(filename):
+    return send_file(filename, mimetype="image/png")
 
 
 if __name__ == "__main__":

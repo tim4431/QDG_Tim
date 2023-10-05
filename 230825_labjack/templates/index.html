@@ -5,9 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QDG-Lab Temp Monitoring</title>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
     <h1>QDG-Lab Temp Monitoring: {{ current_time }}</h1>
-    <img src="{{ img_filename }}" alt="Temp Image">
+    <img src="{{ url_for('get_image', filename=img_filename) }}" alt="Plot Image">
 </body>
 </html>
