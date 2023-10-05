@@ -32,21 +32,43 @@ duration = 0
 
 lastWarning = None
 
+schedule_report_time_list = [datetime.time(0, 0), datetime.time(6,0), datetime.time(12, 0), datetime.time(18,0)]
+flag_schedule_report_list = [False for i in range(len(schedule_report_time_list))]
+
 while 1:
     numSkippedIntervals = ljm.waitForNextInterval(intervalHandle)
     # Get and format a timestamp
     curtime, curTimeStr, curDateStr = get_time_date()
     if curDateStr != fileDateStr:
-        # report yesterday's data
-        img_fileName = plot_data(fileDateStr, span="1D")
-        # create another thread to send email
-        threading.Thread(
-            target=schedule_report, args=(fileDateStr, img_fileName)
-        ).start()
+        # clear flag_schedule_report_list
+        flag_schedule_report_list = [False for i in range(len(schedule_report_time_list))]
         #
         fileDateStr = curDateStr
         setup_logging(fileDateStr)
         setup_csv(fileDateStr)
+    #
+    for k in range(len(schedule_report_time_list)):
+        report_time = schedule_report_time_list[k]
+        flag = flag_schedule_report_list[k]
+
+        # extract the hour and minute from the report time
+        report_time = datetime.datetime.combine(curtime.date(), report_time)
+
+        #if the curtime is after the report time and the report has not been sent
+        #and the time difference is within 2 minute
+        if (
+            curtime.time() > report_time.time()
+            and (not flag)
+            and (curtime - report_time).total_seconds() < 120
+        ):
+            flag_schedule_report_list[k] = True
+            logging.info("Schedule report at %s" % (report_time))
+            # schedule report
+            img_fileName = plot_data(fileDateStr, span="1D")
+            # create another thread to send email
+            threading.Thread(
+                target=schedule_report, args=(fileDateStr, img_fileName)
+            ).start()
 
     # Calculate the time since the last interval
     # curTick = ljm.getHostTick()

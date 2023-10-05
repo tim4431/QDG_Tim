@@ -13,16 +13,19 @@ EMAIL_SLACK_GENERAL = "general-aaaadgmklzajn2v73ykaooqrci@quantumdevicesgroup.sl
 EMAIL_GROUP = "quantumdevices@lists.berkeley.edu"
 #
 # >>> PRODUCTION <<<
-emergency_email_list = [
-    EMAIL_SELF,
-    EMAIL_SLACK_MONITOR,
-    EMAIL_SLACK_GENERAL,
-    EMAIL_GROUP,
-]
-notice_email_list = [EMAIL_SELF, EMAIL_SLACK_MONITOR]
-# >>> DEBUG <<<
-# emergency_email_list = [EMAIL_SELF]
-# notice_email_list = [EMAIL_SELF]
+# DEBUG = True
+DEBUG = False
+if DEBUG:
+    emergency_email_list = [EMAIL_SELF]
+    notice_email_list = [EMAIL_SELF]
+else:
+    emergency_email_list = [
+        EMAIL_SELF,
+        EMAIL_SLACK_MONITOR,
+        EMAIL_SLACK_GENERAL,
+        EMAIL_GROUP,
+    ]
+    notice_email_list = [EMAIL_SELF, EMAIL_SLACK_MONITOR]
 
 
 def temp_warning(temperature: float, img_fileName=None):
