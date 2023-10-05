@@ -16,16 +16,16 @@ def load_data(fileDateStr, span: str = "1D"):
     tempdata = data["Temperature (C)"]
     if span == "1D":
         return timedata, tempdata
-    elif span == "1H":
-        length = int(3600 / RECORD_INTERVAL_S)
+    elif span == "2H":
+        length = int(3600 * 2 / RECORD_INTERVAL_S)
         return timedata.tail(length), tempdata.tail(length)
 
 
 def plot_data(fileDateStr, span: str = "1D"):
     timedata, tempdata = load_data(fileDateStr, span=span)  # type: ignore
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(
         timedata,
         tempdata,
         marker="o",
@@ -34,18 +34,18 @@ def plot_data(fileDateStr, span: str = "1D"):
         label="Temperature (°C)",
     )
     # add a horizontal line at 26 C
-    plt.axhline(
+    ax.axhline(
         y=TEMPERATURE_THRESHOLD,
         color="r",
         linestyle="--",
         label="Threshold ({:d} °C)".format(TEMPERATURE_THRESHOLD),
     )
     #
-    plt.xlabel("Timestamp")
-    plt.ylabel("Temperature (°C)")
-    plt.title("Temperature vs. Time")
-    plt.legend()
-    plt.grid(True)
+    ax.set_xlabel("Timestamp")
+    ax.set_ylabel("Temperature (°C)")
+    ax.set_title("Temperature vs. Time")
+    ax.legend()
+    ax.grid(True)
     plt.xticks(rotation=45)
     plt.tight_layout()
     img_fileName = "{:s}_{:s}_temperature.png".format(fileDateStr, span)
@@ -60,10 +60,15 @@ def plot_data(fileDateStr, span: str = "1D"):
     except Exception as e:
         logging.error("Error: " + str(e))
     #
-    return img_fileName
+    plt.close(fig)
+    return fig, img_fileName
+
+
+def schedule_report():
+    _, _, fileDateStr = get_time_date()
+    fig, img_fileName = plot_data(fileDateStr, span="1D")
+    return fig
 
 
 if __name__ == "__main__":
-    _, _, fileDateStr = get_time_date()
-    img_fileName = plot_data(fileDateStr, span="1D")
-    print(img_fileName)
+    schedule_report()

@@ -2,3 +2,5 @@
 !*.py
 !.gitignore
 !*.bat
+!templates/
+!templates/*
