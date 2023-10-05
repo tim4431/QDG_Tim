@@ -3,16 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QDG-Lab Temperature Monitor</title>
-    <!-- Include the mpld3 library for rendering interactive plots -->
-    <script src="https://cdn.jsdelivr.net/npm/mpld3@0.5.5/dist/mpld3.min.js"></script>
+    <title>QDG-Lab Temp Monitoring</title>
 </head>
 <body>
-    <h2>QDG-Lab Temperature Monitor</h2>
-
-    <!-- Render the interactive plot here -->
-    {{ plot | safe }}
+    <h1>QDG-Lab Temp Monitoring: {{ current_time }}</h1>
+    <img src="{{ img_filename }}" alt="Temp Image">
 </body>
 </html>

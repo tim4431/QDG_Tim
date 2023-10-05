@@ -61,13 +61,13 @@ def plot_data(fileDateStr, span: str = "1D"):
         logging.error("Error: " + str(e))
     #
     plt.close(fig)
-    return fig, img_fileName
+    return img_fileName
 
 
 def schedule_report_plot():
     _, _, fileDateStr = get_time_date()
-    fig, img_fileName = plot_data(fileDateStr, span="1D")
-    return fig
+    img_fileName = plot_data(fileDateStr, span="1D")
+    return img_fileName
 
 
 if __name__ == "__main__":
