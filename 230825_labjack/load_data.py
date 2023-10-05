@@ -67,6 +67,7 @@ def plot_data(fileDateStr, span: str = "1D"):
 def schedule_report_plot():
     _, _, fileDateStr = get_time_date()
     img_fileName = plot_data(fileDateStr, span="1D")
+    print(img_fileName)
     return img_fileName
 
 
