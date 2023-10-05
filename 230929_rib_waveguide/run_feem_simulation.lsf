@@ -1,0 +1,54 @@
+############################################################
+# Step 1 & 2: Modal analysis of straight and bent waveguides
+############################################################
+
+bent_flag = true; # false: straight waveguide, true: bent waveguide
+
+bend_radius_list = linspace(50e-6,80e-6,10);
+rib_wg_list = linspace(300e-9,400e-9,5);
+
+
+for (j=1:length(rib_wg_list)){
+    loss_list=matrix(length(bend_radius_list));
+
+    rib_width = rib_wg_list(j);
+
+    for (i=1:length(bend_radius_list)){
+
+        switchtolayout;
+        setnamed("rib","x span",rib_width);
+
+        if (bent_flag==false) {
+            prop_feem = {"simulation region":"straight", # use 'straight' simulation region
+                    "use max index":true,
+                    "bent waveguide":false};
+        }else{
+            prop_feem = {"simulation region":"bend", # use 'bend' simulation region
+                    "use max index":true,
+                    "bent waveguide":true,"bend radius":bend_radius_list(i),"bend location x":0};
+        }
+
+        setnamed("FEEM",prop_feem);
+
+        run; # run simulations
+
+        # collect and visualize simulation results
+        if (haveresult("FEEM", "fields")) {
+            mode_profiles = getresult("FEEM", "fields");
+            mode_properties = getresult("FEEM", "modeproperties");
+
+            # visualize(mode_profiles);
+
+            # print mode properties to Script Prompt
+            ?"Effective index (mode 1): "+num2str(real(mode_properties.neff(1))) + " + " + num2str(imag(mode_properties.neff(1))) + "i";
+            ?"Loss (mode 1): "+num2str(real(mode_properties.loss(1))) + " dB/cm";
+            loss_list(i)=real(mode_properties.loss(1));
+        }
+        else {
+            ?"No results found.";
+        }
+    }
+
+    plot(bend_radius_list*1e6,loss_list,'bend_radius (um)','loss (dB/cm)');
+    legend("rib width = "+num2str(round(rib_width*1e9))+" nm");
+}
