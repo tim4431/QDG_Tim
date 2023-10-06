@@ -1,10 +1,13 @@
 from time_util import *
 import csv
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 from datetime import datetime
 from typing import Union
 import logging
+
+matplotlib.use("Agg")  # Use non-interactive backend
 
 
 def load_data(fileDateStr, span: str = "1D"):
