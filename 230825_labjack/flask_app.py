@@ -25,10 +25,6 @@ def get_image(filename):
     return send_file(filename, mimetype="image/png")
 
 
-if __name__ == "__main__":
-    app.run(debug=False, host="192.168.0.135", port=5000)
-
-
 def run_192_168_0_135():
     app.run(host="192.168.0.135", port=5000, debug=False)
 
