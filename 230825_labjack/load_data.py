@@ -64,11 +64,11 @@ def plot_data(fileDateStr, span: str = "1D"):
     return fig, img_fileName
 
 
-def schedule_report():
+def schedule_report_plot():
     _, _, fileDateStr = get_time_date()
     fig, img_fileName = plot_data(fileDateStr, span="1D")
     return fig
 
 
 if __name__ == "__main__":
-    schedule_report()
+    schedule_report_plot()
