@@ -2,6 +2,7 @@
 from flask import Flask, render_template, send_file
 from load_data import schedule_report_plot
 import datetime
+import threading
 
 app = Flask(__name__)
 
@@ -25,4 +26,24 @@ def get_image(filename):
 
 
 if __name__ == "__main__":
-    app.run(debug=False,host="192.168.0.135",port=5000)
+    app.run(debug=False, host="192.168.0.135", port=5000)
+
+
+def run_192_168_0_135():
+    app.run(host="192.168.0.135", port=5000, debug=False)
+
+
+def run_128_32_48_112():
+    app.run(host="128.32.48.112", port=5000, debug=False)
+
+
+if __name__ == "__main__":
+    # Start each Flask app instance in a separate thread
+    thread1 = threading.Thread(target=run_192_168_0_135)
+    thread2 = threading.Thread(target=run_128_32_48_112)
+
+    thread1.start()
+    thread2.start()
+
+    thread1.join()
+    thread2.join()
