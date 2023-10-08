@@ -32,7 +32,8 @@ duration = 0
 
 lastWarning = None
 
-schedule_report_time_list = [datetime.time(0, 0), datetime.time(6,0), datetime.time(12, 0), datetime.time(18,0)]
+from const_var import schedule_report_time_list
+
 flag_schedule_report_list = [False for i in range(len(schedule_report_time_list))]
 
 while 1:
@@ -65,9 +66,10 @@ while 1:
             logging.info("Schedule report at %s" % (report_time))
             # schedule report
             img_fileName = plot_data(fileDateStr, span="1D")
+            # print(type(img_fileName))
             # create another thread to send email
             threading.Thread(
-                target=schedule_report, args=(fileDateStr, img_fileName)
+                target=schedule_report, args=(curDateStr, img_fileName)
             ).start()
 
     # Calculate the time since the last interval
@@ -93,7 +95,7 @@ while 1:
             lastWarning is None
             or (curtime - lastWarning).total_seconds() > ALERT_INTERVAL_S
         ):
-            timedata, tempdata = load_data(fileDateStr, span="1H")
+            timedata, tempdata = load_data(curDateStr, span="1H")
             if len(tempdata) > 5 and np.mean(tempdata[-5:]) > TEMPERATURE_THRESHOLD:
                 logging.info("Temperature Warning: %0.1f C" % (tempertureC))
                 lastWarning = curtime

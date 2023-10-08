@@ -22,6 +22,8 @@ def load_data(fileDateStr, span: str = "1D"):
     elif span == "2H":
         length = int(3600 * 2 / RECORD_INTERVAL_S)
         return timedata.tail(length), tempdata.tail(length)
+    else:
+        raise ValueError("Invalid span: " + span)
 
 
 def plot_data(fileDateStr, span: str = "1D"):

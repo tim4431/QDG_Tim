@@ -13,8 +13,8 @@ EMAIL_SLACK_GENERAL = "general-aaaadgmklzajn2v73ykaooqrci@quantumdevicesgroup.sl
 EMAIL_GROUP = "quantumdevices@lists.berkeley.edu"
 #
 # >>> PRODUCTION <<<
-# DEBUG = True
-DEBUG = False
+from const_var import DEBUG
+#
 if DEBUG:
     emergency_email_list = [EMAIL_SELF]
     notice_email_list = [EMAIL_SELF]
