@@ -1,0 +1,39 @@
+[INFO] - Work loader start
+[INFO] - uuid: c3e1 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 70, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 5.0, 'start_radius': 1.2e-05, 'uuid': 'c3e1'}
+[INFO] - uuid: cb2c created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 70, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 10.0, 'start_radius': 1.2e-05, 'uuid': 'cb2c'}
+[INFO] - uuid: 4003 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 70, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 15.0, 'start_radius': 1.2e-05, 'uuid': '4003'}
+[INFO] - uuid: 7f22 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 70, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 20.0, 'start_radius': 1.2e-05, 'uuid': '7f22'}
+[INFO] - uuid: 8b7f created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 70, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 25.0, 'start_radius': 1.2e-05, 'uuid': '8b7f'}
+[INFO] - uuid: 19bf created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 70, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 30.0, 'start_radius': 1.2e-05, 'uuid': '19bf'}
+[INFO] - uuid: 3abc created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 70, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 35.0, 'start_radius': 1.2e-05, 'uuid': '3abc'}
+[INFO] - uuid: 0460 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 70, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 40.0, 'start_radius': 1.2e-05, 'uuid': '0460'}
+[INFO] - uuid: 45c7 created
+[INFO] - work: {'FOM_typ': 'square', 'FWHM': 5e-08, 'MIN_FEATURE_SIZE': 4e-08, 'N': 9, 'NH': 2, 'NL': 2, 'SOURCE_typ': 'gaussian_released', 'alpha': 0.0, 'lambda_0': 1.326e-06, 'maxiter': 70, 'penalty': [[0.01, 1e-08], [0.02, 1e-07]], 'simulation_typ': 2, 'source_angle': 45.0, 'start_radius': 1.2e-05, 'uuid': '45c7'}
+[INFO] - uuid: c3e1 finished
+[INFO] - uuid: cb2c finished
+[INFO] - uuid: 4003 finished
+[INFO] - uuid: 7f22 finished
+[INFO] - uuid: 8b7f finished
+[INFO] - uuid: 19bf finished
+[INFO] - uuid: 3abc finished
+[INFO] - uuid: 0460 finished
+[INFO] - uuid: 45c7 finished
+[INFO] - 0 uuid: 	c3e1	 finished
+[INFO] - 1 uuid: 	cb2c	 finished
+[INFO] - 2 uuid: 	4003	 finished
+[INFO] - 3 uuid: 	7f22	 finished
+[INFO] - 4 uuid: 	8b7f	 finished
+[INFO] - 5 uuid: 	19bf	 finished
+[INFO] - 6 uuid: 	3abc	 finished
+[INFO] - 7 uuid: 	0460	 finished
+[INFO] - 8 uuid: 	45c7	 finished
+[INFO] - Data merged to f93f_anglesweep
+[INFO] - Work loader end
