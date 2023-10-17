@@ -46,8 +46,8 @@ def _read_pd_power(handle: Any, numAIN: int) -> float:
 def _calc_transmission(
     input_p: Union[float, np.ndarray], output_p: Union[float, np.ndarray]
 ) -> Union[float, np.ndarray]:
-    input_portion = 15.28
-    output_portion = 1234
+    input_portion = 9.48
+    output_portion = 99.2
     att_ratio = (output_p / output_portion) / (input_p / input_portion)
     if isinstance(att_ratio, float):
         att_ratio = max(att_ratio, 0)
@@ -111,6 +111,7 @@ def set_mems_switch(handle, source=0):
     """
     - source = 0, santec, source = 1, broadband
     """
+    return None
     if source == 0:
         ljm.eWriteName(handle, "DAC0", 4.5)
         ljm.eWriteName(handle, "DAC1", 0.0)
