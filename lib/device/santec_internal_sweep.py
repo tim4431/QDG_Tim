@@ -4,8 +4,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 from labjack import ljm
 
-# from . import ljm_stream_util
-import ljm_stream_util
+from . import ljm_stream_util
+
+# import ljm_stream_util
 import time
 from typing import List, Tuple, Union, Any
 

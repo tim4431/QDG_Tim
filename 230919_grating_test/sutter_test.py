@@ -7,6 +7,7 @@ from lib.device.device import (
     init_labjack,
     init_laser,
     init_sutter,
+    init_sutter_local,
     sutter_move,
 )
 from lib.device.santec_internal_sweep import santec_internal_sweep
@@ -19,6 +20,6 @@ from typing import Union, List, Any, Tuple, Callable
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 
-sutter= init_sutter()
+sutter = init_sutter_local()
 sutter.set_x_position(1)
 print(sutter.getPosition())

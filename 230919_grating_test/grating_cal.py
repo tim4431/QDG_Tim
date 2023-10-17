@@ -8,6 +8,7 @@ from lib.device.device import (
     init_labjack,
     init_laser,
     init_sutter,
+    init_sutter_local,
     sutter_move,
 )
 from lib.device.santec_internal_sweep import santec_internal_sweep
@@ -20,8 +21,9 @@ from typing import Union, List, Any, Tuple, Callable
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 
-AIN_PIN_IN=2
-AIN_PIN_OUT=3
+AIN_PIN_IN = 1
+AIN_PIN_OUT = 3
+
 
 def v_to_pd_power(v: Union[float, np.ndarray], numAIN: int) -> Union[float, np.ndarray]:
     """
@@ -441,7 +443,7 @@ def align_grating_2D(
 
     #
     try:
-        sutter = init_sutter()
+        sutter = func_init_sutter()
         time.sleep(0.5)
         callback_func = lambda paras: sutter_step(sutter, paras)
         plot_ion_position_transmission(uuid, callback_func, optimize=optimize)
@@ -453,15 +455,16 @@ def align_grating_2D(
 
 
 if __name__ == "__main__":
+    func_init_sutter = init_sutter_local
     handle = init_labjack()
     # handle = None
     try:
         # print(_read_pd_power(handle, AIN_PIN_IN))
         # print(_read_pd_power(handle, AIN_PIN_OUT))
         # set_mems_switch(handle, source=0)
-        align_grating_1D(handle=handle, source=0)
+        # align_grating_1D(handle=handle, source=0)
         # calibrate_grating("top3", handle, 1260, 1400, 1, power=9.0)
-        # align_grating_2D("top3", handle=handle, source=0, optimize=False)
+        align_grating_2D("bot2", handle=handle, source=0, optimize=False)
     finally:
         if handle is not None:
             ljm.close(handle)
