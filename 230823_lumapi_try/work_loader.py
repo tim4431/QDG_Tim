@@ -85,10 +85,11 @@ if __name__ == "__main__":  # type: ignore
     # print("sleeping")
     # time.sleep(3600 * 5)
 
-    # f93f_sweepangle
+    # f93f_airclad_sweepangle
     work_f93f = load_json("f93f")
     work_f93f["maxiter"] = 70
+    work_f93f["BOX"] = "SiO2"
     work_f93f_anglesweep = work_para_sweeper(
         work_f93f, np.arange(5.0, 50.0, 5), "source_angle"
     )
-    work_loader(work_f93f_anglesweep, "f93f_anglesweep", merge_data=True)
+    work_loader(work_f93f_anglesweep, "f93f_airclad_anglesweep", merge_data=True)
