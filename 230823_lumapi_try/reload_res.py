@@ -164,11 +164,11 @@ def reload_work(
 if __name__ == "__main__":
     #
     reload_work(
-        "bf30",
-        dimension="3D",
-        reload_simulation_typ=0,
+        "24d0",
+        dimension="2D",
+        reload_simulation_typ=1,
         tether_typ=None,
         pause=False,
-        advanced_monitor=True,
+        advanced_monitor=False,
         # movie=True,
     )
