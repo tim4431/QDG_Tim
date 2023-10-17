@@ -38,6 +38,13 @@ def init_sutter():
     sutter.updatePanel()
     return sutter
 
+def init_sutter_local():
+    from .SutterMP285 import SutterMP285
+    sutter = SutterMP285(port="COM3")
+    sutter.setOrigin()
+    sutter.updatePanel()
+    return sutter
+
 
 def sutter_move(sutter: Any, x: float, y: float):
     sutter.set_x_position(x)
