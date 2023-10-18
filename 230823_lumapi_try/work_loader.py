@@ -90,6 +90,6 @@ if __name__ == "__main__":  # type: ignore
     work_f93f["maxiter"] = 70
     work_f93f["BOX"] = "SiO2"
     work_f93f_anglesweep = work_para_sweeper(
-        work_f93f, np.arange(5.0, 50.0, 5), "source_angle"
+        work_f93f, np.arange(25.0, 50.0, 5), "source_angle"
     )
     work_loader(work_f93f_anglesweep, "f93f_airclad_anglesweep", merge_data=True)
