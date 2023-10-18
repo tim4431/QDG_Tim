@@ -9,7 +9,7 @@ sys.path.append(r"\\QDG-LABBEAR\\Users\\QDG-LABBEAR-SERVER\\Desktop\\LANAS\\Data
 def init_laser(wavelength: float = 1326.0, power: float = -15.0):
     from RemoteDevice import RemoteDevice  # type: ignore
 
-    laser = RemoteDevice("SantecTSL570")
+    laser = RemoteDevice("SantecTSL570_2")
     laser.write_laser_status("On")
     laser.write_coherence_control("Off")
     laser.write_wavelength(wavelength)
@@ -38,8 +38,10 @@ def init_sutter():
     sutter.updatePanel()
     return sutter
 
+
 def init_sutter_local():
     from .SutterMP285 import SutterMP285
+
     sutter = SutterMP285(port="COM3")
     sutter.setOrigin()
     sutter.updatePanel()

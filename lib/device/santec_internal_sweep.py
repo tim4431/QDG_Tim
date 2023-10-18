@@ -77,7 +77,7 @@ def santec_internal_sweep(
             "STREAM_RESOLUTION_INDEX",
         ]
         #
-        aValues = [ljm.constants.GND, 0, 4]
+        aValues = [ljm.constants.GND, 0, 1]
         for j in range(numAddresses):
             aNames.append("{:s}_RANGE".format(aScanListNames[i]))
             aValues.append(aRangeList[i])
@@ -96,11 +96,10 @@ def santec_internal_sweep(
             "\nEstimated aquisition time: %0.3f seconds."
             % (float(abs(start - end) / sweeprate))
         )
-        print("Wavelength resolution: %0.3f nm." % (float(sweeprate / scanRate)))
+        print("Wavelength resolution: %0.4f nm." % (float(sweeprate / scanRate)))
         #
         while i < MAX_REQUESTS:
             ljm_stream_util.variableStreamSleep(scansPerRead, scanRate, ljmScanBacklog)
-            print("Fl")
             try:
                 ret = ljm.eStreamRead(handle)
                 aData = ret[0]
@@ -111,7 +110,6 @@ def santec_internal_sweep(
                 ljmScanBacklog = ret[2]
                 i += 1
             except ljm.LJMError as err:
-                print("ee")
                 if err.errorCode == ljm.errorcodes.NO_SCANS_RETURNED:
                     sys.stdout.write(".")
                     sys.stdout.flush()

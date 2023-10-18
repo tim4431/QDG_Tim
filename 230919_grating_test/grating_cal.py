@@ -50,8 +50,9 @@ def _read_pd_power(handle: Any, numAIN: int) -> float:
 def _calc_transmission(
     input_p: Union[float, np.ndarray], output_p: Union[float, np.ndarray]
 ) -> Union[float, np.ndarray]:
-    input_portion = 15.28
-    output_portion = 1234
+    input_portion = 46.98
+    output_portion = 2623
+    # output_portion = 2623 * (323 / 2821)
     att_ratio = (output_p / output_portion) / (input_p / input_portion)
     if isinstance(att_ratio, float):
         att_ratio = max(att_ratio, 0)
@@ -105,7 +106,7 @@ def getDataSweepName(
 ) -> str:
     dataName = getDataName(uuid)
     # create file name
-    fileName = dataName + "_{:.1f}_{:.1f}_{:.2f}.csv".format(
+    fileName = dataName + "_{:.1f}_{:.1f}_{:.4f}.csv".format(
         lambda_start, lambda_end, lambda_step
     )
     return fileName
@@ -171,10 +172,10 @@ def calibrate_grating(
         laser,
         power=power,
         aScanListNames=["AIN{:d}".format(AIN_PIN_IN), "AIN{:d}".format(AIN_PIN_OUT)],
-        scanRate=1000,
+        scanRate=10000,
         start=lambda_start,
         end=lambda_end,
-        sweeprate=50,
+        sweeprate=round(10000 * lambda_step),
     )
     input_v, output_v = datas
     input_p = v_to_pd_power(input_v, AIN_PIN_IN)
@@ -462,9 +463,9 @@ if __name__ == "__main__":
         # print(_read_pd_power(handle, AIN_PIN_IN))
         # print(_read_pd_power(handle, AIN_PIN_OUT))
         # set_mems_switch(handle, source=0)
-        # align_grating_1D(handle=handle, source=0)
-        # calibrate_grating("top3", handle, 1260, 1400, 1, power=9.0)
-        align_grating_2D("bot2", handle=handle, source=0, optimize=False)
+        # align_grating_1D(handle=handle, source=0, power=7.0)
+        calibrate_grating("top3", handle, 1325, 1335, 0.001, power=8.0)
+        # align_grating_2D("top1", handle=handle, source=0, optimize=False, power=7.0)
     finally:
         if handle is not None:
             ljm.close(handle)
