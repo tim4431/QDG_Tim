@@ -8,6 +8,7 @@ from lib.device.device import (
     init_labjack,
     init_laser,
     init_sutter,
+    init_sutter_local,
     sutter_move,
 )
 from lib.device.santec_internal_sweep import santec_internal_sweep
@@ -20,6 +21,9 @@ from typing import Union, List, Any, Tuple, Callable
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 
+AIN_PIN_IN = 1
+AIN_PIN_OUT = 3
+
 
 def v_to_pd_power(v: Union[float, np.ndarray], numAIN: int) -> Union[float, np.ndarray]:
     """
@@ -28,9 +32,9 @@ def v_to_pd_power(v: Union[float, np.ndarray], numAIN: int) -> Union[float, np.n
     - return p: power (uW)
     """
     # fill in your calibration coeffs here
-    if numAIN == 2:
+    if numAIN == AIN_PIN_IN:
         p = 3.97730538 * v + 4.20229793e-04
-    elif numAIN == 3:
+    elif numAIN == AIN_PIN_OUT:
         p = 3.71470995 * v - 4.70855634e-04
     else:
         raise ValueError("numAIN must be 2 or 3")
@@ -46,8 +50,9 @@ def _read_pd_power(handle: Any, numAIN: int) -> float:
 def _calc_transmission(
     input_p: Union[float, np.ndarray], output_p: Union[float, np.ndarray]
 ) -> Union[float, np.ndarray]:
-    input_portion = 15.28
-    output_portion = 1234
+    input_portion = 46.98
+    output_portion = 2623
+    # output_portion = 2623 * (323 / 2821)
     att_ratio = (output_p / output_portion) / (input_p / input_portion)
     if isinstance(att_ratio, float):
         att_ratio = max(att_ratio, 0)
@@ -58,8 +63,8 @@ def _calc_transmission(
 
 
 def transmission_input_output(handle) -> Tuple[float, float, float]:
-    input_p = _read_pd_power(handle, 2)
-    output_p = _read_pd_power(handle, 3)
+    input_p = _read_pd_power(handle, AIN_PIN_IN)
+    output_p = _read_pd_power(handle, AIN_PIN_OUT)
     e = float(_calc_transmission(input_p, output_p))
     return e, input_p, output_p
 
@@ -101,7 +106,7 @@ def getDataSweepName(
 ) -> str:
     dataName = getDataName(uuid)
     # create file name
-    fileName = dataName + "_{:.1f}_{:.1f}_{:.2f}.csv".format(
+    fileName = dataName + "_{:.1f}_{:.1f}_{:.4f}.csv".format(
         lambda_start, lambda_end, lambda_step
     )
     return fileName
@@ -111,6 +116,7 @@ def set_mems_switch(handle, source=0):
     """
     - source = 0, santec, source = 1, broadband
     """
+    return None
     if source == 0:
         ljm.eWriteName(handle, "DAC0", 4.5)
         ljm.eWriteName(handle, "DAC1", 0.0)
@@ -166,15 +172,15 @@ def calibrate_grating(
         handle,
         laser,
         power=power,
-        aScanListNames=["AIN2", "AIN3"],
-        scanRate=1000,
+        aScanListNames=["AIN{:d}".format(AIN_PIN_IN), "AIN{:d}".format(AIN_PIN_OUT)],
+        scanRate=10000,
         start=lambda_start,
         end=lambda_end,
-        sweeprate=50,
+        sweeprate=round(10000 * lambda_step),
     )
     input_v, output_v = datas
-    input_p = v_to_pd_power(input_v, 2)
-    output_p = v_to_pd_power(output_v, 3)
+    input_p = v_to_pd_power(input_v, AIN_PIN_IN)
+    output_p = v_to_pd_power(output_v, AIN_PIN_OUT)
     transmission = _calc_transmission(input_p, output_p)
     # >>> extract data <<<
     x = l
@@ -439,7 +445,7 @@ def align_grating_2D(
 
     #
     try:
-        sutter = init_sutter()
+        sutter = func_init_sutter()
         time.sleep(0.5)
         callback_func = lambda paras: sutter_step(sutter, paras)
         plot_ion_position_transmission(uuid, callback_func, optimize=optimize)
@@ -451,15 +457,16 @@ def align_grating_2D(
 
 
 if __name__ == "__main__":
+    func_init_sutter = init_sutter_local
     handle = init_labjack()
     # handle = None
     try:
-        # print(_read_pd_power(handle, 2))
-        # print(_read_pd_power(handle, 3))
+        # print(_read_pd_power(handle, AIN_PIN_IN))
+        # print(_read_pd_power(handle, AIN_PIN_OUT))
         # set_mems_switch(handle, source=0)
-        align_grating_1D(handle=handle, source=0)
-        # calibrate_grating("top3", handle, 1260, 1400, 1, power=9.0)
-        # align_grating_2D("top3", handle=handle, source=0, optimize=False)
+        # align_grating_1D(handle=handle, source=0, power=7.0)
+        calibrate_grating("top3", handle, 1325, 1335, 0.001, power=8.0)
+        # align_grating_2D("top1", handle=handle, source=0, optimize=False, power=7.0)
     finally:
         if handle is not None:
             ljm.close(handle)
