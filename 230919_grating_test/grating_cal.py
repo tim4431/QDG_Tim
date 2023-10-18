@@ -116,6 +116,7 @@ def set_mems_switch(handle, source=0):
     """
     - source = 0, santec, source = 1, broadband
     """
+    return None
     if source == 0:
         ljm.eWriteName(handle, "DAC0", 4.5)
         ljm.eWriteName(handle, "DAC1", 0.0)
