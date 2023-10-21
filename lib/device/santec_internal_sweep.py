@@ -4,9 +4,11 @@ import numpy as np
 from matplotlib import pyplot as plt
 from labjack import ljm
 
-from . import ljm_stream_util
+if __name__ == "__main__":
+    import ljm_stream_util
+else:
+    from . import ljm_stream_util
 
-# import ljm_stream_util
 import time
 from typing import List, Tuple, Union, Any
 
@@ -143,16 +145,16 @@ if __name__ == "__main__":
     l, vs = santec_internal_sweep(
         handle=handle,
         laser=laser,
-        power=-15,
-        aScanListNames=["AIN2", "AIN3"],
+        power=4,
+        aScanListNames=["AIN1", "AIN3"],
         scanRate=1000,
-        start=1355,
-        end=1365,
+        start=1300,
+        end=1370,
         sweeprate=50,
     )
     v1, v2 = vs
 
-    plt.plot(l, v1, label="AIN2")
+    plt.plot(l, v1, label="AIN1")
     plt.plot(l, v2, label="AIN3")
     plt.show()
     ljm.close(handle)

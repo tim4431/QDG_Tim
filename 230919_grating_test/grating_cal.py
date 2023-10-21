@@ -50,8 +50,8 @@ def _read_pd_power(handle: Any, numAIN: int) -> float:
 def _calc_transmission(
     input_p: Union[float, np.ndarray], output_p: Union[float, np.ndarray]
 ) -> Union[float, np.ndarray]:
-    input_portion = 46.98
-    output_portion = 2623
+    input_portion = 11.50
+    output_portion = 521.2  # @knob 25
     # output_portion = 2623 * (323 / 2821)
     att_ratio = (output_p / output_portion) / (input_p / input_portion)
     if isinstance(att_ratio, float):
@@ -377,7 +377,7 @@ def align_grating_2D(
     if source == None:
         pass
     elif source == 0:
-        laser = init_laser(wavelength=1326.0, power=power)
+        laser = init_laser(wavelength=1375.0, power=power)
         set_mems_switch(handle, source=0)
     elif source == 1:
         set_mems_switch(handle, source=1)
@@ -464,9 +464,9 @@ if __name__ == "__main__":
         # print(_read_pd_power(handle, AIN_PIN_IN))
         # print(_read_pd_power(handle, AIN_PIN_OUT))
         # set_mems_switch(handle, source=0)
-        # align_grating_1D(handle=handle, source=0, power=7.0)
-        calibrate_grating("top3", handle, 1325, 1335, 0.001, power=8.0)
-        # align_grating_2D("top1", handle=handle, source=0, optimize=False, power=7.0)
+        align_grating_1D(handle=handle, source=0, power=4.0)
+        # calibrate_grating("top1", handle, 1290, 1375, 0.01, power=5.0)
+        # align_grating_2D("top1", handle=handle, source=0, optimize=False, power=5.0)
     finally:
         if handle is not None:
             ljm.close(handle)
