@@ -1,4 +1,5 @@
+output("sample"){
 board(B){
-    printf("%f\n", B.grid.size);
-
+    printf("%s\n", B.name);
+}
 }
