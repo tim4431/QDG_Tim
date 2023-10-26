@@ -1,0 +1,13 @@
+int CountDots(string s)
+{
+  int dots = 0;
+  for (int i = 0; s[i]; ++i)
+      if (s[i] == '.')
+         ++dots;
+  return dots;
+}
+string dotted = "This.has.dots...";
+output("test") {
+  printf("Number of dots: %d\n",
+                 CountDots(dotted));
+  }
