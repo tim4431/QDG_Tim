@@ -1,0 +1,4 @@
+board(B){
+    printf("%f\n", B.grid.size);
+
+}
