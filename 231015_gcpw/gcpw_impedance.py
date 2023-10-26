@@ -59,13 +59,25 @@ plt.contourf(
     alpha=0.8,
     linestyles="dotted",
 )
-plt.scatter(1.067, 0.762, marker="x", color="white", s=100)
+plt.scatter(1.067, 0.762, marker="x", color="white", s=100, label="former")
+plt.scatter(1.1684, 0.8636, marker="x", color="black", s=100, label="current")
 plt.xlabel("w_s (mm)")
 plt.ylabel("w_c (mm)")
 
 from matplotlib.patches import Patch
 
-# 手动创建一个带有标签的图例
+# # 手动创建一个带有标签的图例
+# legend_elements = [
+#     Patch(
+#         facecolor="white",
+#         edgecolor="black",
+#         alpha=0.8,
+#         linestyle="dotted",
+#         label="R=50 Ohm",
+#     )
+# ]
+# plt.legend(handles=legend_elements)
+# Custom legend element
 legend_elements = [
     Patch(
         facecolor="white",
@@ -75,6 +87,14 @@ legend_elements = [
         label="R=50 Ohm",
     )
 ]
-plt.legend(handles=legend_elements)
+
+# Create a legend combining handles from scatter plots and custom legend element
+scatter_legend = plt.legend(loc="lower right")
+custom_legend = plt.legend(handles=legend_elements, loc="upper right")
+
+# Add both legends to the same axis
+ax = plt.gca().add_artist(scatter_legend)
+plt.gca().add_artist(custom_legend)
+#
 plt.savefig("gcpw_impedance.png", dpi=200, bbox_inches="tight")
 plt.show()
