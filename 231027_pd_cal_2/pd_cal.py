@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 def photodiode_power_sweep(dataName, numAIN):
-    laser = init_laser()
+    laser = init_laser(system=1)
     handle = init_labjack(system=1)
     #
     xname = "att"
@@ -34,14 +34,14 @@ if __name__ == "__main__":
     # fig, ax = plt.subplots()
     # popt = calibrate_photodiode(
     #     ax,
-    #     "./data_231027/photodiode_AIN2b_L_cal.csv",
-    #     max_att=13.00,
-    #     max_power=15.14,
+    #     "./data_231027/photodiode_AIN2_H_cal.csv",
+    #     max_att=11.50,
+    #     max_power=37.29,
     #     p_att_dict=p_att_dict,
     #     sigma_multiplier=3,
     # )
-    # plt.xscale("log")
-    # plt.yscale("log")
+    # # plt.xscale("log")
+    # # plt.yscale("log")
     # print(popt)
     # plt.show()
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     popt = calibrate_photodiode_LH(
         dataName_L="./data_231027/photodiode_AIN2_L_cal.csv",
         dataName_H="./data_231027/photodiode_AIN2_H_cal.csv",
-        max_power_H=37.29,
+        max_power_H=15.90,
         p_att_dict=p_att_dict,
         sigma_multiplier=3,
     )
