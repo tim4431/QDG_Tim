@@ -6,10 +6,12 @@ import numpy as np
 sys.path.append(r"\\QDG-LABBEAR\\Users\\QDG-LABBEAR-SERVER\\Desktop\\LANAS\\DataBear")
 
 
-def init_laser(wavelength: float = 1326.0, power: float = -15.0):
+def init_laser(wavelength: float = 1326.0, power: float = -15.0,system=0):
     from RemoteDevice import RemoteDevice  # type: ignore
-
-    laser = RemoteDevice("SantecTSL570_2")
+    if (system==1):
+        laser = RemoteDevice("SantecTSL570")
+    else:
+        laser = RemoteDevice("SantecTSL570_2")
     laser.write_laser_status("On")
     laser.write_coherence_control("Off")
     laser.write_wavelength(wavelength)
@@ -27,7 +29,7 @@ def init_labjack(system=0):
     if (system==0):
         handle = ljm.openS("T7", "ETHERNET", "192.168.0.125")
     elif (system==1):
-        handle = ljm.openS("T7", "ETHERNET", "192.168.0.149")
+        handle = ljm.openS("T7", "ETHERNET", "192.168.0.141")
     else:
         raise ValueError("system error")
     info = ljm.getHandleInfo(handle)
