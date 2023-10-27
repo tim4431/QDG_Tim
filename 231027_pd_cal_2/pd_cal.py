@@ -28,32 +28,32 @@ p_att_dict = {att: p for att, p in zip(att, p)}
 
 if __name__ == "__main__":
     # # 1.measure data
-    photodiode_power_sweep("./data_231027/photodiode_AIN2b_L_cal.csv", 2)
+    # photodiode_power_sweep("./data_231027/photodiode_AIN2b_L_cal.csv", 2)
 
-    # 2. fit using ax+b
-    fig, ax = plt.subplots()
-    popt = calibrate_photodiode(
-        ax,
-        "./data_231027/photodiode_AIN2b_L_cal.csv",
-        max_att=13.00,
-        max_power=15.14,
-        p_att_dict=p_att_dict,
-        sigma_multiplier=3,
-    )
-    plt.xscale("log")
-    plt.yscale("log")
-    print(popt)
-    plt.show()
-
-    # # 3. fit L and H
-    # popt = calibrate_photodiode_LH(
-    #     dataName_L="./data_231027/photodiode_AIN2_L_cal.csv",
-    #     dataName_H="./data_231027/photodiode_AIN2_H_cal.csv",
-    #     max_power_H=37.29,
+    # # 2. fit using ax+b
+    # fig, ax = plt.subplots()
+    # popt = calibrate_photodiode(
+    #     ax,
+    #     "./data_231027/photodiode_AIN2b_L_cal.csv",
+    #     max_att=13.00,
+    #     max_power=15.14,
     #     p_att_dict=p_att_dict,
     #     sigma_multiplier=3,
     # )
-    # # plt.xscale("log")
-    # # plt.yscale("log")
-    # # print(popt)
+    # plt.xscale("log")
+    # plt.yscale("log")
+    # print(popt)
     # plt.show()
+
+    # 3. fit L and H
+    popt = calibrate_photodiode_LH(
+        dataName_L="./data_231027/photodiode_AIN2_L_cal.csv",
+        dataName_H="./data_231027/photodiode_AIN2_H_cal.csv",
+        max_power_H=37.29,
+        p_att_dict=p_att_dict,
+        sigma_multiplier=3,
+    )
+    # plt.xscale("log")
+    # plt.yscale("log")
+    # print(popt)
+    plt.show()

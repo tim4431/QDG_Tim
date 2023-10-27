@@ -117,11 +117,11 @@ def calibrate_photodiode_LH(
     )
     #
     popt_L, pcov_L = curve_fit(f, v_L, p_L)
-    strL = "fitL v(V) = {:.6f} * p(uW) + {:.6f}(V)".format(*popt_L)
+    strL = "fitL p(uW) = {:.6f} * v(V) + {:.6f}(uW)".format(*popt_L)
     print(strL)
     #
     popt_H, pcov_H = curve_fit(f, v_H, p_H)
-    strH = "fitH v(V) = {:.6f} * p(uW) + {:.6f}(V)".format(*popt_H)
+    strH = "fitH p(uW) = {:.6f} * v(V) + {:.6f}(uW)".format(*popt_H)
     print(strH)
     #
     ax0.plot(f(v_L, *popt_L), v_L, alpha=0.5, c="blue", label=strL)  # type: ignore
