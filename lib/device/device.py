@@ -23,8 +23,13 @@ def init_picoharp():
     return RemoteDevice("PicoHarp300")
 
 
-def init_labjack():
-    handle = ljm.openS("T7", "ETHERNET", "192.168.0.125")
+def init_labjack(system=0):
+    if (system==0):
+        handle = ljm.openS("T7", "ETHERNET", "192.168.0.125")
+    elif (system==1):
+        handle = ljm.openS("T7", "ETHERNET", "192.168.0.149")
+    else:
+        raise ValueError("system error")
     info = ljm.getHandleInfo(handle)
     print(info)
     return handle
