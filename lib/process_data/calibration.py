@@ -116,18 +116,28 @@ def calibrate_photodiode_LH(
         label=rf"$\pm {sigma_multiplier}\sigma$" + " std",
     )
     #
-    popt_L, pcov_L = curve_fit(f, p_L, v_L)
+    popt_L, pcov_L = curve_fit(f, v_L, p_L)
     strL = "fit v(V) = {:.6f} * p(uW) + {:.6f}(V)".format(*popt_L)
     print(strL)
     #
-    popt_H, pcov_H = curve_fit(f, p_H, v_H)
+    popt_H, pcov_H = curve_fit(f, v_H, p_H)
     strH = "fit v(V) = {:.6f} * p(uW) + {:.6f}(V)".format(*popt_H)
     print(strH)
     #
-    ax0.plot(p_L, f(p_L, *popt_L), alpha=0.5, c="blue", label=strL)
-    ax0.scatter(p_L, v_L, marker="+", alpha=0.5, c="blue", label="data points L")
-    ax0.plot(p_H, f(p_H, *popt_H), alpha=0.5, c="blue", label=strH)
-    ax0.scatter(p_H, v_H, marker="+", alpha=0.5, c="blue", label="data points H")
+    ax0.plot(f(v_L, *popt_L), v_L, alpha=0.5, c="blue", label=strL)  # type: ignore
+    ax0.scatter(p_L, v_L, marker="+", alpha=0.5, c="blue", label="data points L")  # type: ignore
+    ax0.plot(f(v_H, *popt_H), v_H, alpha=0.5, c="blue", label=strH)  # type: ignore
+    ax0.scatter(p_H, v_H, marker="+", alpha=0.5, c="blue", label="data points H")  # type: ignore
+
+    # find the intersection of two curves
+    def diff(x):
+        return f(x, *popt_L) - f(x, *popt_H)
+
+    from scipy.optimize import fsolve
+
+    x0 = fsolve(diff, 0)
+    print("intersection: {:.6f} V".format(x0[0]))
+
     # # add a subplot in the lower right
     # from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
