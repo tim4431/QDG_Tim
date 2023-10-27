@@ -1,6 +1,7 @@
 from scipy.optimize import curve_fit
 from .csv_data import load_csv_data
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def calibrate_photodiode(
@@ -53,7 +54,6 @@ def calibrate_photodiode(
 
 
 def calibrate_photodiode_LH(
-    ax,
     dataName_L,
     dataName_H,
     max_power_H: float,
@@ -62,6 +62,12 @@ def calibrate_photodiode_LH(
     select_func=None,
     sigma_multiplier: int = 1,
 ):
+    # (1,2) subplot
+    # fig, ax = plt.subplots(1, 2, figsize=(12, 6))
+    # ax0 = ax[0]
+    # ax1 = ax[1]
+    fig, ax = plt.subplots()
+    ax0 = ax
     #
     att_H, v_H, std_v_H = load_csv_data(
         dataName_H,
@@ -77,12 +83,6 @@ def calibrate_photodiode_LH(
     #
     def f(x, a, b):
         return a * x + b
-
-    def g(x, a, b, c):
-        return a * (x**2) + b * x + c
-
-    def h(x, a, b, c, d):
-        return a * (x**3) + b * (x**2) + c * x + d
 
     popt, pcov = curve_fit(f, v_H, p_H)
     #
@@ -108,37 +108,26 @@ def calibrate_photodiode_LH(
     std_v = np.concatenate((std_v_L, std_v_H))
     std_v = std_v[p_i_sort_mask]
     #
-    ax.scatter(p_i, v_i, marker="+", alpha=0.5, c="blue", label="data points")
-    ax.fill_between(
-        p_i,
-        v_i - sigma_multiplier * std_v,  # type: ignore
-        v_i + sigma_multiplier * std_v,  # type: ignore
+    ax0.fill_between(
+        p_L,
+        v_L - sigma_multiplier * std_v_L,  # type: ignore
+        v_L + sigma_multiplier * std_v_L,  # type: ignore
         alpha=0.2,
         label=rf"$\pm {sigma_multiplier}\sigma$" + " std",
     )
     #
-    popt, pcov = curve_fit(f, p_i, v_i)
-    str1 = "fit v(V) = {:.6f} * p(uW) + {:.6f}(V)".format(*popt)
-    print(str1)
+    popt_L, pcov_L = curve_fit(f, p_L, v_L)
+    strL = "fit v(V) = {:.6f} * p(uW) + {:.6f}(V)".format(*popt_L)
+    print(strL)
     #
-    popt1, pcov1 = curve_fit(f, v_i, p_i)
-    str2 = "fit p(uW) = {:.6f} * v(V) + {:.6f}(uW)".format(*popt)
-    print(str2)
+    popt_H, pcov_H = curve_fit(f, p_H, v_H)
+    strH = "fit v(V) = {:.6f} * p(uW) + {:.6f}(V)".format(*popt_H)
+    print(strH)
     #
-    ax.plot(
-        p_i,
-        f(p_i, *popt),
-        alpha=0.5,
-        c="blue",
-        label=str1 + "\n" + str2,
-    )
-    # ax.plot(
-    #     f(v_i, *popt1),
-    #     v_i,
-    #     alpha=0.5,
-    #     c="blue",
-    #     label=str1 + "\n" + str2,
-    # )
+    ax0.plot(p_L, f(p_L, *popt_L), alpha=0.5, c="blue", label=strL)
+    ax0.scatter(p_L, v_L, marker="+", alpha=0.5, c="blue", label="data points L")
+    ax0.plot(p_H, f(p_H, *popt_H), alpha=0.5, c="blue", label=strH)
+    ax0.scatter(p_H, v_H, marker="+", alpha=0.5, c="blue", label="data points H")
     # # add a subplot in the lower right
     # from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
@@ -163,9 +152,9 @@ def calibrate_photodiode_LH(
     # axins.set_xlabel("laser power(nW)")
     # axins.set_ylabel("voltage(mV)")
 
-    ax.set_xlabel("laser power(uW)")
-    ax.set_ylabel("voltage(V)")
-    ax.legend()
+    ax0.set_xlabel("laser power(uW)")
+    ax0.set_ylabel("voltage(V)")
+    ax0.legend()
     #
     # fit using v-pi curve
-    return popt1
+    return popt_L, popt_H

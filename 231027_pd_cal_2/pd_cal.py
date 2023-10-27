@@ -46,9 +46,7 @@ if __name__ == "__main__":
     # plt.show()
 
     # 3. fit L and H
-    fig, ax = plt.subplots(figsize=(10, 8))
     popt = calibrate_photodiode_LH(
-        ax,
         dataName_L="./data_231027/photodiode_AIN2_L_cal.csv",
         dataName_H="./data_231027/photodiode_AIN2_H_cal.csv",
         max_power_H=37.29,
