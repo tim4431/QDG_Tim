@@ -4,7 +4,7 @@ import numpy as np
 sys.path.append("..")
 from lib.device.device import ljm_auto_range_read, init_labjack, init_laser
 from lib.device.data_recorder import data_recorder
-from lib.process_data.calibration import calibrate_photodiode
+from lib.process_data.calibration import calibrate_photodiode, calibrate_photodiode_LH
 from lib.process_data.csv_data import load_csv_data
 import matplotlib.pyplot as plt
 
@@ -23,21 +23,39 @@ def photodiode_power_sweep(dataName, numAIN):
     )
 
 
-# photodiode_power_sweep("./data_231027/photodiode_AIN2_L_cal.csv", 2)
-
 att, p, _ = load_csv_data("./data/santec_power_sweep.csv", None, key_x="att", key_y="p")
 p_att_dict = {att: p for att, p in zip(att, p)}
-#
-fig, ax = plt.subplots()
-popt = calibrate_photodiode(
-    ax,
-    "./data_231027/photodiode_AIN2_H_cal.csv",
-    max_att=13.00,
-    max_power=0.5442,
-    p_att_dict=p_att_dict,
-    sigma_multiplier=3,
-)
-plt.xscale("log")
-plt.yscale("log")
-print(popt)
-plt.show()
+
+if __name__ == "__main__":
+    # # 1.measure data
+    # photodiode_power_sweep("./data_231027/photodiode_AIN2_L_cal.csv", 2)
+
+    # # 2. fit using ax+b
+    # fig, ax = plt.subplots()
+    # popt = calibrate_photodiode(
+    #     ax,
+    #     "./data_231027/photodiode_AIN2_H_cal.csv",
+    #     max_att=13.00,
+    #     max_power=0.5442,
+    #     p_att_dict=p_att_dict,
+    #     sigma_multiplier=3,
+    # )
+    # plt.xscale("log")
+    # plt.yscale("log")
+    # print(popt)
+    # plt.show()
+
+    # 3. fit L and H
+    fig, ax = plt.subplots(figsize=(10, 8))
+    popt = calibrate_photodiode_LH(
+        ax,
+        dataName_L="./data_231027/photodiode_AIN2_L_cal.csv",
+        dataName_H="./data_231027/photodiode_AIN2_H_cal.csv",
+        max_power_H=37.29,
+        p_att_dict=p_att_dict,
+        sigma_multiplier=3,
+    )
+    # plt.xscale("log")
+    # plt.yscale("log")
+    # print(popt)
+    plt.show()
