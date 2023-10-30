@@ -7,12 +7,12 @@ import matplotlib.pyplot as plt
 def calibrate_photodiode(
     ax,
     dataName,
-    max_att: float,
     max_power: float,
     p_att_dict: dict,
     #
     select_func=None,
     sigma_multiplier: int = 1,
+    **kwargs,
 ):
     att, v, std_v = load_csv_data(
         dataName,
@@ -20,16 +20,17 @@ def calibrate_photodiode(
         key_x="att",
         key_y="v",
     )
-    p_max = p_att_dict[max_att]
+    p_max = p_att_dict[np.max(att)]
     p_i = np.array([max_power * p_att_dict[a] / p_max for a in att])
     #
-    ax.scatter(p_i, v, marker="+", alpha=0.5, c="blue", label="data points")
+    ax.scatter(p_i, v, marker="+", alpha=0.5, label="data points", **kwargs)
     ax.fill_between(
         p_i,
         v - sigma_multiplier * std_v,  # type: ignore
         v + sigma_multiplier * std_v,  # type: ignore
         alpha=0.2,
         label=rf"$\pm {sigma_multiplier}\sigma$" + " std",
+        **kwargs,
     )
 
     def f(x, a, b):
@@ -41,8 +42,8 @@ def calibrate_photodiode(
         p_i,
         f(p_i, *popt),
         alpha=0.5,
-        c="blue",
         label="fit voltage(V) = {:.4f} * p(uW) + {:.4f} V".format(*popt),
+        **kwargs,
     )
     ax.set_xlabel("laser power(uW)")
     ax.set_ylabel("voltage(V)")
@@ -63,11 +64,9 @@ def calibrate_photodiode_LH(
     sigma_multiplier: int = 1,
 ):
     # (1,2) subplot
-    # fig, ax = plt.subplots(1, 2, figsize=(12, 6))
-    # ax0 = ax[0]
-    # ax1 = ax[1]
-    fig, ax = plt.subplots()
-    ax0 = ax
+    fig, ax = plt.subplots(1, 2, figsize=(12, 6))
+    ax0 = ax[0]
+    ax1 = ax[1]
     #
     att_H, v_H, std_v_H = load_csv_data(
         dataName_H,
@@ -78,7 +77,7 @@ def calibrate_photodiode_LH(
     p_max = p_att_dict[np.max(att_H)]
     p_H = np.array([max_power_H * p_att_dict[a] / p_max for a in att_H])
     p_H_attenuation = max_power_H / p_max
-    print("attenuation_H: {:.2f}dB".format(10 * np.log10(p_H_attenuation)))
+    print("attenuation_H: {:.2f} dB".format(10 * np.log10(p_H_attenuation)))
 
     #
     def f(x, a, b):
@@ -123,48 +122,65 @@ def calibrate_photodiode_LH(
     popt_H, pcov_H = curve_fit(f, v_H, p_H)
     strH = "fitH p(uW) = {:.6f} * v(V) + {:.6f}(uW)".format(*popt_H)
     print(strH)
-    #
-    ax0.plot(f(v_L, *popt_L), v_L, alpha=0.5, c="blue", label=strL)  # type: ignore
-    ax0.scatter(p_L, v_L, marker="+", alpha=0.5, c="blue", label="data points L")  # type: ignore
-    ax0.plot(f(v_H, *popt_H), v_H, alpha=0.5, c="blue", label=strH)  # type: ignore
-    ax0.scatter(p_H, v_H, marker="+", alpha=0.5, c="blue", label="data points H")  # type: ignore
 
+    #
     # find the intersection of two curves
     def diff(x):
         return f(x, *popt_L) - f(x, *popt_H)
 
     from scipy.optimize import fsolve
 
-    x0 = fsolve(diff, 0)
-    print("intersection: {:.6f} V".format(x0[0]))
+    x0 = fsolve(diff, 0)[0]
+    print("intersection: {:.6f} V".format(x0))
+    y0 = f(x0, *popt_L)
+    print("intersection: {:.6f} uW".format(y0))
 
-    # # add a subplot in the lower right
-    # from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+    #
+    def f_piecewise(x):  # numpy
+        return np.piecewise(
+            x,
+            [x <= x0, x > x0],
+            [lambda x: f(x, *popt_L), lambda x: f(x, *popt_H)],
+        )
 
-    # axins = inset_axes(
-    #     ax,
-    #     width="40%",  # width = 30% of parent_bbox
-    #     height="40%",  # height  = 30% of parent_bbox
-    #     loc="center right",
-    # )
-    # cut data from low power region p< 100nW
-    # P_LOWER_BOUND = 0.06
-    # mask = p_i < P_LOWER_BOUND
-    # axins.scatter(p_i[mask] * 1e3, v_i[mask] * 1e3, marker="+", alpha=0.5, c="blue")
-    # axins.plot(
-    #     f(v_i[mask] * 1e3, *popt1),
-    #     v_i[mask] * 1e3,
-    #     alpha=0.5,
-    #     c="blue",
-    # )
-    # axins.set_xlim(-0.1 * P_LOWER_BOUND * 1e3, P_LOWER_BOUND * 1e3 * 1.1)
-    # axins.set_ylim(1.1 * np.min(v_i[mask]) * 1e3, np.max(v_i[mask]) * 1e3 * 1.1)
-    # axins.set_xlabel("laser power(nW)")
-    # axins.set_ylabel("voltage(mV)")
-
+    #
+    ax0.plot(f_piecewise(v_L), v_L, alpha=0.4, c="purple", label=strL)  # type: ignore
+    ax0.scatter(p_L, v_L, marker="+", alpha=0.3, c="purple", label="data points L")  # type: ignore
+    ax0.plot(f_piecewise(v_H), v_H, alpha=0.4, c="blue", label=strH)  # type: ignore
+    ax0.scatter(p_H, v_H, marker="+", alpha=0.4, c="blue", label="data points H")  # type: ignore
+    #
     ax0.set_xlabel("laser power(uW)")
     ax0.set_ylabel("voltage(V)")
     ax0.legend()
+
+    #
+    # ax1: relative error
+    ax1.axvline(x=x0, c="red", alpha=0.5, label="intersection, {:.6f} V, {:.6f} uW".format(x0, y0), linestyle="dashed", linewidth=1)  # type: ignore
+    # plot piecewise function relative error at each data point
+    err_pL = np.abs((p_L - f_piecewise(v_L)) / p_L)
+    ax1.scatter(
+        p_L,
+        err_pL,
+        alpha=0.5,
+        marker="+",  # type: ignore
+        c="purple",
+        label="relative error L",
+    )
+    err_pH = np.abs((p_H - f_piecewise(v_H)) / p_H)
+    ax1.scatter(
+        p_H,
+        err_pH,
+        alpha=0.5,
+        marker="+",  # type: ignore
+        c="blue",
+        label="relative error H",
+    )
+    ax1.set_ylim(0, 0.2)
+    ax1.set_xlabel("laser power(uW)")
+    ax1.set_ylabel("relative error")
+    ax1.legend()
+    ax1.set_xscale("log")
+    # ax1.set_yscale("log")
     #
     # fit using v-pi curve
     return popt_L, popt_H
