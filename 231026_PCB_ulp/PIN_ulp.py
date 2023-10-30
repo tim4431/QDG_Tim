@@ -32,6 +32,10 @@ move_comp("J5", X_SMA_2, HMID - DIS_SMA_2 / 2)
 MW_SPACING = 100
 for i in range(4):
     move_comp(compNameMW[i], 448, HMID + MW_SPACING * (1.5 - i))
+DC_SPACING = 60
+for i in range(6):
+    move_comp(compNameDCU[i], 40 + i * DC_SPACING, 1170)
+    move_comp(compNameDCB[i], 40 + i * DC_SPACING, 1170)
 
 # merge command
 print(" ".join(intruction_str_List))
