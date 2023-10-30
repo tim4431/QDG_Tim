@@ -21,8 +21,8 @@ H1Board = 1845
 HMID = H1Board / 2
 move_comp("J2", 3400, H1Board + 150)
 move_comp("J1", 3400, -150)
-DIS_SMA_1 = 380
-DIS_SMA_2 = 970
+DIS_SMA_1 = 420
+DIS_SMA_2 = 1100
 X_SMA_1 = 2910
 X_SMA_2 = 3360
 move_comp("J4", X_SMA_1, HMID + DIS_SMA_1 / 2)
