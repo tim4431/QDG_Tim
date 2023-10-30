@@ -24,10 +24,10 @@ DIS_SMA_1 = 322
 DIS_SMA_2 = 880
 X_SMA_1 = 2790
 X_SMA_2 = 3140
-move_comp("J4", DIS_SMA_1, H1Board / 2 + DIS_SMA_1 / 2)
-move_comp("J3", DIS_SMA_1, H1Board / 2 - DIS_SMA_1 / 2)
-move_comp("J6", DIS_SMA_2, H1Board / 2 + DIS_SMA_2 / 2)
-move_comp("J5", DIS_SMA_2, H1Board / 2 - DIS_SMA_2 / 2)
+move_comp("J4", X_SMA_1, H1Board / 2 + DIS_SMA_1 / 2)
+move_comp("J3", X_SMA_1, H1Board / 2 - DIS_SMA_1 / 2)
+move_comp("J6", X_SMA_2, H1Board / 2 + DIS_SMA_2 / 2)
+move_comp("J5", X_SMA_2, H1Board / 2 - DIS_SMA_2 / 2)
 
 # merge command
 print(" ".join(intruction_str_List))
