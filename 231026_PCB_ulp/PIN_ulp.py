@@ -13,15 +13,15 @@ def move_comp(compName: str, x, y):
     intruction_str_List.append(move_comp_str(compName, x, y))
 
 
-compNameDCU = ["U$14", "U$7", "U$2", "U$3", "U$4", "U$5"]
-compNameDCB = ["U$16", "U$15", "U$8", "U$9", "U$10", "U$11"]
+compNameDCB = ["U$14", "U$7", "U$2", "U$3", "U$4", "U$5"]
+compNameDCU = ["U$16", "U$15", "U$8", "U$9", "U$10", "U$11"]
 compNameMW = ["U$13", "U$1", "U$12", "U$6"]
 
 H1Board = 1845
 HMID = H1Board / 2
-move_comp("J2", 3400, H1Board + 150)
-move_comp("J1", 3400, -150)
-DIS_SMA_1 = 420
+move_comp("J2", 3440, H1Board + 150)
+move_comp("J1", 3440, -150)
+DIS_SMA_1 = 430
 DIS_SMA_2 = 1100
 X_SMA_1 = 2910
 X_SMA_2 = 3360
@@ -35,7 +35,7 @@ for i in range(4):
 DC_SPACING = 60
 for i in range(6):
     move_comp(compNameDCU[i], 40 + i * DC_SPACING, 1170)
-    move_comp(compNameDCB[i], 40 + i * DC_SPACING, 1170)
+    move_comp(compNameDCB[i], 40 + i * DC_SPACING, 670)
 
 # merge command
 print(" ".join(intruction_str_List))
