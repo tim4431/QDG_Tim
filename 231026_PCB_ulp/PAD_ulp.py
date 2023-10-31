@@ -53,16 +53,16 @@ def get_via_ys(traces, x, w_via):
 
 
 traces = [
-    (-1442, -333, 830, -645),
-    (-1060, -615, 830, -738),
-    (-1060, -950, 830, -831),
-    (-1442, -1231, 830, -925),
+    (448, 1072, 3360, 1472),
+    (448, 972, 2910, 1138),
+    (448, 872, 2910, 708),
+    (448, 772, 3360, 372),
 ]
-x = np.linspace(-1442, 830, 21)
+x = np.linspace(448, 3360, 25)
 for trace in traces:
     plt.plot([trace[0], trace[2]], [trace[1], trace[3]], c="b")
 for x_ in x:
-    ys = get_via_ys(traces, x_, 94)
+    ys = get_via_ys(traces, x_, 100)
     plt.scatter([x_] * len(ys), ys, c="r")
 
 
