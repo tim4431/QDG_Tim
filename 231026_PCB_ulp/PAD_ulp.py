@@ -95,4 +95,8 @@ points.extend(grid_points_keep)
 plt.scatter([x for x, y in points], [y for x, y in points], c="r")
 
 plt.show()
-print(" ".join([via_gnd(x, y) for x, y in points]))
+# print(" ".join([via_gnd(x, y) for x, y in points]))
+# print for each 20 pts
+for i in range(0, len(points), 40):
+    print(i)
+    print(" ".join([via_gnd(x, y) for x, y in points[i : i + 40]]))
