@@ -1,0 +1,62 @@
+photonics.routing.waveguide:
+  width: 0.35
+  turn_radius: 10
+  layer: 1
+
+photonics.routing.tether:
+  taper_len: 3
+  wg_width: 0.350
+  tether_width: 0.75
+  tether_length: 0.2
+  arm_taper_len: 1
+  arm_length: 4
+  arm_width: 3
+  width: 'photonics.routing.waveguide'
+  turn_radius: 'photonics.routing.waveguide'
+  layer: 'photonics.routing.waveguide'
+
+photonics.couplers.exponential_taper:
+  width_1: 0.164
+  width_2: 0.350
+  length: 15
+  m: 0.522
+  layer: 'photonics.routing.waveguide'
+
+photonics.resonators.pcc_mirrors:
+  width: 0.4
+  a_m: 0.315
+  a_d: 0.265
+  ff: 0.45
+  N_mirrors: 15
+  layer:  'photonics.routing.waveguide'
+
+photonics.resonators.pcc_cavity:
+  width: 0.4
+  a_m: 0.315
+  a_d: 0.265
+  ff: 0.45
+  N_taper: 3
+  layer:  'photonics.routing.waveguide'
+
+photonics.resonators.pcc_bus:
+  gap: 0.335
+  layer:  'photonics.routing.waveguide'
+
+MEMS.springs.meander_spring:
+  width: 0.75
+  length: 8
+  gap: 1.25
+  num: 3
+  ends: 2
+  layer: 1
+
+MEMS.actuators.released_beam:
+  height: 40
+  width: 7
+  hole_x: 3
+  hole_y: 3
+  hole_gap: 2
+  layer: 3
+
+MEMS.actuators.spider_actuator:
+  gap: 1
