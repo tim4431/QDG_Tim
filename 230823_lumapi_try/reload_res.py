@@ -162,16 +162,16 @@ def reload_work(
 
 
 if __name__ == "__main__":
-    #
-    reload_work(
-        "f93f",
-        dimension="3D",
-        reload_simulation_typ=2,
-        tether_typ=None,
-        pause=False,
-        advanced_monitor=False,
-        # movie=True,
-    )
+    # #
+    # reload_work(
+    #     "f93f",
+    #     dimension="3D",
+    #     reload_simulation_typ=2,
+    #     tether_typ=None,
+    #     pause=False,
+    #     advanced_monitor=False,
+    #     # movie=True,
+    # )
     #
     reload_work(
         "f93f",
