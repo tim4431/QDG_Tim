@@ -84,12 +84,20 @@ def work_para_sweeper(work_template, sweep_range, sweep_var_name):
 if __name__ == "__main__":  # type: ignore
     # print("sleeping")
     # time.sleep(3600 * 5)
-
-    # f93f_airclad_sweepangle
-    work_f93f = load_json("f93f")
-    work_f93f["maxiter"] = 70
-    work_f93f["BOX"] = "SiO2"
-    work_f93f_anglesweep = work_para_sweeper(
-        work_f93f, np.arange(25.0, 50.0, 5), "source_angle"
-    )
-    work_loader(work_f93f_anglesweep, "f93f_airclad_anglesweep", merge_data=True)
+    work_larger_4e25 = {
+        "FOM_typ": "square",
+        "FWHM": 4e-08,
+        "MIN_FEATURE_SIZE": 4e-08,
+        "N": 10,
+        "NH": 2,
+        "NL": 2,
+        "SOURCE_typ": "gaussian_released",
+        "alpha": 0.0,
+        "lambda_0": 1.326e-06,
+        "maxiter": 100,
+        "penalty": [[0.01, 1e-08], [0.02, 1e-07]],
+        "simulation_typ": 2,
+        "source_angle": 14.8,
+        "start_radius": 1.4e-05,
+    }
+    work_loader(work_larger_4e25, "work_larger_4e25", merge_data=False)
