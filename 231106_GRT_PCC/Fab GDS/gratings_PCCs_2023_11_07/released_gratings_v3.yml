@@ -34,3 +34,7 @@ photonics.resonators.pcc_cavity:
 photonics.resonators.pcc_bus:
   gap: 0.335
   layer:  'photonics.routing.waveguide'
+
+photonics.resonators.pcc_bus_y_sweepfilling:
+  gap: 0.335
+  layer:  'photonics.routing.waveguide'
