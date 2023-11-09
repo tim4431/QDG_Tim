@@ -174,7 +174,7 @@ if __name__ == "__main__":
     # )
     #
     reload_work(
-        "f93f",
+        "8a24",
         dimension="3D",
         reload_simulation_typ=2,
         tether_typ="empty",
