@@ -100,4 +100,4 @@ if __name__ == "__main__":  # type: ignore
         "source_angle": 14.8,
         "start_radius": 1.4e-05,
     }
-    work_loader(work_larger_4e25, "work_larger_4e25", merge_data=False)
+    work_loader([work_larger_4e25], "work_larger_4e25", merge_data=False)
