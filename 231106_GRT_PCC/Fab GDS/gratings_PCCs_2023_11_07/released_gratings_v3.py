@@ -43,6 +43,18 @@ def pts_group3_sweep_x(N, x0, y0, step=127):
     return pts
 
 
+def pts_group3_sweep_y(N, x0, y0, step=127):
+    # group by 3, spacing by step
+    # group to group, spacing by 6*step
+    y1 = y0 - ((N - 1) / 2) * (6 * step)
+    y2 = y0 + ((N - 1) / 2) * (6 * step)
+    pts = []
+    for y in np.arange(y1, y2 + 1, 6 * step):
+        for i in range(3):
+            pts.append([x0, y + i * step])
+    return pts
+
+
 def add_grating(pts, layer):
     for pt in pts:
         x_, y_ = pt
@@ -50,10 +62,10 @@ def add_grating(pts, layer):
         grating = pf.Component()
         grating.load_gds("grating_gds", dir + "/4e25.gds")
         grating.copy_layers(1, layer)
-        grating.rotate(-np.pi / 2)
+        grating.rotate(-np.pi)
         forge.add_component(grating)
         r = grating.get_bbox()
-        r = shrink_rectangle(*r, dxl=2, dxr=2, dyt=0, dyb=3)
+        r = shrink_rectangle(*r, dxl=3, dxr=0, dyt=2, dyb=2)
         forge.add_geometry(gdspy.Rectangle(*r, layer=2))
 
 
@@ -68,26 +80,26 @@ def add_reflect_pcc_bus(pt, ff_bragg, dff, layer):
     #
     pos_mask_path = []
     pos_mask_path.append(forge.xy)
-    forge.add(pf.waveguide, coordinates=[[0, 0], [0, 2]], layer=layer)
+    forge.add(pf.waveguide, coordinates=[[0, 0], [2, 0]], layer=layer)
     forge.add(
-        pf.pcc_bus_y_sweepfilling, num_units=2, ff_bragg=ff_bragg, dff=dff, layer=layer
+        pf.pcc_bus_sweepfilling, num_units=2, ff_bragg=ff_bragg, dff=dff, layer=layer
     )
-    forge.add(pf.waveguide, coordinates=[[0, 0], [0, 1]], layer=layer)
+    forge.add(pf.waveguide, coordinates=[[0, 0], [1, 0]], layer=layer)
     # end cavity
     forge.add(
         pf.taper,
-        coordinates=[[0, 0], [0, 1]],
+        coordinates=[[0, 0], [1, 0]],
         initial_width=0.35,
         final_width=0.40,
         layer=layer,
     )  # taper connecting bus to cavity
-    forge.add(pf.waveguide, coordinates=[[0, 0], [0, 1]], width=0.4, layer=layer)
-    forge.add(pf.pcc_mirrors, N_mirrors=10, angle=np.pi / 2, layer=layer)
-    forge.add(pf.pcc_cavity, angle=np.pi / 2, layer=layer)
-    forge.add(pf.pcc_mirrors, angle=np.pi / 2, layer=layer)
-    forge.add(pf.waveguide, coordinates=[[0, 0], [0, 2]], width=0.4, layer=layer)
+    forge.add(pf.waveguide, coordinates=[[0, 0], [1, 0]], width=0.4, layer=layer)
+    forge.add(pf.pcc_mirrors, N_mirrors=10, angle=0, layer=layer)
+    forge.add(pf.pcc_cavity, angle=0, layer=layer)
+    forge.add(pf.pcc_mirrors, angle=0, layer=layer)
+    forge.add(pf.waveguide, coordinates=[[0, 0], [2, 0]], width=0.4, layer=layer)
     pos_mask_path.append(forge.xy)
-    forge.add(pf.waveguide, coordinates=[[0, 0], [0, 2]], width=0.4, layer=layer)
+    forge.add(pf.waveguide, coordinates=[[0, 0], [2, 0]], width=0.4, layer=layer)
     # positive mask
     forge.add(pf.waveguide, coordinates=pos_mask_path, width=7, layer=2, relative=False)
 
@@ -96,7 +108,7 @@ def create_batch(x0, y0, layer, N=3, dff=0.01, ff0=0.45):
     X_step = 40
 
     # pts = pts_sweep_x(N, x0, y0, step=X_step)
-    pts = pts_group3_sweep_x(N / 3, x0, y0, step=X_step)
+    pts = pts_group3_sweep_y(N / 3, x0, y0, step=X_step)
 
     add_grating(pts, layer=layer)
 
@@ -122,18 +134,22 @@ if __name__ == "__main__":
         gdspy.Rectangle([-1e4 / 2, -1e4 / 2], [1e4 / 2, 1e4 / 2], layer=0)
     )
     # i j scan
-    N_SCAN_X = 8
-    N_SCAN_Y = 8
+    N_SCAN_X = 3
+    N_SCAN_Y = 2
     DIS_GROUP = 250
     for i in range(1, N_SCAN_X + 1):
         for j in range(1, N_SCAN_Y + 1):
-            x0 = (i - (N_SCAN_X + 1) / 2) * DIS_GROUP
-            y0 = (j - (N_SCAN_Y + 1) / 2) * DIS_GROUP
-            create_batch(x0, y0, N=3, layer=10 * i + j, dff=0.01, ff0=0.45)
+            layer = 10 * i + j
+            y0 = (i - (N_SCAN_X + 1) / 2) * DIS_GROUP
+            x0 = (j - (N_SCAN_Y + 1) / 2) * DIS_GROUP
+            create_batch(x0, y0, N=3, layer=layer, dff=0.01, ff0=0.45)
+            forge.add_geometry(
+                gdspy.Text(str(layer), 30, position=[x0 + 20, y0 - 75], layer=2)
+            )
     # plot_ffs(3, 0.45, 0.01)
     # fine scan to make sure we see atleast a PCC
-    create_batch(0, -1.5e3, N=9, dff=0.005, ff0=0.45, layer=1)
-    plot_ffs(9, 0.45, 0.005)
+    create_batch(0, -1.2e3, N=9, dff=0.005, ff0=0.45, layer=1)
+    # plot_ffs(9, 0.45, 0.005)
 
     # MLA Marker
     size = 25 - 2
