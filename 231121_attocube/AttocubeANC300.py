@@ -61,12 +61,6 @@ class AttocubeANC300:
 
 if __name__ == "__main__":
     anc300 = AttocubeANC300()
-    # threading.Thread(target=anc300.move_y,args=(200,)).start()
-    # import time
-    # time.sleep(0.5)
-    anc300.move_y(400)
-    print(anc300.position)
-    anc300.move_steps(0,-100,0)
-    print(anc300.position)
-    # anc300.stop()
+    anc300.axisY.frequency=80
+    anc300.axisY.voltage=30
 
