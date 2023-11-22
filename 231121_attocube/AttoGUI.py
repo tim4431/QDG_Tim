@@ -41,8 +41,8 @@ class AttocubeControlGUI(QMainWindow):
         self.moveDirection = None
         self.START_STEP_SIZE = 1
         self.stepSize = self.START_STEP_SIZE
-        self.STEP_INCREASE_RATE = 0.2
-        self.MAX_STEP_SIZE = 10
+        self.STEP_INCREASE_RATE = 0.5
+        self.MAX_STEP_SIZE = 20
 
         self.stepsizeTimer = QTimer(self)
         self.stepsizeTimer.setInterval(200)

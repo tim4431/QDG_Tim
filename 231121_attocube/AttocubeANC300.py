@@ -6,8 +6,12 @@ from fake_ancinstance import fakeANCController
 class AttocubeANC300:
     def __init__(self, address: str = "192.168.0.91", commandline=True):
         self.address = address
-        self.anc300 = ANC300Controller("TCPIP::{:s}::7230::SOCKET".format(self.address),\
-                                        passwd="123456", axisnames=["axis_x", "axis_y", "axis_z"],query_delay=0)  # type: ignore
+        self.anc300 = ANC300Controller(
+            "TCPIP::{:s}::7230::SOCKET".format(self.address),
+            passwd="123456",
+            axisnames=["axis_x", "axis_y", "axis_z"],
+            query_delay=0,
+        )  # type: ignore
         # self.anc300 = fakeANCController()
         print(self.anc300.version)
         self.axisX = self.anc300.axis_x
@@ -24,7 +28,6 @@ class AttocubeANC300:
         self.volt_x = 30
         self.volt_y = 30
         self.volt_z = 30
-
 
     @property
     def position(self):
@@ -115,8 +118,7 @@ class AttocubeANC300:
         else:
             return True
 
-    def move_x(self, steps: int, **kwargs):
-        force_move = kwargs.get("force_move", False)
+    def move_x(self, steps: int, force_move=False):
         if force_move or self.check_steps("X", steps):
             self.axisX.move(steps)
             self.x += steps
@@ -124,8 +126,7 @@ class AttocubeANC300:
         else:
             return False
 
-    def move_y(self, steps: int, **kwargs):
-        force_move = kwargs.get("force_move", False)
+    def move_y(self, steps: int, force_move=False):
         if force_move or self.check_steps("Y", steps):
             self.axisY.move(steps)
             self.y += steps
@@ -133,8 +134,7 @@ class AttocubeANC300:
         else:
             return False
 
-    def move_z(self, steps: int, **kwargs):
-        force_move = kwargs.get("force_move", False)
+    def move_z(self, steps: int, force_move=False):
         if force_move or self.check_steps("Z", steps):
             self.axisZ.move(steps)
             self.z += steps
