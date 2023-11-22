@@ -4,12 +4,14 @@ from fake_ancinstance import fakeANCController
 
 
 class AttocubeANC300:
-    def __init__(self, address: str = "192.168.0.91"):
-        # self.anc300 = ANC300Controller("TCPIP::{:s}::7230::SOCKET".format(address), passwd="123456", axisnames=["axis_x", "axis_y", "axis_z"])  # type: ignore
+    def __init__(self, address: str = "192.168.0.91", commandline=True):
+        self.address = address
+        # self.anc300 = ANC300Controller("TCPIP::{:s}::7230::SOCKET".format(self.address), passwd="123456", axisnames=["axis_x", "axis_y", "axis_z"])  # type: ignore
         self.anc300 = fakeANCController()
         self.axisX = self.anc300.axis_x
         self.axisY = self.anc300.axis_y
         self.axisZ = self.anc300.axis_z
+        self._commandline = commandline
         self.x = int(0)
         self.y = int(0)
         self.z = int(0)
@@ -76,7 +78,7 @@ class AttocubeANC300:
     def goto_origin(self):
         self.move_to(0, 0, 0)
 
-    def check_steps(self, axis_name: str, steps: int) -> bool:
+    def check_steps(self, axis_name: str, steps: int, force_move=False) -> bool:
         """
         Check if the steps is too large
         - True: continue
@@ -84,11 +86,17 @@ class AttocubeANC300:
         """
         MAX_STEP = {"X": 100, "Y": 200, "Z": 200}
         if abs(steps) > MAX_STEP[axis_name]:
-            a = input(
-                "Warning: steps {:s} = {:d} is too large, continue? (y/n)".format(
-                    axis_name, steps
-                )
-            ).strip()
+            if not force_move and self._commandline:
+                a = input(
+                    "Warning: steps {:s} = {:d} is too large, continue? (y/n)".format(
+                        axis_name, steps
+                    )
+                ).strip()
+            elif not force_move and not self._commandline:
+                a = "N"
+            else:
+                a = "Y"
+            #
             if a == "y" or a == "Y" or a == "":
                 return True
             else:
@@ -98,27 +106,41 @@ class AttocubeANC300:
             return True
 
     def move_x(self, steps: int, **kwargs):
-        if self.check_steps("X", steps):
+        force_move = kwargs.get("force_move", False)
+        if force_move or self.check_steps("X", steps):
             self.axisX.move(steps, **kwargs)
             self.x += steps
+            return True
+        else:
+            return False
 
     def move_y(self, steps: int, **kwargs):
-        if self.check_steps("Y", steps):
+        force_move = kwargs.get("force_move", False)
+        if force_move or self.check_steps("Y", steps):
             self.axisY.move(steps, **kwargs)
             self.y += steps
+            return True
+        else:
+            return False
 
     def move_z(self, steps: int, **kwargs):
-        if self.check_steps("Z", steps):
+        force_move = kwargs.get("force_move", False)
+        if force_move or self.check_steps("Z", steps):
             self.axisZ.move(steps, **kwargs)
             self.z += steps
+            return True
+        else:
+            return False
 
     def move(self, stepsX: int, stepsY: int, stepsZ: int, **kwargs):
-        self.move_x(stepsX, **kwargs)
-        self.move_y(stepsY, **kwargs)
-        self.move_z(stepsZ, **kwargs)
+        return (
+            self.move_x(stepsX, **kwargs)
+            and self.move_y(stepsY, **kwargs)
+            and self.move_z(stepsZ, **kwargs)
+        )
 
     def move_to(self, x: int, y: int, z: int, **kwargs):
-        self.move(x - self.x, y - self.y, z - self.z, **kwargs)
+        return self.move(x - self.x, y - self.y, z - self.z, **kwargs)
 
     # def stop(self):
     #     self.anc300.stop_all()
@@ -126,15 +148,22 @@ class AttocubeANC300:
 
 if __name__ == "__main__":
     anc300 = AttocubeANC300()
-    anc300.move_x(10)  # X, +10 steps
-    anc300.move_y(-10)  # Y, -10 steps
-    anc300.move(10, 10, 10)  # X, Y, Z, +10 steps
-    anc300.move_to(0, 0, 0)  # X, Y, Z, move to (0, 0, 0)
-    # Note: above all methods are blocking
-    # anc300.stop()  # stop all
-    anc300.set_to_origin()  # set current position to (0, 0, 0)
-    anc300.goto_origin()  # move to (0, 0, 0)
-    print(anc300.position)  # get current position
-    anc300.position = (10, 10, 10)  # set current position to (10, 10, 10)
-    print(anc300.freq_x)  # get current frequency on X axis
-    anc300.freq_x = 90  # set frequency on X axis to 1000 Hz
+    # anc300.move_x(10)  # X, +10 steps
+    # anc300.move_y(-10)  # Y, -10 steps
+    # anc300.move(10, 10, 10)  # X, Y, Z, +10 steps
+    # anc300.move_to(0, 0, 0)  # X, Y, Z, move to (0, 0, 0)
+    # # Note: above all methods are blocking
+    # # anc300.stop()  # stop all
+    # anc300.set_to_origin()  # set current position to (0, 0, 0)
+    # anc300.goto_origin()  # move to (0, 0, 0)
+    # print(anc300.position)  # get current position
+    # anc300.position = (10, 10, 10)  # set current position to (10, 10, 10)
+    # print(anc300.freq_x)  # get current frequency on X axis
+    # anc300.freq_x = 90  # set frequency on X axis to 1000 Hz
+    ###
+    # repeatability test
+    for i in range(10):
+        anc300.freq_y = 100
+        anc300.move_y(100)
+        anc300.freq_y = 1000
+        anc300.move_y(-100)

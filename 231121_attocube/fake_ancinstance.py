@@ -25,7 +25,7 @@ class fakeAxis:
         print("set {:s} voltage to {:.1f}".format(self.name, value))
         self._voltage = value
 
-    def move(self, steps):
+    def move(self, steps, **kwargs):
         time.sleep(0.001)
         print("move {:s} by {:d} steps".format(self.name, steps))
 
