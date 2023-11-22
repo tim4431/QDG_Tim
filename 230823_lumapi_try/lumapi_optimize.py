@@ -943,6 +943,7 @@ def plot_result(
     FWHMHist: List[float],
     dataName: str,
     simulation_typ: int = 0,
+    draw_T0: bool = False,
 ) -> None:
     fig = plt.figure(figsize=(15, 6))
     grid = GridSpec(1, 3, width_ratios=[2, 1, 1])
@@ -955,7 +956,11 @@ def plot_result(
     if simulation_typ in [0, 2]:
         l, T = transmission
         arb_fit_1d(ax0, l * 1e9, T, r"$T(\lambda)$", label=True)
-        ax0.legend(loc="upper left")
+        # draw the T0(lambda) curve
+        if draw_T0:
+            T0 = analysis.gaussian_curve(l * 1e9, 1326, 50) * np.max(T)  # type: ignore
+            ax0.plot(l * 1e9, T0, label=r"$T_0(\lambda), \lambda_0 = 1326, bw = 50$", color="purple", linestyle="--", alpha=0.4)  # type: ignore
+        #
     # plot reflection in twinx
     if simulation_typ in [1, 2]:
         ax0_2 = ax0.twinx()
@@ -970,7 +975,11 @@ def plot_result(
             annotation=False,
             color="orange",
         )
-        ax0_2.legend(loc="upper right")
+    # Legend
+    if simulation_typ in [0, 2]:
+        ax0.legend(loc="upper left", facecolor="white",framealpha=1)
+    if simulation_typ in [1, 2]:
+        ax0_2.legend(loc="upper right", facecolor="white",framealpha=1)  # type: ignore
     #
     ax0.set_title("Transmission / Reflection")
     # plot the FOM history
@@ -1001,7 +1010,7 @@ def plot_result(
     # ax2_2.set_ylabel("FWHM(nm)")
     ax2_2.legend(loc="lower right")
     #
-    plt.savefig("{:s}_result.png".format(dataName), dpi=200, bbox_inches="tight")
+    plt.savefig("{:s}_result1.png".format(dataName), dpi=200, bbox_inches="tight")
     #
 
 
@@ -1039,6 +1048,7 @@ def reload_plot(uuid):
         FWHMHist,  # type: ignore
         dataName,
         simulation_typ=kwargs.get("simulation_typ", DEFAULT_PARA["simulation_typ"]),
+        draw_T0=True,
     )
 
 

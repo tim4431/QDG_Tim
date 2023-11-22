@@ -134,22 +134,41 @@ if __name__ == "__main__":
         gdspy.Rectangle([-1e4 / 2, -1e4 / 2], [1e4 / 2, 1e4 / 2], layer=0)
     )
     # i j scan
-    N_SCAN_X = 3
-    N_SCAN_Y = 2
-    DIS_GROUP = 250
-    for i in range(1, N_SCAN_X + 1):
-        for j in range(1, N_SCAN_Y + 1):
-            layer = 10 * i + j
-            y0 = (i - (N_SCAN_X + 1) / 2) * DIS_GROUP
-            x0 = (j - (N_SCAN_Y + 1) / 2) * DIS_GROUP
-            create_batch(x0, y0, N=3, layer=layer, dff=0.01, ff0=0.45)
-            forge.add_geometry(
-                gdspy.Text(str(layer), 30, position=[x0 + 20, y0 - 75], layer=2)
-            )
+    N_scan = 6
+    layers = [11, 12, 21, 22, 31, 32, 1, 1, 1]
+    # @Lukasz if you want to change to 9 groups
+    # N_scan = 9
+    # layers = [11, 12, 13, 21, 22, 23, 31, 32, 33, 1, 1, 1]
+    #
+    DIS_GROUP = 127 * 2
+    #
+    N_Group = N_scan + 3  # 3 for fine scan
+    for i in range(N_scan):
+        layer = layers[i]
+        x0 = 0
+        y0 = (i - (N_Group - 1) / 2) * DIS_GROUP
+        create_batch(x0, y0, N=3, layer=layer, dff=0.01, ff0=0.45)
+        forge.add_geometry(
+            gdspy.Text(str(layer), 40, position=[x0 + 220, y0 + 65], layer=2, angle=np.pi)  # type: ignore
+        )
     # plot_ffs(3, 0.45, 0.01)
+    #
     # fine scan to make sure we see atleast a PCC
-    create_batch(0, -1.2e3, N=9, dff=0.005, ff0=0.45, layer=1)
+    # 7,8,9
+    y0 = ((N_scan + 1) - (N_Group - 1) / 2) * DIS_GROUP
+    create_batch(0, y0, N=9, dff=0.005, ff0=0.45, layer=1)
     # plot_ffs(9, 0.45, 0.005)
+
+    # Device Marker
+    forge.add_geometry(
+        gdspy.Text("A", 150, position=[1000, -400], layer=2, datatype=1, angle=np.pi)  # type: ignore
+    )
+    forge.add_geometry(
+        gdspy.Text("B", 150, position=[1000, 0], layer=2, datatype=2, angle=np.pi)  # type: ignore
+    )
+    forge.add_geometry(
+        gdspy.Text("C", 150, position=[1000, 400], layer=2, datatype=3, angle=np.pi)  # type: ignore
+    )
 
     # MLA Marker
     size = 25 - 2
