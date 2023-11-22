@@ -53,7 +53,7 @@ def santec_internal_sweep(
             ljm.constants.STREAM_SCANS_RETURN_ALL_OR_NONE,
         )
         ljm.writeLibraryConfigS(ljm.constants.STREAM_RECEIVE_TIMEOUT_MS, 0)
-
+    laser.write_sweep_cycles(999)
     laser.write_laser_status("On")
     laser.write_coherence_control("Off")  # turn off coherence control
     laser.write_start_wav(start)
