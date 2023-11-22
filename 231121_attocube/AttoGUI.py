@@ -41,8 +41,9 @@ class AttocubeControlGUI(QMainWindow):
         self.moveDirection = None
         self.START_STEP_SIZE = 1
         self.stepSize = self.START_STEP_SIZE
-        self.STEP_INCREASE_RATE = 0.5
-        self.MAX_STEP_SIZE = 20
+        self.STEP_INCREASE_RATE = 2
+        self.MAX_STEP_SIZE = 50
+        self._locked_movement = False
 
         self.stepsizeTimer = QTimer(self)
         self.stepsizeTimer.setInterval(200)
@@ -59,13 +60,18 @@ class AttocubeControlGUI(QMainWindow):
         # self.setFont(font)
 
     @property
+    def position(self):
+        return self._x, self._y, self._z
+
+    @property
     def x(self):
         return self._x
 
     @x.setter
     def x(self, value: int):
         self._last_x = self._x
-        self._x = value
+        if not self._locked_movement:
+            self._x = value
 
     @property
     def y(self):
@@ -74,7 +80,8 @@ class AttocubeControlGUI(QMainWindow):
     @y.setter
     def y(self, value: int):
         self._last_y = self._y
-        self._y = value
+        if not self._locked_movement:
+            self._y = value
 
     @property
     def z(self):
@@ -83,7 +90,8 @@ class AttocubeControlGUI(QMainWindow):
     @z.setter
     def z(self, value: int):
         self._last_z = self._z
-        self._z = value
+        if not self._locked_movement:
+            self._z = value
 
     def retrive_last_x(self):
         self._x = self._last_x
@@ -247,6 +255,19 @@ class AttocubeControlGUI(QMainWindow):
         # self.centralWidget = QWidget()
         # self.setCentralWidget(self.centralWidget)
 
+        # Add a lock status button, if pressed the movement is locked
+        lockWidget = QWidget()
+        lockLayout = QVBoxLayout(lockWidget)
+        lockLabel = QLabel("Movement Lock")
+        self.lockButton = QPushButton("Lock")
+        self.lockButton.setCheckable(True)
+        self.lockButton.clicked.connect(self.lockMovement)
+        lockLayout.addWidget(lockLabel)
+        lockLayout.addWidget(self.lockButton)
+        # vertical alignment
+        lockLayout.setAlignment(Qt.AlignCenter)  # type: ignore
+        controlLayout.addWidget(lockWidget)
+
         # Z axis buttons
         ZcontrolWidget = QWidget()
         ZcontrolLayout = QVBoxLayout(ZcontrolWidget)
@@ -326,7 +347,7 @@ class AttocubeControlGUI(QMainWindow):
         zeroLayout.addWidget(self.setOrigin)
 
         # Status label
-        self.statusLabel = QLabel("Status: Idle")
+        self.statusLabel = QLabel("Status:")
         self.statusLabel.setAlignment(Qt.AlignCenter)  # type: ignore
         self.statusText = QLabel("Idle")
         self.statusText.setAlignment(Qt.AlignCenter)  # type: ignore
@@ -385,6 +406,17 @@ class AttocubeControlGUI(QMainWindow):
         self.gotoOrigin.clicked.connect(self.goto_origin)
         self.setOrigin.clicked.connect(self.set_origin)
 
+    def lockMovement(self):
+        self._locked_movement = self.lockButton.isChecked()
+        if self._locked_movement:
+            self.lockButton.setText("Unlock")
+            self.statusText.setText("Locked")
+            self.statusText.setStyleSheet("color: red")
+        else:
+            self.lockButton.setText("Lock")
+            self.statusText.setText("Idle")
+            self.statusText.setStyleSheet("color: green")
+
     def step_move(self):
         if self.moveAxis == "X":
             self.x += int(self.moveDirection * self.stepSize)  # type: ignore
@@ -410,6 +442,14 @@ class AttocubeControlGUI(QMainWindow):
         self.updatePosition()
 
     def set_origin(self):
+        # change the history Accordingly
+        _x, _y, _z = self.position
+        for i in range(len(self.historyPosition)):
+            self.historyPosition[i] = (
+                self.historyPosition[i][0] - _x,
+                self.historyPosition[i][1] - _y,
+                self.historyPosition[i][2] - _z,
+            )
         self.attocube.set_to_origin()
         self.goto_origin()
 
@@ -442,7 +482,7 @@ class AttocubeControlGUI(QMainWindow):
 
     def updatePosition(self):
         # statusText changes to "Moving", and change colar to red
-        if self.statusText.text() != "Moving":
+        if not self._locked_movement and self.statusText.text() != "Moving":
             self.statusText.setText("Moving")
             self.statusText.setStyleSheet("color: blue")
             QApplication.processEvents()  # Force the GUI to update
@@ -460,7 +500,7 @@ class AttocubeControlGUI(QMainWindow):
                 QApplication.processEvents()
         #
         # statusText changes to "Idle", and change colar to green
-        if not (self.movementTimer.isActive()):
+        if (not self._locked_movement) and (not (self.movementTimer.isActive())):
             self.statusText.setText("Idle")
             self.statusText.setStyleSheet("color: green")
         #
@@ -474,6 +514,7 @@ class AttocubeControlGUI(QMainWindow):
         return success
 
     def updatePlot(self):
+        FIG_SIZE = 1000
         # Fetch current position from your AttocubeANC300 class and add it to history
         self.updatePlotNumber += 1  # type: ignore
         current_position = self.attocube.position
@@ -501,8 +542,8 @@ class AttocubeControlGUI(QMainWindow):
                 alpha=np.linspace(0.2, 0.8, len(self.historyPosition)),  # type: ignore
             )
         ax1.scatter(current_position[1], current_position[2], color="black", marker="x")  # type: ignore
-        ax1.set_xlim(-100, 100)
-        ax1.set_ylim(-100, 100)
+        ax1.set_xlim(-FIG_SIZE / 2, FIG_SIZE / 2)
+        ax1.set_ylim(-FIG_SIZE / 2, FIG_SIZE / 2)
 
         # Create xOy cross-section subplot
         ax2 = self.figure.add_subplot(122)
@@ -521,8 +562,8 @@ class AttocubeControlGUI(QMainWindow):
                 alpha=np.linspace(0.2, 0.8, len(self.historyPosition)),  # type: ignore
             )
         ax2.scatter(current_position[0], current_position[1], color="black", marker="x")  # type: ignore
-        ax2.set_xlim(-100, 100)
-        ax2.set_ylim(-100, 100)
+        ax2.set_xlim(-FIG_SIZE / 2, FIG_SIZE / 2)
+        ax2.set_ylim(-FIG_SIZE / 2, FIG_SIZE / 2)
 
         # Redraw the canvas
         self.canvas.draw()
