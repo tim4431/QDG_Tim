@@ -6,15 +6,25 @@ from fake_ancinstance import fakeANCController
 class AttocubeANC300:
     def __init__(self, address: str = "192.168.0.91", commandline=True):
         self.address = address
-        # self.anc300 = ANC300Controller("TCPIP::{:s}::7230::SOCKET".format(self.address), passwd="123456", axisnames=["axis_x", "axis_y", "axis_z"])  # type: ignore
-        self.anc300 = fakeANCController()
+        self.anc300 = ANC300Controller("TCPIP::{:s}::7230::SOCKET".format(self.address),\
+                                        passwd="123456", axisnames=["axis_x", "axis_y", "axis_z"],query_delay=0)  # type: ignore
+        # self.anc300 = fakeANCController()
+        print(self.anc300.version)
         self.axisX = self.anc300.axis_x
         self.axisY = self.anc300.axis_y
         self.axisZ = self.anc300.axis_z
         self._commandline = commandline
+        #
         self.x = int(0)
         self.y = int(0)
         self.z = int(0)
+        self.freq_x = 500
+        self.freq_y = 500
+        self.freq_z = 500
+        self.volt_x = 30
+        self.volt_y = 30
+        self.volt_z = 30
+
 
     @property
     def position(self):
@@ -84,7 +94,7 @@ class AttocubeANC300:
         - True: continue
         - False: stop
         """
-        MAX_STEP = {"X": 100, "Y": 200, "Z": 200}
+        MAX_STEP = {"X": 100, "Y": 600, "Z": 200}
         if abs(steps) > MAX_STEP[axis_name]:
             if not force_move and self._commandline:
                 a = input(
@@ -108,7 +118,7 @@ class AttocubeANC300:
     def move_x(self, steps: int, **kwargs):
         force_move = kwargs.get("force_move", False)
         if force_move or self.check_steps("X", steps):
-            self.axisX.move(steps, **kwargs)
+            self.axisX.move(steps)
             self.x += steps
             return True
         else:
@@ -117,7 +127,7 @@ class AttocubeANC300:
     def move_y(self, steps: int, **kwargs):
         force_move = kwargs.get("force_move", False)
         if force_move or self.check_steps("Y", steps):
-            self.axisY.move(steps, **kwargs)
+            self.axisY.move(steps)
             self.y += steps
             return True
         else:
@@ -126,7 +136,7 @@ class AttocubeANC300:
     def move_z(self, steps: int, **kwargs):
         force_move = kwargs.get("force_move", False)
         if force_move or self.check_steps("Z", steps):
-            self.axisZ.move(steps, **kwargs)
+            self.axisZ.move(steps)
             self.z += steps
             return True
         else:
@@ -163,7 +173,7 @@ if __name__ == "__main__":
     ###
     # repeatability test
     for i in range(10):
-        anc300.freq_y = 100
-        anc300.move_y(100)
-        anc300.freq_y = 1000
-        anc300.move_y(-100)
+        anc300.freq_y = 500
+        anc300.move_y(500)
+        anc300.freq_y = 2000
+        anc300.move_y(-500)
