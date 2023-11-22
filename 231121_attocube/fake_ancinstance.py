@@ -4,8 +4,8 @@ import time
 class fakeAxis:
     def __init__(self, name=""):
         self.name = name
-        self._frequency = 1
-        self._voltage = 0
+        self._frequency = 100
+        self._voltage = 30
 
     @property
     def frequency(self):

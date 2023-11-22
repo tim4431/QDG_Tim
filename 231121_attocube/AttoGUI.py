@@ -16,6 +16,7 @@ from AttocubeANC300 import AttocubeANC300
 from PyQt5.QtWidgets import QGridLayout
 import time
 from PyQt5.QtCore import QTimer
+import numpy as np
 
 
 class AttocubeControlGUI(QMainWindow):
@@ -43,26 +44,46 @@ class AttocubeControlGUI(QMainWindow):
         self.stepsizeTimer.setInterval(200)
         self.stepsizeTimer.timeout.connect(self.increaseStepSize)
 
+        self.historyPosition = []
+        self.updatePlotNumber = 0
+
         self.initUI()
+        # # set global font
+        # font = self.font()
+        # font.setPointSize(12)
+        # font.setFamily("Arial")
+        # self.setFont(font)
 
     def initUI(self):
         self.setWindowTitle("Attocube ANC300 Controller")
-        self.setGeometry(100, 100, 700, 600)
+        self.setGeometry(100, 100, 700, 650)
+
+        def addTitle(text: str):
+            label = QLabel(text)
+            font = label.font()
+            # font.setFamily("Consolas")
+            font.setPointSize(12)
+            font.setBold(True)
+            label.setFont(font)
+            layout.addWidget(label)
 
         # Main layout
         layout = QVBoxLayout()
 
         # Frequency and voltage controls
+        addTitle("Frequency and voltage controls")
         self.freq_voltage_layout = QHBoxLayout()
         self.initFreqVoltageControls()
         layout.addLayout(self.freq_voltage_layout)
 
         # Movement control buttons
+        addTitle("Movement controls")
         self.movement_control_layout = QHBoxLayout()
         self.initMovementControls()
         layout.addLayout(self.movement_control_layout)
 
         # Plot for current position
+        addTitle("Current position")
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
         layout.addWidget(self.canvas)
@@ -203,8 +224,8 @@ class AttocubeControlGUI(QMainWindow):
         gridLayout.addLayout(gridYLayout, 0, 3)
         gridLayout.addWidget(self.inputCurentY, 1, 3)
         # Y axis button
-        self.moveLeftY = QPushButton("<- Y")
-        self.moveRightY = QPushButton("Y ->")
+        self.moveLeftY = QPushButton("vv Y")
+        self.moveRightY = QPushButton("Y ^^")
         gridLayout.addWidget(self.moveLeftY, 0, 4)
         gridLayout.addWidget(self.moveRightY, 1, 4)
         # Connect these buttons to your movement control functions
@@ -232,8 +253,8 @@ class AttocubeControlGUI(QMainWindow):
         gridLayout.addLayout(gridZLayout, 0, 5)
         gridLayout.addWidget(self.inputCurentZ, 1, 5)
         # Z axis button
-        self.moveLeftZ = QPushButton("<- Z")
-        self.moveRightZ = QPushButton("Z ->")
+        self.moveLeftZ = QPushButton("vv Z")
+        self.moveRightZ = QPushButton("Z ^^")
         gridLayout.addWidget(self.moveLeftZ, 0, 6)
         gridLayout.addWidget(self.moveRightZ, 1, 6)
         # Connect these buttons to your movement control functions
@@ -326,19 +347,61 @@ class AttocubeControlGUI(QMainWindow):
         self.updatePlot()
 
     def updatePlot(self):
-        # Update the plot with the current position
-        # You need to fetch current position from your AttocubeANC300 class
-        x, y, z = self.attocube.position
+        # Fetch current position from your AttocubeANC300 class and add it to history
+        self.updatePlotNumber += 1  # type: ignore
+        current_position = self.attocube.position
+        MAX_HISTORY = 6
+        while len(self.historyPosition) > MAX_HISTORY:
+            self.historyPosition.pop(0)
+
+        # Clear the current figure
         self.figure.clear()
-        ax = self.figure.add_subplot(111, projection="3d")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.set_zlabel("Z")
-        ax.scatter(x, y, z)
-        ax.set_xlim([-100, 100])
-        ax.set_ylim([-100, 100])
-        ax.set_zlim([-100, 100])
+
+        # Create yOz cross-section subplot
+        ax1 = self.figure.add_subplot(121)
+        ax1.set_xlabel("Y")
+        ax1.set_ylabel("Z")
+        ax1.scatter(current_position[1], current_position[2], color="black", marker="x")  # type: ignore
+        if len(self.historyPosition) > 0:
+            # Draw line from last point to current point
+            ax1.plot(
+                [self.historyPosition[-1][1], current_position[1]],
+                [self.historyPosition[-1][2], current_position[2]],
+                color="blue",
+            )
+            ax1.scatter(
+                [history[1] for history in self.historyPosition],
+                [history[2] for history in self.historyPosition],
+                alpha=np.linspace(0.2, 1, len(self.historyPosition)),  # type: ignore
+            )
+        ax1.set_xlim(-100, 100)
+        ax1.set_ylim(-100, 100)
+
+        # Create xOy cross-section subplot
+        ax2 = self.figure.add_subplot(122)
+        ax2.set_xlabel("X")
+        ax2.set_ylabel("Y")
+        ax2.scatter(current_position[0], current_position[1], color="black", marker="x")  # type: ignore
+        if len(self.historyPosition) > 0:
+            # Draw line from last point to current point
+            ax2.plot(
+                [self.historyPosition[-1][0], current_position[0]],
+                [self.historyPosition[-1][1], current_position[1]],
+                color="blue",
+            )
+            ax2.scatter(
+                [history[0] for history in self.historyPosition],
+                [history[1] for history in self.historyPosition],
+                alpha=np.linspace(0.2, 1, len(self.historyPosition)),  # type: ignore
+            )
+        ax2.set_xlim(-100, 100)
+        ax2.set_ylim(-100, 100)
+
+        # Redraw the canvas
         self.canvas.draw()
+        # every 5 times, add current position to history
+        if self.updatePlotNumber % 5 == 0:
+            self.historyPosition.append(current_position)
 
 
 # Main application
