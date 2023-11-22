@@ -35,3 +35,4 @@ class fakeANCController:
         self.axis_x = fakeAxis("X")
         self.axis_y = fakeAxis("Y")
         self.axis_z = fakeAxis("Z")
+        self.version = "fake ANC300"

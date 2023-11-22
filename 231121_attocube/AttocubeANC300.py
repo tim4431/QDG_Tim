@@ -6,13 +6,13 @@ from fake_ancinstance import fakeANCController
 class AttocubeANC300:
     def __init__(self, address: str = "192.168.0.91", commandline=True):
         self.address = address
-        self.anc300 = ANC300Controller(
-            "TCPIP::{:s}::7230::SOCKET".format(self.address),
-            passwd="123456",
-            axisnames=["axis_x", "axis_y", "axis_z"],
-            query_delay=0,
-        )  # type: ignore
-        # self.anc300 = fakeANCController()
+        # self.anc300 = ANC300Controller(
+        #     "TCPIP::{:s}::7230::SOCKET".format(self.address),
+        #     passwd="123456",
+        #     axisnames=["axis_x", "axis_y", "axis_z"], # type: ignore
+        #     query_delay=0,
+        # )  # type: ignore
+        self.anc300 = fakeANCController()
         print(self.anc300.version)
         self.axisX = self.anc300.axis_x
         self.axisY = self.anc300.axis_y
