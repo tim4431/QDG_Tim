@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QHBoxLayout,
     QDialog,
+    QSpinBox,
 )
 from PyQt5.QtCore import QThread, pyqtSignal, Qt
 import sys
@@ -25,13 +26,16 @@ class AttocubeControlGUI(QMainWindow):
         super().__init__()
 
         # Initialize your AttocubeANC300 class here
-        self.attocube = AttocubeANC300(commandline=False, constant_mode=True)
+        self.attocube = AttocubeANC300(commandline=False, constant_mode=False)
         self._x = self.attocube.x  # type: ignore
         self._y = self.attocube.y  # type: ignore
         self._z = self.attocube.z  # type: ignore
         self._last_x = self._x
         self._last_y = self._y
         self._last_z = self._z
+        #
+        self.BOUND_SIZE = 1000
+        self.BOUND_STEP_SIZE = 10
 
         self.movementTimer = QTimer(self)
         self.movementTimer.setInterval(100)
@@ -53,11 +57,11 @@ class AttocubeControlGUI(QMainWindow):
         self.updatePlotNumber = 0
 
         self.initUI()
-        # # set global font
-        # font = self.font()
-        # font.setPointSize(12)
-        # font.setFamily("Arial")
-        # self.setFont(font)
+        # set global font
+        font = self.font()
+        font.setPointSize(10)
+        font.setFamily("Open Sans")
+        self.setFont(font)
 
     @property
     def position(self):
@@ -109,12 +113,12 @@ class AttocubeControlGUI(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle("Attocube ANC300 Controller")
-        self.setGeometry(100, 100, 700, 650)
+        self.setGeometry(100, 100, 700, 750)
 
         def addTitle(text: str):
             label = QLabel(text)
             font = label.font()
-            # font.setFamily("Consolas")
+            # font.setFamily("Arial")
             font.setPointSize(12)
             font.setBold(True)
             label.setFont(font)
@@ -130,7 +134,7 @@ class AttocubeControlGUI(QMainWindow):
         layout.addLayout(self.freq_voltage_layout)
 
         # Movement control buttons
-        addTitle("Movement controls")
+        addTitle("Movement controls (in steps)")
         self.movement_control_layout = QHBoxLayout()
         self.initMovementControls()
         layout.addLayout(self.movement_control_layout)
@@ -163,72 +167,115 @@ class AttocubeControlGUI(QMainWindow):
     def initFreqVoltageControls(self):
         # Create a grid layout
         gridLayout = QGridLayout()
-        # network port number
-        self.labelIP = QLabel("IP address:")
+        labelIP = QLabel("IP Address:")
         self.inputIP = QLineEdit(self)
-        self.inputIP.setText(str(self.attocube.address))  # type: ignore
+        self.inputIP.setText(str(self.attocube.address))
         self.inputIP.editingFinished.connect(self.updateAddress)
-        gridLayout.addWidget(self.labelIP, 0, 0)
-        gridLayout.addWidget(self.inputIP, 1, 0)
+        #
+        self.button_s200a = QPushButton("s200a")
+        self.button_s200a.clicked.connect(self.address_s200a)
+        self.button_s200b = QPushButton("s200b")
+        self.button_s200b.clicked.connect(self.address_s200b)
+
+        gridLayout.addWidget(labelIP, 0, 0)
+        gridLayout.addWidget(self.inputIP, 0, 1)
+        gridLayout.addWidget(self.button_s200a, 1, 0)
+        gridLayout.addWidget(self.button_s200b, 1, 1)
+
+        # connect button & status Label
+        self.connectButton = QPushButton("Connect")
+        self.connectButton.clicked.connect(self.connectAttocube)
+        self.connectedLabel = QLabel("Disconnected")
+        self.connectedLabel.setAlignment(Qt.AlignCenter)  # type: ignore
+        self.connectedLabel.setStyleSheet("color: red")
+        gridLayout.addWidget(self.connectButton, 0, 2)
+        gridLayout.addWidget(self.connectedLabel, 1, 2)
 
         # Example for X axis
-        self.labelFreqX = QLabel("X-axis Freq (Hz):")
+        self.labelFreqX = QLabel("X Freq (Hz):")
         self.inputFreqX = QLineEdit(self)
         self.inputFreqX.setText(str(self.attocube.freq_x))
         self.inputFreqX.editingFinished.connect(self.updateFreqVoltageControls)
-        gridLayout.addWidget(self.labelFreqX, 0, 1)
-        gridLayout.addWidget(self.inputFreqX, 0, 2)
+        gridLayout.addWidget(self.labelFreqX, 0, 3)
+        gridLayout.addWidget(self.inputFreqX, 0, 4)
 
         # Y
-        self.labelFreqY = QLabel("Y-axis Freq (Hz):")
+        self.labelFreqY = QLabel("Y Freq (Hz):")
         self.inputFreqY = QLineEdit(self)
         self.inputFreqY.setText(str(self.attocube.freq_y))
         self.inputFreqY.editingFinished.connect(self.updateFreqVoltageControls)
-        gridLayout.addWidget(self.labelFreqY, 0, 3)
-        gridLayout.addWidget(self.inputFreqY, 0, 4)
+        gridLayout.addWidget(self.labelFreqY, 0, 5)
+        gridLayout.addWidget(self.inputFreqY, 0, 6)
 
         # Z
-        self.labelFreqZ = QLabel("Z-axis Freq (Hz):")
+        self.labelFreqZ = QLabel("Z Freq (Hz):")
         self.inputFreqZ = QLineEdit(self)
         self.inputFreqZ.setText(str(self.attocube.freq_z))
         self.inputFreqZ.editingFinished.connect(self.updateFreqVoltageControls)
-        gridLayout.addWidget(self.labelFreqZ, 0, 5)
-        gridLayout.addWidget(self.inputFreqZ, 0, 6)
+        gridLayout.addWidget(self.labelFreqZ, 0, 7)
+        gridLayout.addWidget(self.inputFreqZ, 0, 8)
 
         # Add similar widgets for voltage
         # X
-        self.labelVoltageX = QLabel("X-axis Volt (V):")
+        self.labelVoltageX = QLabel("X Volt (V):")
         self.inputVoltageX = QLineEdit(self)
         self.inputVoltageX.setText(str(self.attocube.volt_x))
         self.inputVoltageX.editingFinished.connect(self.updateFreqVoltageControls)
-        gridLayout.addWidget(self.labelVoltageX, 1, 1)
-        gridLayout.addWidget(self.inputVoltageX, 1, 2)
+        gridLayout.addWidget(self.labelVoltageX, 1, 3)
+        gridLayout.addWidget(self.inputVoltageX, 1, 4)
 
         # Y
-        self.labelVoltageY = QLabel("Y-axis Volt (V):")
+        self.labelVoltageY = QLabel("Y Volt (V):")
         self.inputVoltageY = QLineEdit(self)
         self.inputVoltageY.setText(str(self.attocube.volt_y))
         self.inputVoltageY.editingFinished.connect(self.updateFreqVoltageControls)
-        gridLayout.addWidget(self.labelVoltageY, 1, 3)
-        gridLayout.addWidget(self.inputVoltageY, 1, 4)
+        gridLayout.addWidget(self.labelVoltageY, 1, 5)
+        gridLayout.addWidget(self.inputVoltageY, 1, 6)
 
         # Z
-        self.labelVoltageZ = QLabel("Z-axis Volt (V):")
+        self.labelVoltageZ = QLabel("Z Volt (V):")
         self.inputVoltageZ = QLineEdit(self)
         self.inputVoltageZ.setText(str(self.attocube.volt_z))
         self.inputVoltageZ.editingFinished.connect(self.updateFreqVoltageControls)
-        gridLayout.addWidget(self.labelVoltageZ, 1, 5)
-        gridLayout.addWidget(self.inputVoltageZ, 1, 6)
+        gridLayout.addWidget(self.labelVoltageZ, 1, 7)
+        gridLayout.addWidget(self.inputVoltageZ, 1, 8)
 
         # Set the layout for the frequency and voltage controls
-        gridLayout.setColumnStretch(0, 3)
-        gridLayout.setColumnStretch(1, 1)
+        gridLayout.setColumnStretch(0, 2)
+        gridLayout.setColumnStretch(1, 2)
         gridLayout.setColumnStretch(2, 1)
         gridLayout.setColumnStretch(3, 1)
         gridLayout.setColumnStretch(4, 1)
         gridLayout.setColumnStretch(5, 1)
         gridLayout.setColumnStretch(6, 1)
+        gridLayout.setColumnStretch(7, 1)
+        gridLayout.setColumnStretch(8, 1)
         self.freq_voltage_layout.addLayout(gridLayout)
+
+    def address_s200a(self):
+        self.attocube.address = "192.168.0.101"
+        self.inputIP.setText(str(self.attocube.address))
+
+    def address_s200b(self):
+        self.attocube.address = "192.168.0.91"
+        self.inputIP.setText(str(self.attocube.address))
+
+    def connectAttocube(self):
+        self.connectedLabel.setText("Connecting...")
+        self.connectedLabel.setStyleSheet("color: blue")
+        QApplication.processEvents()
+        #
+        self.attocube.init_Controller()
+        #
+        if self.attocube.connected:
+            self.connectedLabel.setText("Connected")
+            self.connectedLabel.setStyleSheet("color: green")
+            self.displayFreqVoltageControls()
+        else:
+            self.connectedLabel.setText("Disconnected")
+            self.connectedLabel.setStyleSheet("color: red")
+        #
+        QApplication.processEvents()
 
     def updateAddress(self):
         new_address = str(self.inputIP.text())
@@ -239,26 +286,28 @@ class AttocubeControlGUI(QMainWindow):
         # X
         new_freq_x = int(self.inputFreqX.text())
         self.attocube.freq_x = new_freq_x
-        self.inputFreqX.setText(str(self.attocube.freq_x))
         # Y
         new_freq_y = int(self.inputFreqY.text())
         self.attocube.freq_y = new_freq_y
-        self.inputFreqY.setText(str(self.attocube.freq_y))
         # Z
         new_freq_z = int(self.inputFreqZ.text())
         self.attocube.freq_z = new_freq_z
-        self.inputFreqZ.setText(str(self.attocube.freq_z))
         # X
         new_volt_x = float(self.inputVoltageX.text())
         self.attocube.volt_x = new_volt_x
-        self.inputVoltageX.setText(str(self.attocube.volt_x))
         # Y
         new_volt_y = float(self.inputVoltageY.text())
         self.attocube.volt_y = new_volt_y
-        self.inputVoltageY.setText(str(self.attocube.volt_y))
         # Z
         new_volt_z = float(self.inputVoltageZ.text())
         self.attocube.volt_z = new_volt_z
+
+    def displayFreqVoltageControls(self):
+        self.inputFreqX.setText(str(self.attocube.freq_x))
+        self.inputFreqY.setText(str(self.attocube.freq_y))
+        self.inputFreqZ.setText(str(self.attocube.freq_z))
+        self.inputVoltageX.setText(str(self.attocube.volt_x))
+        self.inputVoltageY.setText(str(self.attocube.volt_y))
         self.inputVoltageZ.setText(str(self.attocube.volt_z))
 
     def initMovementControls(self):
@@ -266,35 +315,41 @@ class AttocubeControlGUI(QMainWindow):
         # self.centralWidget = QWidget()
         # self.setCentralWidget(self.centralWidget)
 
-        # Add a lock status button, if pressed the movement is locked
-        lockWidget = QWidget()
-        lockLayout = QVBoxLayout(lockWidget)
-        lockLabel = QLabel("Movement Lock")
-        self.lockButton = QPushButton("Lock")
-        self.lockButton.setCheckable(True)
-        self.lockButton.clicked.connect(self.lockMovement)
-        lockLayout.addWidget(lockLabel)
-        lockLayout.addWidget(self.lockButton)
-        # vertical alignment
-        lockLayout.setAlignment(Qt.AlignCenter)  # type: ignore
-        controlLayout.addWidget(lockWidget)
-
         # Z axis buttons
         ZcontrolWidget = QWidget()
-        ZcontrolLayout = QVBoxLayout(ZcontrolWidget)
+        ZcontrolLayout = QGridLayout(ZcontrolWidget)
         self.moveLeftZ = QPushButton("Z-- (d)")
         self.moveRightZ = QPushButton("Z++ (u)")
-        ZcontrolLayout.addWidget(self.moveRightZ)
-        ZcontrolLayout.addWidget(self.moveLeftZ)
-        controlLayout.addWidget(ZcontrolWidget)
+        labelCurrentZ = QLabel("Z:")
+        self.inputCurrentZ = QLineEdit(self)
+        self.inputCurrentZ.setText(str(self.attocube.z))
+        self.inputCurrentZ.editingFinished.connect(self.updateFromText)
+        labelBoundZmin = QLabel("Z min:")
+        self.inputBoundZmin = QSpinBox(self)
+        self.inputBoundZmin.setRange(-self.BOUND_SIZE, self.BOUND_SIZE)
+        self.inputBoundZmin.setSingleStep(self.BOUND_STEP_SIZE)
+        self.inputBoundZmin.setValue(self.attocube.zmin)
+        self.inputBoundZmin.editingFinished.connect(self.updateBound)
+        labelBoundZmax = QLabel("Z max:")
+        self.inputBoundZmax = QSpinBox(self)
+        self.inputBoundZmax.setRange(-self.BOUND_SIZE, self.BOUND_SIZE)
+        self.inputBoundZmax.setSingleStep(self.BOUND_STEP_SIZE)
+        self.inputBoundZmax.setValue(self.attocube.zmax)
+        self.inputBoundZmax.editingFinished.connect(self.updateBound)
+        #
+        ZcontrolLayout.addWidget(self.moveRightZ, 0, 0, 1, 2)
+        ZcontrolLayout.addWidget(labelBoundZmax, 1, 0)
+        ZcontrolLayout.addWidget(self.inputBoundZmax, 1, 1)
+        ZcontrolLayout.addWidget(labelCurrentZ, 2, 0)
+        ZcontrolLayout.addWidget(self.inputCurrentZ, 2, 1)
+        ZcontrolLayout.addWidget(labelBoundZmin, 3, 0)
+        ZcontrolLayout.addWidget(self.inputBoundZmin, 3, 1)
+        ZcontrolLayout.addWidget(self.moveLeftZ, 4, 0, 1, 2)
         # the keyboard u is for Z++
         # the keyboard d is for Z--
         self.moveLeftZ.setShortcut(Qt.Key_D)  # type: ignore
         self.moveRightZ.setShortcut(Qt.Key_U)  # type: ignore
 
-        # Ring layout for X and Y axis control
-        ringWidget = QWidget()
-        ringLayout = QGridLayout(ringWidget)
         # X and Y axis buttons
         self.moveLeftX = QPushButton("X-- (<)")
         self.moveRightX = QPushButton("X++ (>)")
@@ -309,39 +364,90 @@ class AttocubeControlGUI(QMainWindow):
         self.moveLeftY.setShortcut(Qt.Key_Down)  # type: ignore
         self.moveRightY.setShortcut(Qt.Key_Up)  # type: ignore
 
-        # Add X and Y axis buttons to the ring layout
-        ringLayout.addWidget(self.moveLeftX, 1, 0)
-        ringLayout.addWidget(self.moveRightX, 1, 2)
-        ringLayout.addWidget(self.moveLeftY, 2, 1)
-        ringLayout.addWidget(self.moveRightY, 0, 1)
-
         # Current X, Y, Z values display
         # self.currentXYZDisplay = QLabel("X: 0, Y: 0, Z: 0")
         # self.currentXYZDisplay.setAlignment(Qt.AlignCenter)  # type: ignore
-        positionWidget = QWidget()
-        positionLayout = QGridLayout(positionWidget)
-        self.labelCurrentX = QLabel("X:")
+        labelCurrentX = QLabel("X:")
         self.inputCurrentX = QLineEdit(self)
         self.inputCurrentX.setText(str(self.attocube.x))
         self.inputCurrentX.editingFinished.connect(self.updateFromText)
-        self.labelCurrentY = QLabel("Y:")
+        labelBoundXmax = QLabel("X max:")
+        self.inputBoundXmax = QSpinBox(self)
+        self.inputBoundXmax.setRange(-self.BOUND_SIZE, self.BOUND_SIZE)
+        self.inputBoundXmax.setSingleStep(self.BOUND_STEP_SIZE)
+        self.inputBoundXmax.setValue(self.attocube.xmax)
+        self.inputBoundXmax.editingFinished.connect(self.updateBound)
+        labelBoundXmin = QLabel("X min:")
+        self.inputBoundXmin = QSpinBox(self)
+        self.inputBoundXmin.setRange(-self.BOUND_SIZE, self.BOUND_SIZE)
+        self.inputBoundXmin.setSingleStep(self.BOUND_STEP_SIZE)
+        self.inputBoundXmin.setValue(self.attocube.xmin)
+        self.inputBoundXmin.editingFinished.connect(self.updateBound)
+        #
+        labelCurrentY = QLabel("Y:")
         self.inputCurrentY = QLineEdit(self)
         self.inputCurrentY.setText(str(self.attocube.y))
         self.inputCurrentY.editingFinished.connect(self.updateFromText)
-        self.labelCurrentZ = QLabel("Z:")
-        self.inputCurrentZ = QLineEdit(self)
-        self.inputCurrentZ.setText(str(self.attocube.z))
-        self.inputCurrentZ.editingFinished.connect(self.updateFromText)
-        positionLayout.addWidget(self.labelCurrentX, 0, 0)
+        labelBoundYmax = QLabel("Y max:")
+        self.inputBoundYmax = QSpinBox(self)
+        self.inputBoundYmax.setRange(-self.BOUND_SIZE, self.BOUND_SIZE)
+        self.inputBoundYmax.setSingleStep(self.BOUND_STEP_SIZE)
+        self.inputBoundYmax.setValue(self.attocube.ymax)
+        self.inputBoundYmax.editingFinished.connect(self.updateBound)
+        labelBoundYmin = QLabel("Y min:")
+        self.inputBoundYmin = QSpinBox(self)
+        self.inputBoundYmin.setRange(-self.BOUND_SIZE, self.BOUND_SIZE)
+        self.inputBoundYmin.setSingleStep(self.BOUND_STEP_SIZE)
+        self.inputBoundYmin.setValue(self.attocube.ymin)
+        self.inputBoundYmin.editingFinished.connect(self.updateBound)
+        #
+        positionWidget = QWidget()
+        positionLayout = QGridLayout(positionWidget)
+        positionLayout.setSpacing(2)  # Set the spacing between widgets to 2 pixels
+        positionLayout.addWidget(labelCurrentX, 0, 0)
         positionLayout.addWidget(self.inputCurrentX, 0, 1)
-        positionLayout.addWidget(self.labelCurrentY, 1, 0)
+        positionLayout.addWidget(labelCurrentY, 1, 0)
         positionLayout.addWidget(self.inputCurrentY, 1, 1)
-        positionLayout.addWidget(self.labelCurrentZ, 2, 0)
-        positionLayout.addWidget(self.inputCurrentZ, 2, 1)
+        #
+        XLeftWidget = QWidget()
+        XLeftLayout = QGridLayout(XLeftWidget)
+        XLeftLayout.setSpacing(2)  # Set the spacing between widgets to 2 pixels
+        XLeftLayout.addWidget(self.moveLeftX, 0, 0, 1, 2)
+        XLeftLayout.addWidget(labelBoundXmin, 1, 0)
+        XLeftLayout.addWidget(self.inputBoundXmin, 1, 1)
+        #
+        XRightWidget = QWidget()
+        XRightLayout = QGridLayout(XRightWidget)
+        XRightLayout.setSpacing(2)  # Set the spacing between widgets to 2 pixels
+        XRightLayout.addWidget(self.moveRightX, 0, 0, 1, 2)
+        XRightLayout.addWidget(labelBoundXmax, 1, 0)
+        XRightLayout.addWidget(self.inputBoundXmax, 1, 1)
+        #
+        YLeftWidget = QWidget()
+        YLeftLayout = QGridLayout(YLeftWidget)
+        YLeftLayout.setSpacing(2)  # Set the spacing between widgets to 2 pixels
+        YLeftLayout.addWidget(self.moveLeftY, 0, 0, 1, 2)
+        YLeftLayout.addWidget(labelBoundYmin, 1, 0)
+        YLeftLayout.addWidget(self.inputBoundYmin, 1, 1)
+        #
+        YRightWidget = QWidget()
+        YRightLayout = QGridLayout(YRightWidget)
+        YRightLayout.setSpacing(2)  # Set the spacing between widgets to 2 pixels
+        YRightLayout.addWidget(self.moveRightY, 0, 0, 1, 2)
+        YRightLayout.addWidget(labelBoundYmax, 1, 0)
+        YRightLayout.addWidget(self.inputBoundYmax, 1, 1)
+        #
+        ringWidget = QWidget()
+        ringLayout = QGridLayout(ringWidget)
+        ringLayout.addWidget(XLeftWidget, 1, 0)
+        ringLayout.addWidget(XRightWidget, 1, 2)
         ringLayout.addWidget(positionWidget, 1, 1)
-        ringLayout.setColumnStretch(1, 1)
-        ringLayout.setColumnStretch(0, 1)
-        ringLayout.setColumnStretch(2, 1)
+        ringLayout.addWidget(YRightWidget, 0, 1)
+        ringLayout.addWidget(YLeftWidget, 2, 1)
+        #
+        # ringLayout.setColumnStretch(1, 1)
+        # ringLayout.setColumnStretch(0, 1)
+        # ringLayout.setColumnStretch(2, 1)
 
         # goto to zero buttons
         self.gotozeroX = QPushButton("X = 0")
@@ -358,6 +464,10 @@ class AttocubeControlGUI(QMainWindow):
         zeroLayout.addWidget(self.setOrigin)
 
         # Status label
+        lockLabel = QLabel("Movement Lock")
+        self.lockButton = QPushButton("Lock")
+        self.lockButton.setCheckable(True)
+        self.lockButton.clicked.connect(self.lockMovement)
         self.statusLabel = QLabel("Status:")
         self.statusLabel.setAlignment(Qt.AlignCenter)  # type: ignore
         self.statusText = QLabel("Idle")
@@ -371,16 +481,19 @@ class AttocubeControlGUI(QMainWindow):
 
         statusWidget = QWidget()
         statusLayout = QVBoxLayout(statusWidget)
+        statusLayout.addWidget(lockLabel)
+        statusLayout.addWidget(self.lockButton)
         statusLayout.addWidget(self.statusLabel)
         statusLayout.addWidget(self.statusText)
         statusLayout.addWidget(self.movestatusLabel)
         statusLayout.addWidget(self.movestatusText)
+        statusLayout.setAlignment(Qt.AlignCenter)  # type: ignore
 
         # Add the ring widget and zeroLayout to the main layout
+        controlLayout.addWidget(statusWidget)
         controlLayout.addWidget(ZcontrolWidget)
         controlLayout.addWidget(ringWidget)
         controlLayout.addWidget(zeroWidget)
-        controlLayout.addWidget(statusWidget)
 
         # Applying the layout to the main widget
         # self.centralWidget.setLayout(controlLayout)
@@ -416,6 +529,21 @@ class AttocubeControlGUI(QMainWindow):
         self.gotoZeroZ.clicked.connect(lambda: self.goto_zero("Z"))
         self.gotoOrigin.clicked.connect(self.goto_origin)
         self.setOrigin.clicked.connect(self.set_origin)
+
+    def updateBound(self):
+        self.attocube.xmin = min(int(self.inputBoundXmin.value()), self.attocube.xmax)
+        self.inputBoundXmin.setValue(self.attocube.xmin)
+        self.attocube.xmax = max(int(self.inputBoundXmax.value()), self.attocube.xmin)
+        self.inputBoundXmax.setValue(self.attocube.xmax)
+        self.attocube.ymin = min(int(self.inputBoundYmin.value()), self.attocube.ymax)
+        self.inputBoundYmin.setValue(self.attocube.ymin)
+        self.attocube.ymax = max(int(self.inputBoundYmax.value()), self.attocube.ymin)
+        self.inputBoundYmax.setValue(self.attocube.ymax)
+        self.attocube.zmin = min(int(self.inputBoundZmin.value()), self.attocube.zmax)
+        self.inputBoundZmin.setValue(self.attocube.zmin)
+        self.attocube.zmax = max(int(self.inputBoundZmax.value()), self.attocube.zmin)
+        self.inputBoundZmax.setValue(self.attocube.zmax)
+        self.updatePlot()
 
     def lockMovement(self):
         self._locked_movement = self.lockButton.isChecked()
@@ -526,7 +654,7 @@ class AttocubeControlGUI(QMainWindow):
         return success
 
     def updatePlot(self):
-        FIG_SIZE = 1000
+        FIG_SIZE = 1200
         # Fetch current position from your AttocubeANC300 class and add it to history
         self.updatePlotNumber += 1  # type: ignore
         current_position = self.attocube.position
@@ -539,6 +667,9 @@ class AttocubeControlGUI(QMainWindow):
 
         # Create yOz cross-section subplot
         ax1 = self.figure.add_subplot(121)
+        # set wspace
+        self.figure.subplots_adjust(wspace=0.5)
+
         ax1.set_xlabel("Y")
         ax1.set_ylabel("Z")
         if len(self.historyPosition) > 0:
@@ -554,6 +685,10 @@ class AttocubeControlGUI(QMainWindow):
                 alpha=np.linspace(0.2, 0.8, len(self.historyPosition)),  # type: ignore
             )
         ax1.scatter(current_position[1], current_position[2], color="black", marker="x")  # type: ignore
+        ax1.axhline(y=self.attocube.zmin, color="red", linestyle="--")  # type: ignore
+        ax1.axhline(y=self.attocube.zmax, color="red", linestyle="--")
+        ax1.axvline(x=self.attocube.ymin, color="red", linestyle="--")
+        ax1.axvline(x=self.attocube.ymax, color="red", linestyle="--")
         ax1.set_xlim(-FIG_SIZE / 2, FIG_SIZE / 2)
         ax1.set_ylim(-FIG_SIZE / 2, FIG_SIZE / 2)
 
@@ -574,6 +709,10 @@ class AttocubeControlGUI(QMainWindow):
                 alpha=np.linspace(0.2, 0.8, len(self.historyPosition)),  # type: ignore
             )
         ax2.scatter(current_position[0], current_position[1], color="black", marker="x")  # type: ignore
+        ax2.axhline(y=self.attocube.ymin, color="red", linestyle="--")
+        ax2.axhline(y=self.attocube.ymax, color="red", linestyle="--")
+        ax2.axvline(x=self.attocube.xmin, color="red", linestyle="--")
+        ax2.axvline(x=self.attocube.xmax, color="red", linestyle="--")
         ax2.set_xlim(-FIG_SIZE / 2, FIG_SIZE / 2)
         ax2.set_ylim(-FIG_SIZE / 2, FIG_SIZE / 2)
 

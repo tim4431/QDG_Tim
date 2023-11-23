@@ -10,20 +10,10 @@ class AttocubeANC300:
     ):
         self.constant_mode = constant_mode
         self.address = address
-        # self.anc300 = ANC300Controller(
-        #     "TCPIP::{:s}::7230::SOCKET".format(self.address),
-        #     passwd="123456",
-        #     axisnames=["axis_x", "axis_y", "axis_z"], # type: ignore
-        #     query_delay=0,
-        # )  # type: ignore
-        self.anc300 = fakeANCController()
-        print(self.anc300.version)
-        self.axisX = self.anc300.axis_x
-        self.axisY = self.anc300.axis_y
-        self.axisZ = self.anc300.axis_z
+        self.connected = False
         self._commandline = commandline
+        self.init_Controller(fake=True)
         #
-        self.displace_limit = [100, 600, 600]
         self._x = int(0)  # read only
         self._y = int(0)  # read only
         self._z = int(0)  # read only
@@ -34,6 +24,14 @@ class AttocubeANC300:
         if constant_mode:
             self.constant_move_to_target()
         #
+        self.displace_limit = [500, 500, 500]
+        self.xmin = -self.displace_limit[0]
+        self.xmax = self.displace_limit[0]
+        self.ymin = -self.displace_limit[1]
+        self.ymax = self.displace_limit[1]
+        self.zmin = -self.displace_limit[2]
+        self.zmax = self.displace_limit[2]
+        #
         self.freq_x = 500
         self.freq_y = 500
         self.freq_z = 500
@@ -41,6 +39,25 @@ class AttocubeANC300:
         self.volt_y = 30
         self.volt_z = 30
         #
+
+    def init_Controller(self, fake=False):
+        if fake:
+            self.anc300 = fakeANCController()
+        else:
+            try:
+                self.anc300 = ANC300Controller(
+                    "TCPIP::{:s}::7230::SOCKET".format(self.address),
+                    passwd="123456",
+                    axisnames=["axis_x", "axis_y", "axis_z"],  # type: ignore
+                    query_delay=0,
+                )  # type: ignore
+                self.connected = True
+            except Exception as e:
+                print(e)
+                self.connected = False
+        self.axisX = self.anc300.axis_x
+        self.axisY = self.anc300.axis_y
+        self.axisZ = self.anc300.axis_z
 
     @property
     def x(self):
@@ -131,8 +148,11 @@ class AttocubeANC300:
         - True: continue
         - False: stop
         """
-        MAX_STEP = {"X": 100, "Y": 600, "Z": 200}
-        if abs(steps) > MAX_STEP[axis_name]:
+        current_position = getattr(self, axis_name.lower())
+        next_position = current_position + steps
+        boundmax = getattr(self, axis_name.lower() + "max")
+        boundmin = getattr(self, axis_name.lower() + "min")
+        if next_position > boundmax or next_position < boundmin:
             if not force_move and self._commandline:
                 a = input(
                     "Warning: steps {:s} = {:d} is too large, continue? (y/n)".format(
@@ -155,7 +175,7 @@ class AttocubeANC300:
     def _perform_move_x(self, steps: int, force_move=False):
         if steps == 0:
             return True
-        if force_move or self.check_steps("X", steps):
+        if force_move or self.check_steps("x", steps):
             self.axisX.move(steps)
             self._x += steps
             return True
@@ -165,7 +185,7 @@ class AttocubeANC300:
     def _perform_move_y(self, steps: int, force_move=False):
         if steps == 0:
             return True
-        if force_move or self.check_steps("Y", steps):
+        if force_move or self.check_steps("y", steps):
             self.axisY.move(steps)
             self._y += steps
             return True
@@ -175,7 +195,7 @@ class AttocubeANC300:
     def _perform_move_z(self, steps: int, force_move=False):
         if steps == 0:
             return True
-        if force_move or self.check_steps("Z", steps):
+        if force_move or self.check_steps("z", steps):
             self.axisZ.move(steps)
             self._z += steps
             return True
