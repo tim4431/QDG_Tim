@@ -205,8 +205,15 @@ class AttocubeANC300:
             self.move_to_target(**kwargs)
 
     def constant_move_to_target(self):
-        thread = threading.Thread(target=self._constant_move_to_target)
-        thread.start()
+        self._thread = threading.Thread(target=self._constant_move_to_target)
+        self._thread.start()
+
+    def stop_constant_move(self):
+        # kill the thread
+        self._thread.join()
+
+    def __del__(self):
+        self.stop_constant_move()
 
     # def stop(self):
     #     self.anc300.stop_all()
@@ -236,7 +243,7 @@ if __name__ == "__main__":
     ###
     # constant move
     anc300.constant_move_to_target()
-    for i in range(10):
+    for i in range(1):
         anc300.x_tar += 10
         anc300.y_tar -= 10
         time.sleep(0.1)
