@@ -25,7 +25,7 @@ class AttocubeControlGUI(QMainWindow):
         super().__init__()
 
         # Initialize your AttocubeANC300 class here
-        self.attocube = AttocubeANC300(commandline=False)
+        self.attocube = AttocubeANC300(commandline=False, constant_mode=True)
         self._x = self.attocube.x  # type: ignore
         self._y = self.attocube.y  # type: ignore
         self._z = self.attocube.z  # type: ignore
@@ -148,6 +148,17 @@ class AttocubeControlGUI(QMainWindow):
 
         # Update plot
         self.updatePlot()
+
+    def closeApplication(self):
+        # Stop the thread here
+        self.attocube.stop_constant_move()
+        # Exit the application
+        QApplication.quit()
+
+    def closeEvent(self, event):
+        # Call the close application method
+        self.closeApplication()
+        event.accept()
 
     def initFreqVoltageControls(self):
         # Create a grid layout
@@ -508,6 +519,7 @@ class AttocubeControlGUI(QMainWindow):
 
     def attocube_move(self, force_move=False):
         success = self.attocube.move_to(self.x, self.y, self.z, force_move=force_move)  # type: ignore
+        # success = self.attocube.set_target(self.x, self.y, self.z, force_move=force_move)  # type: ignore
         self.inputCurrentX.setText(str(int(self.attocube.x)))
         self.inputCurrentY.setText(str(int(self.attocube.y)))
         self.inputCurrentZ.setText(str(int(self.attocube.z)))

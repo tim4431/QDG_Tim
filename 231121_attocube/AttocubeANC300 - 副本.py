@@ -5,10 +5,7 @@ import time
 
 
 class AttocubeANC300:
-    def __init__(
-        self, address: str = "192.168.0.91", commandline=True, constant_mode=False
-    ):
-        self.constant_mode = constant_mode
+    def __init__(self, address: str = "192.168.0.91", commandline=True):
         self.address = address
         # self.anc300 = ANC300Controller(
         #     "TCPIP::{:s}::7230::SOCKET".format(self.address),
@@ -30,9 +27,6 @@ class AttocubeANC300:
         self.x_tar = int(0)  # read-write
         self.y_tar = int(0)  # read-write
         self.z_tar = int(0)  # read-write
-        self._constant_running = False
-        if constant_mode:
-            self.constant_move_to_target()
         #
         self.freq_x = 500
         self.freq_y = 500
@@ -153,8 +147,6 @@ class AttocubeANC300:
             return True
 
     def _perform_move_x(self, steps: int, force_move=False):
-        if steps == 0:
-            return True
         if force_move or self.check_steps("X", steps):
             self.axisX.move(steps)
             self._x += steps
@@ -163,8 +155,6 @@ class AttocubeANC300:
             return False
 
     def _perform_move_y(self, steps: int, force_move=False):
-        if steps == 0:
-            return True
         if force_move or self.check_steps("Y", steps):
             self.axisY.move(steps)
             self._y += steps
@@ -173,8 +163,6 @@ class AttocubeANC300:
             return False
 
     def _perform_move_z(self, steps: int, force_move=False):
-        if steps == 0:
-            return True
         if force_move or self.check_steps("Z", steps):
             self.axisZ.move(steps)
             self._z += steps
@@ -205,31 +193,27 @@ class AttocubeANC300:
         self.target = (x, y, z)
         return self.move_to_target(**kwargs)
 
-    def set_target(self, x: int, y: int, z: int, **kwargs):
-        self.target = (x, y, z)
-        return True
-
     def move_to_target(self, **kwargs):
         return (
-            self._perform_move_x(self.x_tar - self._x, **kwargs)
-            and self._perform_move_y(self.y_tar - self._y, **kwargs)
-            and self._perform_move_z(self.z_tar - self._z, **kwargs)
+            self.move_x(self.x_tar - self._x, **kwargs)
+            and self.move_y(self.y_tar - self._y, **kwargs)
+            and self.move_z(self.z_tar - self._z, **kwargs)
         )
 
     def _constant_move_to_target(self, **kwargs):
-        while self._constant_running:
-            time.sleep(0.01)
+        while 1:
             self.move_to_target(**kwargs)
 
     def constant_move_to_target(self):
-        self._constant_running = True
         self._thread = threading.Thread(target=self._constant_move_to_target)
         self._thread.start()
 
     def stop_constant_move(self):
-        if self.constant_mode:
-            self._constant_running = False
-            self._thread.join()
+        # kill the thread
+        self._thread.join()
+
+    def __del__(self):
+        self.stop_constant_move()
 
     # def stop(self):
     #     self.anc300.stop_all()
@@ -251,20 +235,15 @@ if __name__ == "__main__":
     # anc300.freq_x = 90  # set frequency on X axis to 1000 Hz
     ###
     # repeatability test
-    for i in range(10):
-        anc300.freq_y = 500
-        anc300.move_y(500)
-        anc300.freq_y = 2000
-        anc300.move_y(-500)
+    # for i in range(10):
+    #     anc300.freq_y = 500
+    #     anc300.move_y(500)
+    #     anc300.freq_y = 2000
+    #     anc300.move_y(-500)
     ###
     # constant move
-    # anc300.constant_move_to_target()
-    # for i in range(1):
-    #     anc300.x_tar += 10
-    #     anc300.y_tar -= 10
-    #     time.sleep(0.1)
-    # print(anc300.target)
-    # time.sleep(1)
-    # anc300.stop_constant_move()
-    # print(anc300.position)
-    # print(anc300.target)
+    anc300.constant_move_to_target()
+    for i in range(1):
+        anc300.x_tar += 10
+        anc300.y_tar -= 10
+        time.sleep(0.1)
