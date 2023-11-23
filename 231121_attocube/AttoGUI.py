@@ -113,7 +113,7 @@ class AttocubeControlGUI(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle("Attocube ANC300 Controller")
-        self.setGeometry(100, 100, 700, 750)
+        self.setGeometry(50, 50, 700, 800)
 
         def addTitle(text: str):
             label = QLabel(text)
