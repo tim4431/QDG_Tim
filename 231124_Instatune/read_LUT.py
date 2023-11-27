@@ -1,43 +1,33 @@
 import csv
 
 
-def read_nearest_wavelength(file_path, target_wavelength):
-    with open(file_path, "r") as file:
-        reader = csv.DictReader(file)
-        nearest_row = {}
-        min_difference = float("inf")
+import numpy as np
 
-        for row in reader:
-            wavelength = float(row["WL Target"])
-            difference = abs(wavelength - target_wavelength)
-            if difference < min_difference:
-                min_difference = difference
-                nearest_row = row
+def read_nearest_wavelength(file_path, target_wavelengths):
+    data = np.genfromtxt(file_path, delimiter=',', skip_header=1)
+    FM_DAC = data[:,1]
+    BM_DAC = data[:,2]
+    PH_DAC = data[:,3]
+    SOA_DAC = data[:,4]
+    WL_Target = data[:,5]
 
-        # return nearest_row
-        # (Front Mirror, Back Mirror, Phase, SOA)
-        FM_DAC = float(nearest_row["FM DAC"])
-        BM_DAC = float(nearest_row["BM DAC"])
-        PH_DAC = float(nearest_row["PH DAC"])
-        SOA_DAC = float(nearest_row["SOA DAC"])
-        WL_Target = float(nearest_row["WL Target"])
-        if abs(WL_Target - target_wavelength) > 0.1:
-            raise ValueError(
-                "Nearest wavelength {:.4f} is too far from target wavelength {:.4f}"
-            )
+    vals=[]
+    for target_wavelength in target_wavelengths:
+        nearest_index = np.argmin(np.abs(WL_Target - target_wavelength))
+        nearest_row = data[nearest_index]
+        if np.abs(WL_Target[nearest_index] - target_wavelength) > 0.1:
+            raise ValueError("Nearest wavelength {:.4f} is too far from target wavelength {:.4f}".format(WL_Target[nearest_index], target_wavelength))
         else:
-            print("Find nearest wavelength {:.4f}".format(WL_Target))
-        return (FM_DAC, BM_DAC, PH_DAC, SOA_DAC)
+            print("Find nearest wavelength {:.4f}".format(nearest_row[5]))
+            val = (FM_DAC[nearest_index], BM_DAC[nearest_index], PH_DAC[nearest_index], SOA_DAC[nearest_index])
+            vals.append(val)
+    return vals
 
 
 def read_LUT(wavelength_list):
     lut = []
     file_path = "./DJ133_LUT_0v0.csv"
-    for wavelength in wavelength_list:
-        nearest_row = read_nearest_wavelength(file_path, wavelength)
-        # print(nearest_row)
-        lut.append(nearest_row)
-    return lut
+    return read_nearest_wavelength(file_path, wavelength_list)
 
 
 if __name__ == "__main__":
