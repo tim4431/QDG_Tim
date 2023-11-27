@@ -19,7 +19,7 @@ def read_nearest_wavelength(file_path, target_wavelengths):
             raise ValueError("Nearest wavelength {:.4f} is too far from target wavelength {:.4f}".format(WL_Target[nearest_index], target_wavelength))
         else:
             print("Find nearest wavelength {:.4f}".format(nearest_row[5]))
-            val = (FM_DAC[nearest_index], BM_DAC[nearest_index], PH_DAC[nearest_index], SOA_DAC[nearest_index])
+            val = (int(FM_DAC[nearest_index]), int(BM_DAC[nearest_index]), int(PH_DAC[nearest_index]), int(SOA_DAC[nearest_index]))
             vals.append(val)
     return vals
 

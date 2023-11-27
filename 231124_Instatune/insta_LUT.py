@@ -5,6 +5,7 @@ import struct
 
 
 def write_command_packet(register_address, write_value):
+    print(type(write_value))
     byte0 = 0x80 | register_address  # 0x80 for Write operation
     byte1 = (write_value >> 8) & 0xFF  # MSB
     byte2 = write_value & 0xFF  # LSB
