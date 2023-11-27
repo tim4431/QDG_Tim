@@ -32,7 +32,7 @@ def read_nearest_wavelength(file_path, target_wavelength):
 
 def read_LUT(wavelength_list):
     lut = []
-    file_path = "/home/tim/Code/QDG_Tim/231124_Instatune/DJ133_LUT_0v0.csv"
+    file_path = "./DJ133_LUT_0v0.csv"
     for wavelength in wavelength_list:
         nearest_row = read_nearest_wavelength(file_path, wavelength)
         # print(nearest_row)
