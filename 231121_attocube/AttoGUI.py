@@ -8,16 +8,16 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QHBoxLayout,
     QDialog,
+    QGridLayout,
     QSpinBox,
 )
-from PyQt5.QtCore import QThread, pyqtSignal, Qt
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QThread, pyqtSignal, Qt, QTimer
 import sys
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from AttocubeANC300 import AttocubeANC300
-from PyQt5.QtWidgets import QGridLayout
 import time
-from PyQt5.QtCore import QTimer
 import numpy as np
 
 
@@ -141,9 +141,34 @@ class AttocubeControlGUI(QMainWindow):
 
         # Plot for current position
         addTitle("Current position")
+        # add two pictures here for demonstration
+        self.pic_layout = QHBoxLayout()
+        # load the picture /assets/fiber_xOy.png
+        pic_xOy = QLabel()
+        pic_xOy.setPixmap(QPixmap("./assets/fiber_xOy.png"))
+        pic_xOy.setScaledContents(True)
+        pic_xOy.setFixedHeight(60)
+        pic_xOy.setFixedWidth(200)
+        pic_xOy.setAlignment(Qt.AlignCenter)  # type: ignore
+        #
+        pic_yOz = QLabel()
+        pic_yOz.setPixmap(QPixmap("./assets/fiber_yOz.png"))
+        pic_yOz.setScaledContents(True)
+        pic_yOz.setFixedHeight(60)
+        pic_yOz.setFixedWidth(120)
+        pic_yOz.setAlignment(Qt.AlignCenter)  # type: ignore
+        #
+        self.pic_layout.addWidget(pic_yOz)
+        self.pic_layout.addWidget(pic_xOy)
+        #
+        layout.addLayout(self.pic_layout)
+
+        # Create a figure and canvas
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
         layout.addWidget(self.canvas)
+        # if I click the canvas it will get the position of cursor in the canvas and move to that position
+        self.canvas.mpl_connect("button_press_event", self.canvas_onclick)
 
         # Set main widget
         widget = QWidget()
@@ -658,7 +683,7 @@ class AttocubeControlGUI(QMainWindow):
         # Fetch current position from your AttocubeANC300 class and add it to history
         self.updatePlotNumber += 1  # type: ignore
         current_position = self.attocube.position
-        MAX_HISTORY = 6
+        MAX_HISTORY = 10
         while len(self.historyPosition) > MAX_HISTORY:
             self.historyPosition.pop(0)
 
@@ -682,7 +707,7 @@ class AttocubeControlGUI(QMainWindow):
             ax1.scatter(
                 [history[1] for history in self.historyPosition],
                 [history[2] for history in self.historyPosition],
-                alpha=np.linspace(0.2, 0.8, len(self.historyPosition)),  # type: ignore
+                alpha=np.linspace(0.2, 0.6, len(self.historyPosition)),  # type: ignore
             )
         ax1.scatter(current_position[1], current_position[2], color="black", marker="x")  # type: ignore
         ax1.axhline(y=self.attocube.zmin, color="red", linestyle="--")  # type: ignore
@@ -706,7 +731,7 @@ class AttocubeControlGUI(QMainWindow):
             ax2.scatter(
                 [history[0] for history in self.historyPosition],
                 [history[1] for history in self.historyPosition],
-                alpha=np.linspace(0.2, 0.8, len(self.historyPosition)),  # type: ignore
+                alpha=np.linspace(0.2, 0.6, len(self.historyPosition)),  # type: ignore
             )
         ax2.scatter(current_position[0], current_position[1], color="black", marker="x")  # type: ignore
         ax2.axhline(y=self.attocube.ymin, color="red", linestyle="--")
@@ -719,8 +744,21 @@ class AttocubeControlGUI(QMainWindow):
         # Redraw the canvas
         self.canvas.draw()
         # every 5 times, add current position to history
-        if self.updatePlotNumber % 5 == 0:
+        if self.updatePlotNumber % 1 == 0:
             self.historyPosition.append(current_position)
+
+    def canvas_onclick(self, event):
+        if event.button == 1:
+            # check if it is in left subplot or right subplot
+            if event.inaxes == self.figure.axes[0]:
+                # left subplot, xdata=y, ydata=z
+                self.y = int(event.xdata)
+                self.z = int(event.ydata)
+            else:
+                # right subplot, xdata=x, ydata=y
+                self.x = int(event.xdata)
+                self.y = int(event.ydata)
+            self.updatePosition()
 
 
 # Main application
