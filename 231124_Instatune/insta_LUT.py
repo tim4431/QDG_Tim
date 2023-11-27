@@ -1,17 +1,16 @@
 import serial
 
 
+import struct
+
 def create_command_packet(register_address, write_value):
     byte0 = 1 << 31 | register_address << 25
     byte1 = (write_value >> 8) & 0xFF  # MSB
     byte2 = write_value & 0xFF  # LSB
     byte3 = 0  # Checksum placeholder
-    return (
-        byte0.to_bytes(1, "big")
-        + byte1.to_bytes(1, "big")
-        + byte2.to_bytes(1, "big")
-        + byte3.to_bytes(1, "big")
-    )
+    print(byte0, byte1, byte2, byte3)
+
+    return struct.pack(">BBBB", byte0, byte1, byte2, byte3)
 
 
 def write_to_register(ser, register_address, write_value):
