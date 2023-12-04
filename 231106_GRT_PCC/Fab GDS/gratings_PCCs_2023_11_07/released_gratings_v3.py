@@ -34,10 +34,10 @@ def pts_sweep_x(N, x0, y0, step=127):
 def pts_group3_sweep_x(N, x0, y0, step=127):
     # group by 3, spacing by step
     # group to group, spacing by 6*step
-    x1 = x0 - ((N - 1) / 2) * (6 * step)
-    x2 = x0 + ((N - 1) / 2) * (6 * step)
+    x1 = x0 - ((N - 1) / 2) * (9 * step)
+    x2 = x0 + ((N - 1) / 2) * (9 * step)
     pts = []
-    for x in np.arange(x1, x2 + 1, 6 * step):
+    for x in np.arange(x1, x2 + 1, 9 * step):
         for i in range(3):
             pts.append([x + i * step, y0])
     return pts
@@ -46,10 +46,10 @@ def pts_group3_sweep_x(N, x0, y0, step=127):
 def pts_group3_sweep_y(N, x0, y0, step=127):
     # group by 3, spacing by step
     # group to group, spacing by 6*step
-    y1 = y0 - ((N - 1) / 2) * (6 * step)
-    y2 = y0 + ((N - 1) / 2) * (6 * step)
+    y1 = y0 - ((N - 1) / 2) * (9 * step)
+    y2 = y0 + ((N - 1) / 2) * (9 * step)
     pts = []
-    for y in np.arange(y1, y2 + 1, 6 * step):
+    for y in np.arange(y1, y2 + 1, 9 * step):
         for i in range(3):
             pts.append([x0, y + i * step])
     return pts
@@ -135,39 +135,45 @@ if __name__ == "__main__":
     )
     # i j scan
     N_scan = 6
-    layers = [11, 12, 21, 22, 31, 32, 1, 1, 1]
+    layers = [11, 12, 13, 14, 15, 16, 1, 1, 1]
     # @Lukasz if you want to change to 9 groups
     # N_scan = 9
     # layers = [11, 12, 13, 21, 22, 23, 31, 32, 33, 1, 1, 1]
     #
-    DIS_GROUP = 127 * 2
+    DIS_GROUP = 127 * 3
     #
     N_Group = N_scan + 3  # 3 for fine scan
+    for j in range(4):
+        x0 = (j - (4 - 1) / 2) * DIS_GROUP
+        #
+        for i in range(N_scan):
+            layer = layers[i]
+            y0 = (i - (N_Group - 1) / 2) * DIS_GROUP
+            create_batch(x0, y0, N=3, layer=layer, dff=0.01, ff0=0.45)
+        # plot_ffs(3, 0.45, 0.01)
+        #
+        # fine scan to make sure we see atleast a PCC
+        # 7,8,9
+        y0 = ((N_scan + 1) - (N_Group - 1) / 2) * DIS_GROUP
+        create_batch(x0, y0, N=9, dff=0.005, ff0=0.45, layer=1)
+    # plot_ffs(9, 0.45, 0.005)
+    # Group Marker
     for i in range(N_scan):
-        layer = layers[i]
         x0 = 0
         y0 = (i - (N_Group - 1) / 2) * DIS_GROUP
-        create_batch(x0, y0, N=3, layer=layer, dff=0.01, ff0=0.45)
+        layer = layers[i]
         forge.add_geometry(
-            gdspy.Text(str(layer), 40, position=[x0 + 220, y0 + 65], layer=2, angle=np.pi)  # type: ignore
+            gdspy.Text(str(layer), 100, position=[x0 - 700, y0 + 105], layer=2, angle=np.pi)  # type: ignore
         )
-    # plot_ffs(3, 0.45, 0.01)
-    #
-    # fine scan to make sure we see atleast a PCC
-    # 7,8,9
-    y0 = ((N_scan + 1) - (N_Group - 1) / 2) * DIS_GROUP
-    create_batch(0, y0, N=9, dff=0.005, ff0=0.45, layer=1)
-    # plot_ffs(9, 0.45, 0.005)
-
     # Device Marker
     forge.add_geometry(
-        gdspy.Text("A", 150, position=[1000, -400], layer=2, datatype=1, angle=np.pi)  # type: ignore
+        gdspy.Text("A", 200, position=[1400, -600], layer=2, datatype=1, angle=np.pi)  # type: ignore
     )
     forge.add_geometry(
-        gdspy.Text("B", 150, position=[1000, 0], layer=2, datatype=2, angle=np.pi)  # type: ignore
+        gdspy.Text("B", 200, position=[1400, 0], layer=2, datatype=2, angle=np.pi)  # type: ignore
     )
     forge.add_geometry(
-        gdspy.Text("C", 150, position=[1000, 400], layer=2, datatype=3, angle=np.pi)  # type: ignore
+        gdspy.Text("C", 200, position=[1400, 600], layer=2, datatype=3, angle=np.pi)  # type: ignore
     )
 
     # MLA Marker
